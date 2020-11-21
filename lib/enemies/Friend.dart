@@ -15,7 +15,7 @@ import 'package:shootinggame/enemies/SpecialBullet.dart';
 import 'package:shootinggame/entities/AssetsSizes.dart';
 import 'package:shootinggame/entities/EntityState.dart';
 import 'package:shootinggame/screens/player/Player.dart';
-import 'package:shootinggame/screens/util/Healthbar.dart';
+import 'package:shootinggame/screens/player/Healthbar.dart';
 import 'package:shootinggame/screens/util/SizeHolder.dart';
 
 import 'Bullet.dart';

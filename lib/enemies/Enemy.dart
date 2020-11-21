@@ -8,23 +8,22 @@ import 'package:flame/sprite.dart';
 import 'package:flame/spritesheet.dart';
 import 'package:flutter/gestures.dart';
 import 'package:shootinggame/enemies/BulletType.dart';
+import 'package:shootinggame/enemies/Effect.dart';
 import 'package:shootinggame/enemies/EnemyHealthbar.dart';
 import 'package:shootinggame/enemies/EnemyType.dart';
 import 'package:shootinggame/enemies/SpecialBullet.dart';
 import 'package:shootinggame/entities/AssetsSizes.dart';
 import 'package:shootinggame/entities/EntityState.dart';
 import 'package:shootinggame/screens/player/Player.dart';
-import 'package:shootinggame/screens/util/Healthbar.dart';
+import 'package:shootinggame/screens/player/Healthbar.dart';
 import 'package:shootinggame/screens/util/SizeHolder.dart';
 
 import 'Bullet.dart';
+import 'EffectType.dart';
 
 class Enemy {
   double _timer;
   double attackInterval;
-  List<Bullet> _bullets;
-  AnimationComponent entity;
-  EntityState _state;
   double _distanceToCenter;
   double attackRange;
   bool _flipRender;
@@ -32,21 +31,18 @@ class Enemy {
   double y;
   double health;
   double maxHealth;
-  EnemyType _type;
-  BulletType _bulletType;
-
-  List<Sprite> _sprites = List<Sprite>();
-
   double enemySpeedY;
-
   double enemySpeedX;
   double enemySpeedFactor;
   EnemyhealthBar _enemyhealthBar;
   List<SpecialBullet> specialBullets;
+  AnimationComponent entity;
+  EntityState _state;
+  Effect _effect;
+  bool _isEffected;
 
-  Enemy(this._type, String aniPath) {
+  Enemy(String aniPath) {
     _timer = 0;
-    _bullets = List.empty(growable: true);
     _state = EntityState.Normal;
     _flipRender = false;
     enemySpeedX = 0;
@@ -54,6 +50,7 @@ class Enemy {
     enemySpeedFactor = 0.05;
     _enemyhealthBar = EnemyhealthBar(0, 0);
     specialBullets = List.empty(growable: true);
+    _isEffected = false;
   }
 
   bool attacks() {
@@ -93,6 +90,28 @@ class Enemy {
     return null;
   }
 
+  void getHitWithSpecialBullet(SpecialBullet specialBullet) {
+    if (health > 0) health -= specialBullet.damage;
+    switch (specialBullet.getEffect()) {
+      case EffectType.Freeze:
+        _effect = Effect(EffectType.Freeze, 2);
+        _effect.resize(entity.x, entity.x);
+        _isEffected = true;
+        break;
+      case EffectType.Fire:
+        _effect = Effect(EffectType.Fire, 2);
+        _effect.resize(entity.x, entity.x);
+        _isEffected = true;
+        break;
+      default:
+        break;
+    }
+    if (health <= 0) {
+      print('The Player has died, reviving!');
+      health = maxHealth;
+    }
+  }
+
   bool isDead() {
     return _state == EntityState.Dead;
   }
@@ -126,6 +145,11 @@ class Enemy {
     canvas.save();
     _enemyhealthBar.render(canvas);
     canvas.restore();
+    if (_isEffected) {
+      canvas.save();
+      _effect.render(canvas);
+      canvas.restore();
+    }
   }
 
   void resize() {
@@ -184,6 +208,12 @@ class Enemy {
 
     entity.animation.update(t);
     _enemyhealthBar.updateRect(maxHealth, health, x, y);
+    if (_isEffected) {
+      _effect.update(t, x, y);
+      if (_effect.getType() == EffectType.None) {
+        _isEffected = false;
+      }
+    }
   }
 
   double getDistanceToCenter() {

@@ -146,30 +146,21 @@ class StoryHandler {
     });
   }
 
-  void resize() {
-    _enemies.forEach((e) {
-      e.resize();
-    });
-    _bullets.forEach((b) {
-      b.resize();
-    });
-    _specialBullets.forEach((b) {
-      b.resize();
-    });
-    _presents.forEach((b) {
-      b.resize();
-    });
-    friends.forEach((f) {
-      f.resize();
-    });
-  }
-
   Enemy getNewEnemy() {
     Random random = Random();
     int rand = random.nextInt(_enemyTypes.length);
     BasicEnemy enemy = BasicEnemy(_enemyTypes[rand]);
     enemy.resize();
     return enemy;
+  }
+
+  void addPresent(double x, double y) {
+    int rand = _random.nextInt(10);
+    if (rand > 7)
+      _presents.add(Present(x, y, PresentType.Health));
+    else if (rand > 4)
+      _presents.add(Present(x, y, PresentType.Bullets));
+    else if (rand > 0) _presents.add(Present(x, y, PresentType.Coin));
   }
 
   List<Enemy> getEnemies() {
@@ -180,12 +171,21 @@ class StoryHandler {
     return _presents;
   }
 
-  void addPresent(double x, double y) {
-    int rand = _random.nextInt(10);
-    if (rand > 7)
-      _presents.add(Present(x, y, PresentType.Health));
-    else if (rand > 4)
-      _presents.add(Present(x, y, PresentType.Bullets));
-    else if (rand > 0) _presents.add(Present(x, y, PresentType.Coin));
+  void resize() {
+    _enemies.forEach((e) {
+      e.resize();
+    });
+    _bullets.forEach((b) {
+      b.resize();
+    });
+    _specialBullets.forEach((s) {
+      s.resize();
+    });
+    _presents.forEach((p) {
+      p.resize();
+    });
+    friends.forEach((f) {
+      f.resize();
+    });
   }
 }

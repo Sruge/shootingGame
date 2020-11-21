@@ -13,7 +13,7 @@ class BasicEnemy extends Enemy {
   AnimationComponent entity;
   BulletType _bulletType;
   String aniPath;
-  BasicEnemy(this._type) : super(_type, 'priest.png') {
+  BasicEnemy(this._type) : super('priest.png') {
     attackRange = 130;
     attackInterval = 3;
     health = 4;

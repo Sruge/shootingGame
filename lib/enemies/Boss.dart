@@ -28,7 +28,7 @@ class Boss extends Enemy {
   double _specialAttackTimer;
 
   double _specialAttackInterval;
-  Boss(this._type) : super(EnemyType.Three, 'boss.png') {
+  Boss(this._type) : super('boss.png') {
     health = 30;
     maxHealth = 30;
     specialBullets = List.empty(growable: true);

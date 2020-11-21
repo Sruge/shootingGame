@@ -32,7 +32,7 @@ class SpecialBullet {
         rows: 1);
 
     _specialBullet =
-        AnimationComponent(96, 96, sprshee.createAnimation(0, stepTime: 0.1));
+        AnimationComponent(16, 16, sprshee.createAnimation(0, stepTime: 0.1));
     _state = EntityState.Normal;
     setSpeed([0, 0]);
     damage = 1;

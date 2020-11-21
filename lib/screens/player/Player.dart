@@ -50,7 +50,7 @@ class Player {
 
   num _nextBurn;
 
-  Player() {
+  Player(int char) {
     health = 20;
     maxHealth = 20;
     _healthbar = Healthbar(10, 10, bulletCount);
@@ -66,6 +66,19 @@ class Player {
     maxBulletCount = 50;
     _speedfactor = 0.2;
     coins = 0;
+    String playerPath;
+    switch (char) {
+      case 1:
+        playerPath = 'elf.png';
+        break;
+      case 2:
+        playerPath = 'elf2.png';
+        break;
+      case 3:
+        playerPath = 'elf3.png';
+        break;
+      default:
+    }
 
     final fireSprShe = SpriteSheet(
         imageName: 'fire.png',
@@ -77,7 +90,7 @@ class Player {
     _fireEffectImage = AnimationComponent(100, 100, _fireAnimation);
 
     final freezeSprShe = SpriteSheet(
-        imageName: 'frozen.png',
+        imageName: 'toxed.png',
         textureWidth: 32,
         textureHeight: 24,
         columns: 4,
@@ -86,7 +99,7 @@ class Player {
     _freezeEffectImage = AnimationComponent(100, 100, _freezeAnimation);
 
     final spritesheet = SpriteSheet(
-        imageName: 'elf.png',
+        imageName: playerPath,
         textureWidth: 32,
         textureHeight: 48,
         columns: 4,
@@ -107,7 +120,6 @@ class Player {
         if (enemies[i].contains(detail.globalPosition)) {
           move = false;
           shoot(detail.globalPosition, speed);
-          //fire(detail.globalPosition);
           break;
         }
       }

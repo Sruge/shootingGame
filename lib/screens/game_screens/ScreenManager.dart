@@ -37,7 +37,7 @@ class ScreenManager extends Game with TapDetector {
     screenSize = size;
     _playScreen?.resize();
     _mainScreen?.resize();
-    _characterScreen.resize();
+    _characterScreen?.resize();
   }
 
   @override
@@ -52,7 +52,6 @@ class ScreenManager extends Game with TapDetector {
 
   Future<void> _init(double t) async {
     _fn = _update;
-    _playScreen = PlayGround();
     _mainScreen = MainScreen();
     _characterScreen = CharacterScreen();
 
@@ -86,8 +85,8 @@ class ScreenManager extends Game with TapDetector {
     _screenState = state;
   }
 
-  void startNewGame() {
-    _playScreen = PlayGround();
+  void startNewGame(int char) {
+    _playScreen = PlayGround(char);
     _playScreen?.resize();
 
     _screenState = ScreenState.kPlayScreen;

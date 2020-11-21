@@ -20,7 +20,7 @@ class CharacterScreen extends BaseWidget {
   @override
   void onTapDown(TapDownDetails detail, Function fn) {
     if (_button.toRect().contains(detail.globalPosition)) {
-      screenManager.startNewGame();
+      screenManager.startNewGame(1);
     } else {
       _bg.onTapDown(detail, () {
         screenManager.switchScreen(ScreenState.kPlayScreen);

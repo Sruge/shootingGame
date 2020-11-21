@@ -26,10 +26,10 @@ class PlayGround extends BaseWidget {
   double speedfactor;
   StoryHandler _storyHandler;
 
-  PlayGround() {
+  PlayGround(int char) {
     _bg = DynamicBackground(0, 0, 'playground.png');
 
-    _player = Player();
+    _player = Player(char);
     speedfactor = 0.2;
     _storyHandler = StoryHandler();
 

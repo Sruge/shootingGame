@@ -25,6 +25,9 @@ class Boss extends Enemy {
   List<SpecialBullet> specialBullets;
   List<BulletType> _bulletTypes;
   Random random;
+  double _specialAttackTimer;
+
+  double _specialAttackInterval;
   Boss(this._type) : super(EnemyType.Three, 'boss.png') {
     health = 30;
     maxHealth = 30;
@@ -42,10 +45,12 @@ class Boss extends Enemy {
         rows: 4);
     final animation = spritesheet.createAnimation(1, stepTime: 0.1);
     entity = AnimationComponent(0, 0, animation);
-    attackRange = 200;
+    attackRange = 150;
     attackInterval = 4;
-    enemySpeedFactor = 0.1;
+    enemySpeedFactor = 0.3;
     _disappearTimer = 0;
+    _specialAttackTimer = 0;
+    _specialAttackInterval = 9;
     random = Random();
   }
 
@@ -85,11 +90,15 @@ class Boss extends Enemy {
   @override
   void update(double t, List<double> speed) {
     _disappearTimer += t;
+    _specialAttackTimer += t;
+    if (_specialAttackTimer > _specialAttackInterval) {
+      specialBullets.add(getSpecialAttack());
+      _specialAttackTimer = 0;
+    }
     if (_disappearTimer > 10) {
       Random random = Random();
       x = random.nextDouble() * screenSize.width;
       y = random.nextDouble() * screenSize.height;
-      specialBullets.add(getSpecialAttack());
       _disappearTimer = 0;
     } else {
       super.update(t, speed);

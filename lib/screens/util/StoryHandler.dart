@@ -19,8 +19,8 @@ import 'package:shootinggame/screens/player/Player.dart';
 import 'package:shootinggame/screens/game_screens/ScreenState.dart';
 
 class StoryHandler {
-  final int maxSpawnInterval = 15000;
-  final int minSpawnInterval = 15000;
+  final int maxSpawnInterval = 10000;
+  final int minSpawnInterval = 10000;
   final int intervalChange = 3;
   final int maxEnemies = 4;
   int currentInterval;
@@ -43,7 +43,10 @@ class StoryHandler {
   void start() {
     _enemyTypes = List.empty(growable: true);
     _enemyTypes.add(EnemyType.One);
-    _enemyTypes.add(EnemyType.Two);
+    // _enemyTypes.add(EnemyType.Two);
+    // _enemyTypes.add(EnemyType.Three);
+    // _enemyTypes.add(EnemyType.Four);
+    //_enemyTypes.add(EnemyType.Five);
     currentInterval = maxSpawnInterval;
     nextSpawn = DateTime.now().millisecondsSinceEpoch + currentInterval;
     nextBossSpawn = DateTime.now().millisecondsSinceEpoch + 2;
@@ -120,8 +123,7 @@ class StoryHandler {
     for (int i = 0; i < _specialBullets.length; i++) {
       _specialBullets[i].update(t, bgSpeed);
       if (_specialBullets[i].overlaps(player.toRect())) {
-        player.getHitWithSpecialBullet(_specialBullets[i]);
-        _specialBullets[i].die();
+        _specialBullets[i].hitPlayer(player);
       }
     }
     _bullets.removeWhere((element) => element.isDead());

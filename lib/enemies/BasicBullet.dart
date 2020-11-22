@@ -9,14 +9,16 @@ class BasicBullet extends Bullet {
   double damage;
   BulletType _type;
   BasicBullet(double x, double y, double _bulletSpeedX, double _bulletSpeedY,
-      this._type, damageFctr, rangeFctr)
-      : super(x, y, _bulletSpeedX, _bulletSpeedY,
-            SpriteComponent.square(7, 'bullet.png'), 4) {
+      this._type, lifetimeFctr, damageFctr)
+      : super(x, y, _bulletSpeedX, _bulletSpeedY, 4) {
     if (_type == BulletType.One) {
       damage = damageFctr;
-      lifetime = rangeFctr;
-    } else if (_type == BulletType.Two) damage = 2 * damageFctr;
-    lifetime = 2 * rangeFctr;
+      lifetime = lifetime * lifetimeFctr;
+    } else if (_type == BulletType.Two) {
+      damage = 2 * damageFctr;
+      lifetime = 2 * lifetime * lifetimeFctr;
+      bullet = SpriteComponent.square(9, 'redBullet.png');
+    }
   }
 
   void onTapDown(TapDownDetails detail, Function fn) {

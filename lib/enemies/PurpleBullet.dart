@@ -5,8 +5,11 @@ import 'package:flame/components/component.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:shootinggame/enemies/Bullet.dart';
+import 'package:shootinggame/enemies/Effect.dart';
 import 'package:shootinggame/enemies/EffectType.dart';
+import 'package:shootinggame/screens/player/Player.dart';
 
+import 'Enemy.dart';
 import 'SpecialBullet.dart';
 
 class PurpleBullet extends SpecialBullet {
@@ -14,7 +17,8 @@ class PurpleBullet extends SpecialBullet {
   double _timer;
 
   PurpleBullet(double x, double y, double _bulletSpeedX, double _bulletSpeedY)
-      : super(x, y, 32, 32, _bulletSpeedX, _bulletSpeedY, 'frozen.png', 2) {
+      : super(x, y, 32, 32, _bulletSpeedX, _bulletSpeedY, 'purpleBullets.png',
+            2) {
     damage = 5;
     _timer = 0;
     lifetime = 2;
@@ -34,5 +38,17 @@ class PurpleBullet extends SpecialBullet {
     bulletSpeedX += t * bulletSpeedX;
     bulletSpeedY += t * bulletSpeedY;
     super.update(t, speed);
+  }
+
+  @override
+  void hitPlayer(Player player) {
+    player.addEffect(Effect(EffectType.Purple, 5, player, null));
+    die();
+  }
+
+  @override
+  void hitEnemy(Enemy enemy) {
+    enemy.addEffect(Effect(EffectType.Purple, 5, null, enemy));
+    die();
   }
 }

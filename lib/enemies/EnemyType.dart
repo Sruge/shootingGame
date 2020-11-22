@@ -1,5 +1,1 @@
-enum EnemyType {
-  One,
-  Two,
-  Three,
-}
+enum EnemyType { One, Two, Three, Four, Five }

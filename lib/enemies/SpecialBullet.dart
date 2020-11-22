@@ -11,8 +11,10 @@ import 'package:shootinggame/entities/EntityState.dart';
 import 'package:shootinggame/screens/player/Player.dart';
 import 'package:shootinggame/screens/util/SizeHolder.dart';
 
+import 'Enemy.dart';
+
 class SpecialBullet {
-  AnimationComponent _specialBullet;
+  AnimationComponent specialBullet;
   double _speedX;
   double _speedY;
   double bulletSpeedX;
@@ -32,7 +34,7 @@ class SpecialBullet {
         columns: 4,
         rows: 1);
 
-    _specialBullet = AnimationComponent(
+    specialBullet = AnimationComponent(
         width, height, sprshee.createAnimation(0, stepTime: 0.1));
     _state = EntityState.Normal;
     setSpeed([0, 0]);
@@ -57,34 +59,34 @@ class SpecialBullet {
   }
 
   bool overlaps(Rect rect) {
-    return _specialBullet.toRect().overlaps(rect);
+    return specialBullet.toRect().overlaps(rect);
   }
 
   Rect toRect() {
-    return _specialBullet.toRect();
+    return specialBullet.toRect();
   }
 
   void render(Canvas canvas) {
     canvas.save();
-    _specialBullet.x = x;
-    _specialBullet.y = y;
-    _specialBullet.render(canvas);
+    specialBullet.x = x;
+    specialBullet.y = y;
+    specialBullet.render(canvas);
     canvas.restore();
   }
 
   void resize() {
-    _specialBullet.x = x;
-    _specialBullet.y = y;
+    specialBullet.x = x;
+    specialBullet.y = y;
   }
 
   void update(double t, List<double> speed) {
     _timer += t;
     setSpeed(speed);
-    _specialBullet.update(t);
-    _specialBullet.x = x;
-    _specialBullet.y = y;
-    x = _specialBullet.x + bulletSpeedX - t * _speedX * screenSize.width;
-    y = _specialBullet.y + bulletSpeedY - t * _speedY * screenSize.width;
+    specialBullet.update(t);
+    specialBullet.x = x;
+    specialBullet.y = y;
+    x = specialBullet.x + bulletSpeedX - t * _speedX * screenSize.width;
+    y = specialBullet.y + bulletSpeedY - t * _speedY * screenSize.width;
 
     if (_timer > lifetime) die();
 
@@ -101,7 +103,7 @@ class SpecialBullet {
     _state = EntityState.Dead;
   }
 
-  EffectType getEffect() {
-    return EffectType.None;
-  }
+  void hitPlayer(Player player) {}
+
+  void hitEnemy(Enemy enemy) {}
 }

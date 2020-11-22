@@ -4,16 +4,15 @@ import 'package:shootinggame/enemies/BasicBullet.dart';
 import 'package:shootinggame/enemies/BulletType.dart';
 import 'package:shootinggame/enemies/Enemy.dart';
 import 'package:shootinggame/enemies/EnemyType.dart';
-
-import 'Bullet.dart';
-import 'FreezeBullet.dart';
+import 'package:shootinggame/screens/player/WalkingEntity.dart';
 
 class BasicEnemy extends Enemy {
   EnemyType _type;
-  AnimationComponent entity;
+  WalkingEntity entity;
   BulletType _bulletType;
   String aniPath;
-  BasicEnemy(this._type) : super('priest.png') {
+  int _txtWidth, _txtHeight;
+  BasicEnemy(this._type) : super() {
     attackRange = 130;
     attackInterval = 3;
     health = 4;
@@ -23,25 +22,47 @@ class BasicEnemy extends Enemy {
       case EnemyType.One:
         aniPath = 'priest.png';
         attackRange = 200;
-        attackInterval = 3;
+        attackInterval = 2;
+        bulletLifetimeFctr = 2;
+        _txtWidth = 32;
+        _txtHeight = 48;
         break;
       case EnemyType.Two:
         aniPath = 'monster.png';
-        attackRange = 50;
+        attackRange = 150;
         attackInterval = 5;
+        bulletLifetimeFctr = 1;
+        _txtWidth = 32;
+        _txtHeight = 48;
+        break;
+      case EnemyType.Three:
+        aniPath = 'angel.png';
+        attackRange = 75;
+        attackInterval = 4;
+        bulletLifetimeFctr = 1;
+        _txtWidth = 48;
+        _txtHeight = 48;
+        break;
+      case EnemyType.Four:
+        aniPath = 'ryuk.png';
+        attackRange = 120;
+        attackInterval = 4;
+        bulletLifetimeFctr = 1;
+        _txtWidth = 48;
+        _txtHeight = 64;
+        break;
+      case EnemyType.Five:
+        aniPath = 'ray.png';
+        attackRange = 130;
+        attackInterval = 3;
+        bulletLifetimeFctr = 1;
+        _txtWidth = 32;
+        _txtHeight = 52;
         break;
       default:
         aniPath = 'monster.png';
-        break;
     }
-    final spritesheet = SpriteSheet(
-        imageName: aniPath,
-        textureWidth: 32,
-        textureHeight: 48,
-        columns: 4,
-        rows: 4);
-    final animation = spritesheet.createAnimation(1, stepTime: 0.1);
-    entity = AnimationComponent(0, 0, animation);
+    entity = WalkingEntity(aniPath, _txtWidth, _txtHeight);
   }
 
   @override

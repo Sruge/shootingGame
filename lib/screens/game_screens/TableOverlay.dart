@@ -30,7 +30,7 @@ class TableOverlay {
   }
   void onTapDown(TapDownDetails detail, Player player) {
     if (_speedText.toRect().contains(detail.globalPosition)) {
-      screenManager.setSpeedfactor(0.2);
+      screenManager.setSpeedfactor(1.2, false);
       _speedText = SpriteComponent.fromSprite(0, 0, Sprite('speedout.png'));
       resize();
     }

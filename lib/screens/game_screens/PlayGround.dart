@@ -37,6 +37,7 @@ class PlayGround extends BaseWidget {
   }
   @override
   void onTapDown(TapDownDetails detail, Function fn) {
+    print(speedfactor);
     if (showDeal && _table.contains(detail.globalPosition)) {
       _table.onTapDown(detail, _player);
     } else {
@@ -69,6 +70,7 @@ class PlayGround extends BaseWidget {
 
   @override
   void update(double t) {
+    _player.speedfactor = speedfactor;
     if (_bg.hasReachedDestinationOrBorder()) _player.move = false;
     if (!_player.move) speed = [0, 0];
 

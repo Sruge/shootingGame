@@ -1,1 +1,1 @@
-enum EffectType { None, Freeze, Fire, Deal, Purple }
+enum EffectType { None, Freeze, Fire, Deal, Purple, Smoke }

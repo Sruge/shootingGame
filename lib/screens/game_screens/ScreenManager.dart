@@ -92,8 +92,13 @@ class ScreenManager extends Game with TapDetector {
     _screenState = ScreenState.kPlayScreen;
   }
 
-  void setSpeedfactor(double factor) {
-    _playScreen.speedfactor += _playScreen.speedfactor * factor;
+  void setSpeedfactor(double factor, bool useAsAbsolute) {
+    if (useAsAbsolute) {
+      _playScreen.speedfactor = factor;
+    } else {
+      _playScreen.speedfactor = _playScreen.speedfactor * factor;
+    }
+    print('new speedfactor: ${_playScreen.speedfactor}');
   }
 
   void showDeal(double x, double y) {

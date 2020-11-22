@@ -9,7 +9,7 @@ import 'package:shootinggame/screens/player/Player.dart';
 import 'package:shootinggame/screens/util/SizeHolder.dart';
 
 class Bullet {
-  PositionComponent _bullet;
+  PositionComponent bullet;
   double _speedX;
   double _speedY;
   double _bulletSpeedX;
@@ -20,14 +20,13 @@ class Bullet {
   double speedfactor;
   double lifetime, _timer;
 
-  Bullet(double x, double y, bulletSpeedX, bulletSpeedY, SpriteComponent bullet,
-      this.speedfactor) {
-    _bullet = bullet;
+  Bullet(double x, double y, bulletSpeedX, bulletSpeedY, this.speedfactor) {
+    bullet = SpriteComponent.square(7, 'bullet.png');
     _state = EntityState.Normal;
     setSpeed([0, 0]);
     damage = 1;
     _timer = 0;
-    lifetime = 0.7;
+    lifetime = 1;
 
     this._x = x;
     this._y = y;
@@ -46,33 +45,33 @@ class Bullet {
   }
 
   bool overlaps(Rect rect) {
-    return _bullet.toRect().overlaps(rect);
+    return bullet.toRect().overlaps(rect);
   }
 
   Rect toRect() {
-    return _bullet.toRect();
+    return bullet.toRect();
   }
 
   void render(Canvas canvas) {
     canvas.save();
-    _bullet.x = _x;
-    _bullet.y = _y;
-    _bullet.render(canvas);
+    bullet.x = _x;
+    bullet.y = _y;
+    bullet.render(canvas);
     canvas.restore();
   }
 
   void resize() {
-    _bullet.x = _x;
-    _bullet.y = _y;
+    bullet.x = _x;
+    bullet.y = _y;
   }
 
   void update(double t, List<double> speed) {
     _timer += t;
     setSpeed(speed);
-    _bullet.x = _x;
-    _bullet.y = _y;
-    _x = _bullet.x + _bulletSpeedX - t * _speedX * screenSize.width;
-    _y = _bullet.y + _bulletSpeedY - t * _speedY * screenSize.width;
+    bullet.x = _x;
+    bullet.y = _y;
+    _x = bullet.x + _bulletSpeedX - t * _speedX * screenSize.width;
+    _y = bullet.y + _bulletSpeedY - t * _speedY * screenSize.width;
     if (_timer > lifetime) die();
 
     if (_x < 0 ||

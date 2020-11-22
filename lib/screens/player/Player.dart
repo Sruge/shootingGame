@@ -22,12 +22,14 @@ import 'package:shootinggame/screens/player/ButtonBar.dart';
 import 'package:shootinggame/screens/player/Healthbar.dart';
 import 'package:shootinggame/screens/util/SizeHolder.dart';
 
+import 'WalkingEntity.dart';
+
 class Player {
-  AnimationComponent _player;
+  WalkingEntity _player;
   PositionComponent _standingPlayer;
   Effect _effect;
   bool _isEffected;
-  double _speedfactor;
+  double speedfactor;
   ButtonBar _btnBar;
 
   double health;
@@ -58,14 +60,14 @@ class Player {
     _isEffected = false;
     bulletCount = 40;
     maxBulletCount = 50;
-    _speedfactor = 0.2;
+    speedfactor = 0.2;
     coins = 0;
     score = 0;
     _btnBar = ButtonBar();
     bulletLifetimeFctr = 1;
-    dmgFctr = 1;
+    dmgFctr = 2;
     // _btnBar.add(EffectType.Fire);
-    // _btnBar.add(EffectType.Purple);
+    //_btnBar.add(EffectType.Purple);
 
     String playerPath;
     switch (char) {
@@ -81,16 +83,7 @@ class Player {
       default:
     }
 
-    final spritesheet = SpriteSheet(
-        imageName: playerPath,
-        textureWidth: 32,
-        textureHeight: 48,
-        columns: 4,
-        rows: 4);
-    final animation = spritesheet.createAnimation(1, stepTime: 0.1);
-    _player = AnimationComponent(100, 100, animation);
-    _standingPlayer =
-        SpriteComponent.fromSprite(100, 100, (spritesheet.getSprite(0, 0)));
+    _player = WalkingEntity(playerPath, 32, 48);
   }
   void onTapDown(TapDownDetails detail, List<Enemy> enemies,
       List<Friend> friends, List<double> speed, Function fn) {
@@ -123,16 +116,10 @@ class Player {
 
   void render(Canvas canvas) {
     canvas.save();
-    if (move) {
-      _player.renderFlipX = _flipRender;
-      canvas.save();
-      _player.render(canvas);
-      canvas.restore();
-    } else {
-      canvas.save();
-      _standingPlayer.render(canvas);
-      canvas.restore();
-    }
+
+    _player.render(canvas);
+
+    canvas.restore();
     if (_isEffected) {
       canvas.save();
       _effect.render(canvas);
@@ -162,12 +149,7 @@ class Player {
     _btnBar.resize();
     _player.x = (screenSize.width - screenSize.width * 0.06) / 2;
     _player.y = (screenSize.height - screenSize.height * 0.14) / 2;
-    _player.width = screenSize.width * 0.06;
-    _player.height = screenSize.height * 0.14;
-    _standingPlayer.x = (screenSize.width - screenSize.width * 0.06) / 2;
-    _standingPlayer.y = (screenSize.height - screenSize.height * 0.14) / 2;
-    _standingPlayer.width = screenSize.width * 0.06;
-    _standingPlayer.height = screenSize.height * 0.14;
+    _player.resize();
     _bullets.forEach((b) {
       b.resize();
     });
@@ -178,7 +160,7 @@ class Player {
 
   void update(double t, List<double> speed, List<Enemy> enemies,
       List<Present> presents) {
-    _player.update((t));
+    _player.update(t, speed);
 
     _healthbar.update(maxHealth, health, bulletCount, score, coins);
     _btnBar.update(t);
@@ -201,8 +183,7 @@ class Player {
       _specialBullets[i].update(t, speed);
       enemies.forEach((e) {
         if (e.overlaps(_specialBullets[i].toRect())) {
-          e.getHitWithSpecialBullet(_specialBullets[i]);
-          _specialBullets[i].die();
+          _specialBullets[i].hitEnemy(e);
         }
       });
     }
@@ -222,28 +203,6 @@ class Player {
     if (health > 0) health -= bullet.damage;
     if (health <= 0) {
       die();
-    }
-  }
-
-  void getHitWithSpecialBullet(SpecialBullet specialBullet) {
-    if (health > 0) health -= specialBullet.damage;
-    switch (specialBullet.getEffect()) {
-      case EffectType.Freeze:
-        _effect = Effect(EffectType.Freeze, 2);
-        _effect.resize(_player.x, _player.x);
-        _isEffected = true;
-        break;
-      case EffectType.Fire:
-        _effect = Effect(EffectType.Fire, 2);
-        _effect.resize(_player.x, _player.x);
-        _isEffected = true;
-        break;
-      default:
-        break;
-    }
-    if (health <= 0) {
-      print('The Player has died, reviving!');
-      health = 20;
     }
   }
 
@@ -267,7 +226,7 @@ class Player {
           screenSize.height / 2,
           speed[0],
           speed[1],
-          BulletType.Two,
+          BulletType.One,
           bulletLifetimeFctr,
           dmgFctr);
       bullet.resize();
@@ -289,5 +248,11 @@ class Player {
   void die() {
     print('The Player has died, reviving!');
     health = 20;
+  }
+
+  void addEffect(Effect effect) {
+    effect.resize(_player.x, _player.y);
+    _effect = effect;
+    _isEffected = true;
   }
 }

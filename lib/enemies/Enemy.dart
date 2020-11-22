@@ -1,21 +1,14 @@
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:flame/animation.dart';
-import 'package:flame/components/animation_component.dart';
-import 'package:flame/components/component.dart';
-import 'package:flame/sprite.dart';
-import 'package:flame/spritesheet.dart';
 import 'package:flutter/gestures.dart';
 import 'package:shootinggame/enemies/BulletType.dart';
 import 'package:shootinggame/enemies/Effect.dart';
 import 'package:shootinggame/enemies/EnemyHealthbar.dart';
-import 'package:shootinggame/enemies/EnemyType.dart';
 import 'package:shootinggame/enemies/SpecialBullet.dart';
-import 'package:shootinggame/entities/AssetsSizes.dart';
 import 'package:shootinggame/entities/EntityState.dart';
-import 'package:shootinggame/screens/player/Player.dart';
-import 'package:shootinggame/screens/player/Healthbar.dart';
+
+import 'package:shootinggame/screens/player/WalkingEntity.dart';
 import 'package:shootinggame/screens/util/SizeHolder.dart';
 
 import 'Bullet.dart';
@@ -23,13 +16,13 @@ import 'EffectType.dart';
 import 'FireBullet.dart';
 import 'FreezeBullet.dart';
 import 'PurpleBullet.dart';
+import 'SmokeBullet.dart';
 
 class Enemy {
   double _timer;
   double attackInterval;
   double _distanceToCenter;
   double attackRange;
-  bool _flipRender;
   double x;
   double y;
   double health;
@@ -39,7 +32,7 @@ class Enemy {
   double enemySpeedFactor;
   EnemyhealthBar _enemyhealthBar;
   List<SpecialBullet> specialBullets;
-  AnimationComponent entity;
+  WalkingEntity entity;
   EntityState state;
   Effect _effect;
   bool _isEffected;
@@ -48,10 +41,9 @@ class Enemy {
   double bulletLifetimeFctr;
   double dmgFctr;
 
-  Enemy(String aniPath) {
+  Enemy() {
     _timer = 0;
     state = EntityState.Normal;
-    _flipRender = false;
     enemySpeedX = 0;
     enemySpeedY = 0;
     enemySpeedFactor = 0.05;
@@ -92,8 +84,7 @@ class Enemy {
 
   Bullet getAttack() {
     List<double> coords = getAttackingCoordinates();
-    Bullet bullet = Bullet(coords[0], coords[1], coords[2], coords[3],
-        SpriteComponent.square(7, 'bullet.png'), 2);
+    Bullet bullet = Bullet(coords[0], coords[1], coords[2], coords[3], 2);
     return bullet;
   }
 
@@ -107,33 +98,14 @@ class Enemy {
         return FireBullet(coords[0], coords[1], coords[2], coords[3]);
       case BulletType.Purple:
         return PurpleBullet(coords[0], coords[1], coords[2], coords[3]);
+      case BulletType.Smoke:
+        return SmokeBullet(coords[0], coords[1], coords[2], coords[3]);
       case BulletType.One:
         break;
       case BulletType.Two:
         break;
       default:
         break;
-    }
-  }
-
-  void getHitWithSpecialBullet(SpecialBullet specialBullet) {
-    if (health > 0) health -= specialBullet.damage;
-    switch (specialBullet.getEffect()) {
-      case EffectType.Freeze:
-        _effect = Effect(EffectType.Freeze, 2);
-        _effect.resize(entity.x, entity.x);
-        _isEffected = true;
-        break;
-      case EffectType.Fire:
-        _effect = Effect(EffectType.Fire, 2);
-        _effect.resize(entity.x, entity.x);
-        _isEffected = true;
-        break;
-      default:
-        break;
-    }
-    if (health <= 0) {
-      state = EntityState.Dead;
     }
   }
 
@@ -157,16 +129,7 @@ class Enemy {
   }
 
   void render(Canvas canvas) {
-    if (_flipRender) {
-      entity.renderFlipX = true;
-    } else {
-      entity.renderFlipX = false;
-    }
-    entity.x = x;
-    entity.y = y;
-    canvas.save();
     entity.render(canvas);
-    canvas.restore();
     canvas.save();
     _enemyhealthBar.render(canvas);
     canvas.restore();
@@ -178,8 +141,7 @@ class Enemy {
   }
 
   void resize() {
-    entity.width = screenSize.width * 0.06;
-    entity.height = screenSize.height * 0.14;
+    entity.resize();
 
     int spawnUpDownLeftRight = Random().nextInt(4);
     double spawnPos = Random().nextDouble();
@@ -218,11 +180,6 @@ class Enemy {
       enemySpeedX = 0;
       enemySpeedY = 0;
     }
-    if (enemySpeedX < 0) {
-      _flipRender = false;
-    } else if (enemySpeedX > 0) {
-      _flipRender = true;
-    }
 
     x = x +
         0.04 * enemySpeedX * screenSize.width -
@@ -231,7 +188,9 @@ class Enemy {
         0.04 * enemySpeedY * screenSize.width -
         t * bgSpeed[1] * screenSize.width;
 
-    entity.animation.update(t);
+    entity.x = x;
+    entity.y = y;
+    entity.update(t, [enemySpeedX, enemySpeedY]);
     _enemyhealthBar.updateRect(maxHealth, health, x, y);
     if (_isEffected) {
       _effect.update(t, x, y);
@@ -249,5 +208,11 @@ class Enemy {
 
   int getScore() {
     return 1;
+  }
+
+  void addEffect(Effect effect) {
+    effect.resize(entity.x, entity.y);
+    _effect = effect;
+    _isEffected = true;
   }
 }

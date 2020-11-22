@@ -11,6 +11,7 @@ import 'package:shootinggame/enemies/FireBullet.dart';
 import 'package:shootinggame/enemies/SpecialBullet.dart';
 import 'package:shootinggame/entities/EntityState.dart';
 import 'package:shootinggame/screens/game_screens/ScreenManager.dart';
+import 'package:shootinggame/screens/player/WalkingEntity.dart';
 import 'package:shootinggame/screens/util/SizeHolder.dart';
 
 import 'Bullet.dart';
@@ -20,30 +21,23 @@ class Boss extends Enemy {
   double _disappearTimer;
   double health;
   EntityState state;
-  AnimationComponent entity;
+  WalkingEntity entity;
   List<SpecialBullet> specialBullets;
   List<BulletType> bulletTypes;
   Random random;
   double _specialAttackTimer;
 
   double _specialAttackInterval;
-  Boss() : super('boss.png') {
+  Boss() : super() {
     health = 30;
     maxHealth = 30;
     specialBullets = List.empty(growable: true);
     state = EntityState.Normal;
     attackRange = 200;
     attackInterval = 2;
-    bulletTypes = [BulletType.Purple, BulletType.Fire, BulletType.Freeze];
+    bulletTypes = [BulletType.Smoke, BulletType.Fire, BulletType.Freeze];
 
-    final spritesheet = SpriteSheet(
-        imageName: 'boss.png',
-        textureWidth: 32,
-        textureHeight: 48,
-        columns: 4,
-        rows: 4);
-    final animation = spritesheet.createAnimation(1, stepTime: 0.1);
-    entity = AnimationComponent(0, 0, animation);
+    entity = WalkingEntity('boss.png', 32, 48);
     attackRange = 150;
     attackInterval = 4;
     enemySpeedFactor = 0.03;

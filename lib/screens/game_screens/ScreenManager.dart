@@ -22,7 +22,7 @@ class ScreenManager extends Game with TapDetector {
 
   // Screens
 
-  BaseWidget _playScreen;
+  PlayGround _playScreen;
   BaseWidget _mainScreen;
   BaseWidget _characterScreen;
 
@@ -93,6 +93,10 @@ class ScreenManager extends Game with TapDetector {
   }
 
   void setSpeedfactor(double factor) {
-    _playScreen.speedfactor = factor;
+    _playScreen.speedfactor += _playScreen.speedfactor * factor;
+  }
+
+  void showDeal(double x, double y) {
+    _playScreen?.openDeal(x, y);
   }
 }

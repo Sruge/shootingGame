@@ -50,8 +50,8 @@ class BasicEnemy extends Enemy {
     if (_type == EnemyType.One)
       _bulletType = BulletType.One;
     else if (_type == EnemyType.Two) _bulletType = BulletType.Two;
-    BasicBullet bullet =
-        BasicBullet(coords[0], coords[1], coords[2], coords[3], _bulletType);
+    BasicBullet bullet = BasicBullet(coords[0], coords[1], coords[2], coords[3],
+        _bulletType, bulletLifetimeFctr, dmgFctr);
     return bullet;
   }
 }

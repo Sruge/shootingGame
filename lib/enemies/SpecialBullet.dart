@@ -15,15 +15,16 @@ class SpecialBullet {
   AnimationComponent _specialBullet;
   double _speedX;
   double _speedY;
-  double _bulletSpeedX;
-  double _bulletSpeedY;
-  double _x, _y;
+  double bulletSpeedX;
+  double bulletSpeedY;
+  double x, y;
   EntityState _state;
   double damage;
   double speedfactor;
+  double lifetime, _timer;
 
-  SpecialBullet(double x, double y, bulletSpeedX, bulletSpeedY, String aniPath,
-      this.speedfactor) {
+  SpecialBullet(double x, double y, double width, double height, bulletSpeedX,
+      bulletSpeedY, String aniPath, this.speedfactor) {
     final sprshee = SpriteSheet(
         imageName: aniPath,
         textureWidth: 32,
@@ -31,17 +32,19 @@ class SpecialBullet {
         columns: 4,
         rows: 1);
 
-    _specialBullet =
-        AnimationComponent(16, 16, sprshee.createAnimation(0, stepTime: 0.1));
+    _specialBullet = AnimationComponent(
+        width, height, sprshee.createAnimation(0, stepTime: 0.1));
     _state = EntityState.Normal;
     setSpeed([0, 0]);
     damage = 1;
+    _timer = 0;
+    lifetime = 1;
 
-    this._x = x;
-    this._y = y;
-    this._bulletSpeedX =
+    this.x = x;
+    this.y = y;
+    this.bulletSpeedX =
         bulletSpeedX * speedfactor / (bulletSpeedX.abs() + bulletSpeedY.abs());
-    this._bulletSpeedY =
+    this.bulletSpeedY =
         bulletSpeedY * speedfactor / (bulletSpeedX.abs() + bulletSpeedY.abs());
   }
 
@@ -63,29 +66,30 @@ class SpecialBullet {
 
   void render(Canvas canvas) {
     canvas.save();
-    _specialBullet.x = _x;
-    _specialBullet.y = _y;
+    _specialBullet.x = x;
+    _specialBullet.y = y;
     _specialBullet.render(canvas);
     canvas.restore();
   }
 
   void resize() {
-    _specialBullet.x = _x;
-    _specialBullet.y = _y;
+    _specialBullet.x = x;
+    _specialBullet.y = y;
   }
 
   void update(double t, List<double> speed) {
+    _timer += t;
     setSpeed(speed);
     _specialBullet.update(t);
-    _specialBullet.x = _x;
-    _specialBullet.y = _y;
-    _x = _specialBullet.x + _bulletSpeedX - t * _speedX * screenSize.width;
-    _y = _specialBullet.y + _bulletSpeedY - t * _speedY * screenSize.width;
+    _specialBullet.x = x;
+    _specialBullet.y = y;
+    x = _specialBullet.x + bulletSpeedX - t * _speedX * screenSize.width;
+    y = _specialBullet.y + bulletSpeedY - t * _speedY * screenSize.width;
 
-    if (_x < 0 ||
-        _x > screenSize.width * 3 ||
-        _y < 0 ||
-        _y > screenSize.height * 2) die();
+    if (_timer > lifetime) die();
+
+    if (x < 0 || x > screenSize.width * 3 || y < 0 || y > screenSize.height * 2)
+      die();
   }
 
   void setSpeed(List<double> speed) {

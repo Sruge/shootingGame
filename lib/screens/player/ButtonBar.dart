@@ -5,11 +5,11 @@ import 'package:shootinggame/enemies/EffectType.dart';
 import 'dart:ui';
 
 import 'package:shootinggame/screens/BaseWidget.dart';
-import 'package:shootinggame/screens/player/Button.dart';
+import 'package:shootinggame/screens/player/SpecialAttackBtn.dart';
 import 'package:shootinggame/screens/util/SizeHolder.dart';
 
 class ButtonBar extends BaseWidget {
-  List<Button> _buttons;
+  List<SpecialAttackBtn> _buttons;
   double _distanceButton;
   double firstBtnX;
   double y;
@@ -34,7 +34,7 @@ class ButtonBar extends BaseWidget {
 
   @override
   void resize() {
-    y = screenSize.height - screenSize.width * 0.03;
+    y = screenSize.height - screenSize.width * 0.03 - screenSize.width * 0.05;
     _buttons.forEach((element) {
       element.resize();
     });
@@ -42,18 +42,19 @@ class ButtonBar extends BaseWidget {
 
   @override
   void update(double t) {
-    firstBtnX = screenSize.width - (screenSize.width * 0.07) * _buttons.length;
+    firstBtnX =
+        (screenSize.width - (screenSize.width * 0.07) * _buttons.length) / 2;
     double pushDistance = 0;
 
     _buttons.forEach((element) {
       element.update(t);
       element.x = firstBtnX + pushDistance;
       element.y = y;
-      pushDistance += screenSize.width * 0.02;
+      pushDistance += screenSize.width * 0.07;
     });
   }
 
   void add(EffectType _type) {
-    _buttons.add(Button(_type, 0, 0));
+    _buttons.add(SpecialAttackBtn(_type, 0, 0));
   }
 }

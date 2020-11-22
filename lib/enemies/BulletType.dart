@@ -3,4 +3,5 @@ enum BulletType {
   Two,
   Freeze,
   Fire,
+  Purple,
 }

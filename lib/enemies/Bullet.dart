@@ -18,6 +18,7 @@ class Bullet {
   EntityState _state;
   double damage;
   double speedfactor;
+  double lifetime, _timer;
 
   Bullet(double x, double y, bulletSpeedX, bulletSpeedY, SpriteComponent bullet,
       this.speedfactor) {
@@ -25,6 +26,8 @@ class Bullet {
     _state = EntityState.Normal;
     setSpeed([0, 0]);
     damage = 1;
+    _timer = 0;
+    lifetime = 0.7;
 
     this._x = x;
     this._y = y;
@@ -64,11 +67,13 @@ class Bullet {
   }
 
   void update(double t, List<double> speed) {
+    _timer += t;
     setSpeed(speed);
     _bullet.x = _x;
     _bullet.y = _y;
     _x = _bullet.x + _bulletSpeedX - t * _speedX * screenSize.width;
     _y = _bullet.y + _bulletSpeedY - t * _speedY * screenSize.width;
+    if (_timer > lifetime) die();
 
     if (_x < 0 ||
         _x > screenSize.width * 3 ||

@@ -7,11 +7,11 @@ import 'dart:ui';
 import 'package:shootinggame/screens/BaseWidget.dart';
 import 'package:shootinggame/screens/util/SizeHolder.dart';
 
-class Button extends BaseWidget {
+class SpecialAttackBtn extends BaseWidget {
   PositionComponent _button;
   EffectType _type;
   double x, y;
-  Button(this._type, this.x, this.y) {
+  SpecialAttackBtn(this._type, this.x, this.y) {
     String imgUrl;
     switch (_type) {
       case EffectType.Fire:
@@ -21,7 +21,7 @@ class Button extends BaseWidget {
         imgUrl = 'freeze.png';
         break;
       case EffectType.Purple:
-        imgUrl = 'purpleBulletButton.png';
+        imgUrl = 'purpleBullet.png';
         break;
       default:
     }

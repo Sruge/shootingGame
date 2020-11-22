@@ -6,6 +6,7 @@ import 'package:shootinggame/enemies/EffectType.dart';
 import 'package:shootinggame/enemies/Enemy.dart';
 import 'package:shootinggame/enemies/EnemyType.dart';
 import 'package:shootinggame/enemies/FriendType.dart';
+import 'package:shootinggame/screens/game_screens/ScreenManager.dart';
 
 import 'Bullet.dart';
 import 'FreezeBullet.dart';
@@ -50,5 +51,10 @@ class Dealer extends Friend {
       return EffectType.Deal;
     else
       return EffectType.None;
+  }
+
+  @override
+  void trigger() {
+    screenManager.showDeal(x, y);
   }
 }

@@ -20,6 +20,9 @@ import 'package:shootinggame/screens/util/SizeHolder.dart';
 
 import 'Bullet.dart';
 import 'EffectType.dart';
+import 'FireBullet.dart';
+import 'FreezeBullet.dart';
+import 'PurpleBullet.dart';
 
 class Enemy {
   double _timer;
@@ -37,13 +40,17 @@ class Enemy {
   EnemyhealthBar _enemyhealthBar;
   List<SpecialBullet> specialBullets;
   AnimationComponent entity;
-  EntityState _state;
+  EntityState state;
   Effect _effect;
   bool _isEffected;
+  Random random;
+  List<BulletType> bulletTypes;
+  double bulletLifetimeFctr;
+  double dmgFctr;
 
   Enemy(String aniPath) {
     _timer = 0;
-    _state = EntityState.Normal;
+    state = EntityState.Normal;
     _flipRender = false;
     enemySpeedX = 0;
     enemySpeedY = 0;
@@ -51,6 +58,10 @@ class Enemy {
     _enemyhealthBar = EnemyhealthBar(0, 0);
     specialBullets = List.empty(growable: true);
     _isEffected = false;
+    random = Random();
+    bulletTypes = List.empty(growable: true);
+    bulletLifetimeFctr = 1;
+    dmgFctr = 1;
   }
 
   bool attacks() {
@@ -87,7 +98,22 @@ class Enemy {
   }
 
   SpecialBullet getSpecialAttack() {
-    return null;
+    List<double> coords = getAttackingCoordinates();
+    int rand = random.nextInt(bulletTypes.length);
+    switch (bulletTypes[rand]) {
+      case BulletType.Freeze:
+        return FreezeBullet(coords[0], coords[1], coords[2], coords[3]);
+      case BulletType.Fire:
+        return FireBullet(coords[0], coords[1], coords[2], coords[3]);
+      case BulletType.Purple:
+        return PurpleBullet(coords[0], coords[1], coords[2], coords[3]);
+      case BulletType.One:
+        break;
+      case BulletType.Two:
+        break;
+      default:
+        break;
+    }
   }
 
   void getHitWithSpecialBullet(SpecialBullet specialBullet) {
@@ -107,18 +133,17 @@ class Enemy {
         break;
     }
     if (health <= 0) {
-      print('The Player has died, reviving!');
-      health = maxHealth;
+      state = EntityState.Dead;
     }
   }
 
   bool isDead() {
-    return _state == EntityState.Dead;
+    return state == EntityState.Dead;
   }
 
   void getHit(Bullet bullet) {
     health -= bullet.damage;
-    if (health < 1) _state = EntityState.Dead;
+    if (health < 1) state = EntityState.Dead;
   }
 
   void onTapDown(TapDownDetails detail, Function fn) {}
@@ -220,5 +245,9 @@ class Enemy {
     _distanceToCenter = sqrt(pow((x - screenSize.width * 0.94 / 2).abs(), 2) +
         pow((y - screenSize.height * 0.86 / 2).abs(), 2));
     return _distanceToCenter;
+  }
+
+  int getScore() {
+    return 1;
   }
 }

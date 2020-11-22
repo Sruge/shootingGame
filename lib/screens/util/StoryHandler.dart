@@ -71,7 +71,7 @@ class StoryHandler {
     }
     if (nowTimestamp >= nextBossSpawn) {
       nextBossSpawn = nowTimestamp + currentInterval * 8;
-      Boss boss = Boss(EnemyType.Three);
+      Boss boss = Boss();
       boss.resize();
       _enemies.add(boss);
     }
@@ -84,6 +84,7 @@ class StoryHandler {
     for (int i = 0; i < _enemies.length; i++) {
       if (_enemies[i].isDead()) {
         addPresent(_enemies[i].x, _enemies[i].y);
+        player.score += _enemies[i].getScore();
         _enemies.removeAt(i);
         i -= 1;
       }

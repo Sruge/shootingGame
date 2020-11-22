@@ -18,24 +18,23 @@ import 'FreezeBullet.dart';
 
 class Boss extends Enemy {
   double _disappearTimer;
-  EnemyType _type;
   double health;
-  EntityState _entityState;
+  EntityState state;
   AnimationComponent entity;
   List<SpecialBullet> specialBullets;
-  List<BulletType> _bulletTypes;
+  List<BulletType> bulletTypes;
   Random random;
   double _specialAttackTimer;
 
   double _specialAttackInterval;
-  Boss(this._type) : super('boss.png') {
+  Boss() : super('boss.png') {
     health = 30;
     maxHealth = 30;
     specialBullets = List.empty(growable: true);
-    _entityState = EntityState.Normal;
+    state = EntityState.Normal;
     attackRange = 200;
     attackInterval = 2;
-    _bulletTypes = [BulletType.Freeze, BulletType.Fire];
+    bulletTypes = [BulletType.Purple, BulletType.Fire, BulletType.Freeze];
 
     final spritesheet = SpriteSheet(
         imageName: 'boss.png',
@@ -47,43 +46,26 @@ class Boss extends Enemy {
     entity = AnimationComponent(0, 0, animation);
     attackRange = 150;
     attackInterval = 4;
-    enemySpeedFactor = 0.3;
+    enemySpeedFactor = 0.03;
     _disappearTimer = 0;
     _specialAttackTimer = 0;
-    _specialAttackInterval = 9;
+    _specialAttackInterval = 3;
     random = Random();
   }
 
   @override
   BasicBullet getAttack() {
     List<double> coords = super.getAttackingCoordinates();
-    BasicBullet bullet =
-        BasicBullet(coords[0], coords[1], coords[2], coords[3], BulletType.One);
+    BasicBullet bullet = BasicBullet(coords[0], coords[1], coords[2], coords[3],
+        BulletType.One, bulletLifetimeFctr, dmgFctr);
     return bullet;
-  }
-
-  SpecialBullet getSpecialAttack() {
-    List<double> coords = super.getAttackingCoordinates();
-    int rand = random.nextInt(_bulletTypes.length);
-    switch (_bulletTypes[rand]) {
-      case BulletType.Freeze:
-        return FreezeBullet(coords[0], coords[1], coords[2], coords[3]);
-      case BulletType.Fire:
-        return FireBullet(coords[0], coords[1], coords[2], coords[3]);
-      case BulletType.One:
-        break;
-      case BulletType.Two:
-        break;
-      default:
-        break;
-    }
   }
 
   @override
   void getHit(Bullet bullet) {
     health -= bullet.damage;
     if (health < 1) {
-      _entityState = EntityState.Dead;
+      state = EntityState.Dead;
     }
   }
 
@@ -105,7 +87,7 @@ class Boss extends Enemy {
     }
   }
 
-  bool isDead() {
-    return _entityState == EntityState.Dead;
+  int getScore() {
+    return 3;
   }
 }

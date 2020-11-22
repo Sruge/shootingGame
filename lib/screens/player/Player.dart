@@ -43,6 +43,8 @@ class Player {
   int maxBulletCount;
   int coins;
   int score;
+  double bulletLifetimeFctr;
+  double dmgFctr;
 
   Player(int char) {
     health = 20;
@@ -60,7 +62,10 @@ class Player {
     coins = 0;
     score = 0;
     _btnBar = ButtonBar();
-    _btnBar.add(EffectType.Fire);
+    bulletLifetimeFctr = 1;
+    dmgFctr = 1;
+    // _btnBar.add(EffectType.Fire);
+    // _btnBar.add(EffectType.Purple);
 
     String playerPath;
     switch (char) {
@@ -97,7 +102,8 @@ class Player {
       for (int i = 0; i < enemies.length; i++) {
         if (enemies[i].contains(detail.globalPosition)) {
           move = false;
-          shootSpecial(detail.globalPosition, speed);
+          //shootSpecial(detail.globalPosition, speed);
+          shoot(detail.globalPosition, speed);
           break;
         }
       }
@@ -107,9 +113,7 @@ class Player {
             if (friends[i].overlaps(_player.toRect())) {
               move = false;
               friends[i].die();
-              _speedfactor += _speedfactor * 0.1;
-              screenManager.setSpeedfactor(_speedfactor);
-              screenManager.switchScreen(ScreenState.kCharacterScreen);
+              friends[i].trigger();
             }
           }
         }
@@ -258,8 +262,14 @@ class Player {
 
   void shoot(Offset pos, List<double> speed) {
     if (bulletCount > 0) {
-      BasicBullet bullet = BasicBullet(screenSize.width / 2,
-          screenSize.height / 2, speed[0], speed[1], BulletType.Two);
+      BasicBullet bullet = BasicBullet(
+          screenSize.width / 2,
+          screenSize.height / 2,
+          speed[0],
+          speed[1],
+          BulletType.Two,
+          bulletLifetimeFctr,
+          dmgFctr);
       bullet.resize();
       _bullets.add(bullet);
       bulletCount -= 1;

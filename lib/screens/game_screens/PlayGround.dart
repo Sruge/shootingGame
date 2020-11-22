@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:shootinggame/enemies/Enemy.dart';
 import 'package:shootinggame/enemies/Bullet.dart';
 import 'package:shootinggame/screens/game_screens/ScreenManager.dart';
+import 'package:shootinggame/screens/game_screens/TableOverlay.dart';
 import 'package:shootinggame/screens/player/Player.dart';
 import 'package:shootinggame/screens/game_screens/ScreenState.dart';
 import 'package:shootinggame/screens/util/DynamicBackground.dart';
@@ -19,12 +20,12 @@ class PlayGround extends BaseWidget {
   DynamicBackground _bg;
 
   Player _player;
-  List<SpriteComponent> _enemies;
   List<double> speed = [0, 0];
-  List<Bullet> _bullets;
-  List<Bullet> _opponentBullets;
+
   double speedfactor;
   StoryHandler _storyHandler;
+  bool showDeal;
+  TableOverlay _table;
 
   PlayGround(int char) {
     _bg = DynamicBackground(0, 0, 'playground.png');
@@ -32,19 +33,22 @@ class PlayGround extends BaseWidget {
     _player = Player(char);
     speedfactor = 0.2;
     _storyHandler = StoryHandler();
-
-    _bullets = List.empty(growable: true);
-    _opponentBullets = List.empty(growable: true);
+    showDeal = false;
   }
   @override
   void onTapDown(TapDownDetails detail, Function fn) {
-    speed = getSpeed(detail);
-    _player.onTapDown(
-        detail, _storyHandler.getEnemies(), _storyHandler.friends, speed, () {
-      screenManager.switchScreen(ScreenState.kMenuScreen);
-    });
+    if (showDeal && _table.contains(detail.globalPosition)) {
+      _table.onTapDown(detail, _player);
+    } else {
+      showDeal = false;
+      speed = getSpeed(detail);
+      _player.onTapDown(
+          detail, _storyHandler.getEnemies(), _storyHandler.friends, speed, () {
+        screenManager.switchScreen(ScreenState.kMenuScreen);
+      });
 
-    if (_player.move) _bg.onTapDown(detail, speed);
+      if (_player.move) _bg.onTapDown(detail, speed);
+    }
   }
 
   @override
@@ -52,6 +56,7 @@ class PlayGround extends BaseWidget {
     _bg.render(canvas);
     _storyHandler.render(canvas);
     _player.render(canvas);
+    if (showDeal) _table.render(canvas);
   }
 
   @override
@@ -98,6 +103,12 @@ class PlayGround extends BaseWidget {
     }
 
     return speed;
+  }
+
+  void openDeal(double x, double y) {
+    _table = TableOverlay(x, y);
+    _table.resize();
+    showDeal = true;
   }
 
   void setSpeed(List<double> speed) {

@@ -179,4 +179,6 @@ class Friend {
   void die() {
     _state = EntityState.Dead;
   }
+
+  void trigger() {}
 }

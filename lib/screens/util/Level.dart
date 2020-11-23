@@ -28,7 +28,7 @@ class Level {
   List<Enemy> bosses;
   Level(int level) {
     spawnInterval = 20;
-    friendSpawnInterval = 20;
+    friendSpawnInterval = 8;
     bossSpawnInterval = 70;
     dmgMultiplier = 1;
     bulletLifetimeMultiplier = 1 + level * 0.1;

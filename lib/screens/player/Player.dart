@@ -8,6 +8,7 @@ import 'package:shootinggame/bullets/BulletType.dart';
 import 'package:shootinggame/bullets/FreezeBullet.dart';
 import 'package:shootinggame/effects/Effect.dart';
 import 'package:shootinggame/effects/EffectState.dart';
+import 'package:shootinggame/effects/EffectType.dart';
 import 'package:shootinggame/enemies/Enemy.dart';
 import 'package:shootinggame/bullets/FireBullet.dart';
 import 'package:shootinggame/enemies/Friend.dart';
@@ -58,8 +59,9 @@ class Player {
     bulletLifetimeFctr = 0.7;
     dmgFctr = 2;
     frozen = false;
-    // _btnBar.add(EffectType.Fire);
-    //_btnBar.add(EffectType.Purple);
+    _btnBar.add(EffectType.Fire);
+    //_btnBar.add(EffectType.Fire);
+    //_btnBar.add(EffectType.Fire);
 
     String playerPath;
     switch (char) {
@@ -126,10 +128,10 @@ class Player {
       canvas.restore();
     });
     canvas.save();
-    _healthbar.render(canvas);
+    _btnBar.render(canvas);
     canvas.restore();
     canvas.save();
-    _btnBar.render(canvas);
+    _healthbar.render(canvas);
     canvas.restore();
   }
 

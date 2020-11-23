@@ -15,7 +15,7 @@ class SpecialAttackBtn extends BaseWidget {
     String imgUrl;
     switch (_type) {
       case EffectType.Fire:
-        imgUrl = 'fire.png';
+        imgUrl = 'buttonBarButton.png';
         break;
       case EffectType.Freeze:
         imgUrl = 'freeze.png';
@@ -40,15 +40,13 @@ class SpecialAttackBtn extends BaseWidget {
 
   @override
   void resize() {
-    _button.resize(Size(screenSize.width * 0.05, screenSize.width * 0.05));
-    _button.x = x;
-    _button.y = y;
+    _button.resize(Size(screenSize.width * 0.03, screenSize.width * 0.03));
   }
 
   @override
   void update(double t) {
     _button.update(t);
     _button.x = x;
-    _button.y = y;
+    _button.y = y + screenSize.height * 0.02;
   }
 }

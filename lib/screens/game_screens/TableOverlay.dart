@@ -55,10 +55,10 @@ class TableOverlay {
   }
 
   void resize() {
-    _table.x = x - screenSize.width * 0.12;
-    _table.y = y - screenSize.height * 0.2;
-    _table.width = screenSize.width * 0.12;
-    _table.height = screenSize.height * 0.25;
+    _table.x = x - screenSize.width * 0.18;
+    _table.y = y - screenSize.height * 0.3;
+    _table.width = screenSize.width * 0.18;
+    _table.height = screenSize.height * 0.3;
 
     // _coin.x = _table.x + _table.width * 0.7;
     // _coin.y = _table.y + _table.height * 0.2;

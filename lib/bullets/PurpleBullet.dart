@@ -13,7 +13,7 @@ class PurpleBullet extends SpecialBullet {
 
   PurpleBullet(double x, double y, double _bulletSpeedX, double _bulletSpeedY)
       : super(x, y, 32, 32, _bulletSpeedX, _bulletSpeedY, 'purpleBullets.png',
-            2) {
+            32, 32, 2) {
     damage = 5;
     _timer = 0;
     lifetime = 2;

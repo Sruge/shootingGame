@@ -1,4 +1,5 @@
-import 'package:shootinggame/enemies/Boss.dart';
+import 'package:shootinggame/enemies/bosses/Bahamut.dart';
+import 'package:shootinggame/enemies/bosses/Boss.dart';
 import 'package:shootinggame/enemies/Enemy.dart';
 import 'package:shootinggame/enemies/EnemyType.dart';
 import 'package:shootinggame/enemies/PresentType.dart';
@@ -45,6 +46,8 @@ class Level {
     }
     Boss boss = Boss();
     boss.resize();
-    bosses = [boss];
+    Bahamut boss2 = Bahamut();
+    boss2.resize();
+    bosses = [boss2, boss];
   }
 }

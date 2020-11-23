@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter/gestures.dart';
 import 'package:shootinggame/bullets/BulletType.dart';
+import 'package:shootinggame/bullets/GoldenBullet.dart';
 import 'package:shootinggame/effects/Effect.dart';
 import 'package:shootinggame/effects/EffectState.dart';
 import 'package:shootinggame/enemies/EnemyHealthbar.dart';
@@ -31,7 +32,7 @@ class Enemy {
   double enemySpeedY;
   double enemySpeedX;
   double enemySpeedFactor;
-  EnemyhealthBar _enemyhealthBar;
+  EnemyhealthBar enemyhealthBar;
   List<SpecialBullet> specialBullets;
   WalkingEntity entity;
   EntityState state;
@@ -47,7 +48,7 @@ class Enemy {
     enemySpeedX = 0;
     enemySpeedY = 0;
     enemySpeedFactor = 0.05;
-    _enemyhealthBar = EnemyhealthBar(0, 0);
+    enemyhealthBar = EnemyhealthBar(0, 0);
     specialBullets = List.empty(growable: true);
     random = Random();
     bulletTypes = List.empty(growable: true);
@@ -100,11 +101,11 @@ class Enemy {
         return PurpleBullet(coords[0], coords[1], coords[2], coords[3]);
       case BulletType.Smoke:
         return SmokeBullet(coords[0], coords[1], coords[2], coords[3]);
-      case BulletType.One:
-        break;
-      case BulletType.Two:
+      case BulletType.Gold:
+        return GoldenBullet(coords[0], coords[1], coords[2], coords[3]);
         break;
       default:
+        PurpleBullet(coords[0], coords[1], coords[2], coords[3]);
         break;
     }
   }
@@ -115,7 +116,7 @@ class Enemy {
 
   void getHit(Bullet bullet) {
     health -= bullet.damage;
-    if (health < 1) state = EntityState.Dead;
+    if (health <= 0) state = EntityState.Dead;
   }
 
   void onTapDown(TapDownDetails detail, Function fn) {}
@@ -131,7 +132,7 @@ class Enemy {
   void render(Canvas canvas) {
     entity.render(canvas);
     canvas.save();
-    _enemyhealthBar.render(canvas);
+    enemyhealthBar.render(canvas);
     canvas.restore();
     effects.forEach((effect) {
       canvas.save();
@@ -163,7 +164,7 @@ class Enemy {
         y = screenSize.height * spawnPos;
         break;
     }
-    _enemyhealthBar.resize(x, y);
+    enemyhealthBar.resize(x, y);
     effects.forEach((effect) {
       effect.resize(x, y);
     });
@@ -191,14 +192,15 @@ class Enemy {
         0.04 * enemySpeedY * screenSize.width -
         t * bgSpeed[1] * screenSize.width;
 
-    entity.x = x;
-    entity.y = y;
-    entity.update(t, [enemySpeedX, enemySpeedY]);
-    _enemyhealthBar.updateRect(maxHealth, health, x, y);
+    enemyhealthBar.updateRect(maxHealth, health, x, y);
     effects.forEach((effect) {
       effect.update(t, x, y);
     });
     effects.removeWhere((element) => element.state == EffectState.Ended);
+    entity.x = x;
+    entity.y = y;
+    entity.update(t, [enemySpeedX, enemySpeedY]);
+    if (health <= 0) state = EntityState.Dead;
   }
 
   double getDistanceToCenter() {

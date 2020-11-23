@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:shootinggame/bullets/BasicBullet.dart';
 import 'package:shootinggame/bullets/BulletType.dart';
@@ -8,10 +9,9 @@ import 'package:shootinggame/entities/EntityState.dart';
 import 'package:shootinggame/screens/player/WalkingEntity.dart';
 import 'package:shootinggame/screens/util/SizeHolder.dart';
 
-import '../bullets/Bullet.dart';
+import '../../bullets/Bullet.dart';
 
-class Boss extends Enemy {
-  double _disappearTimer;
+class Bahamut extends Enemy {
   double health;
   EntityState state;
   WalkingEntity entity;
@@ -21,20 +21,20 @@ class Boss extends Enemy {
   double _specialAttackTimer;
 
   double _specialAttackInterval;
-  Boss() : super() {
+  Bahamut() : super() {
     health = 30;
     maxHealth = 30;
     specialBullets = List.empty(growable: true);
     state = EntityState.Normal;
     attackRange = 200;
     attackInterval = 2;
-    bulletTypes = [BulletType.Smoke, BulletType.Fire, BulletType.Freeze];
+    bulletTypes = [BulletType.Purple, BulletType.Fire];
 
-    entity = WalkingEntity('boss.png', 32, 48);
+    entity = WalkingEntity('bahamut.png', 96, 96,
+        Size(baseAnimationWidth * 2, baseAnimationHeight * 2));
     attackRange = 150;
     attackInterval = 4;
     enemySpeedFactor = 0.03;
-    _disappearTimer = 0;
     _specialAttackTimer = 0;
     _specialAttackInterval = 3;
     random = Random();
@@ -58,23 +58,16 @@ class Boss extends Enemy {
 
   @override
   void update(double t, List<double> speed) {
-    _disappearTimer += t;
     _specialAttackTimer += t;
     if (_specialAttackTimer > _specialAttackInterval) {
       specialBullets.add(getSpecialAttack());
       _specialAttackTimer = 0;
     }
-    if (_disappearTimer > 10) {
-      Random random = Random();
-      x = random.nextDouble() * screenSize.width;
-      y = random.nextDouble() * screenSize.height;
-      _disappearTimer = 0;
-    } else {
-      super.update(t, speed);
-    }
+
+    super.update(t, speed);
   }
 
   int getScore() {
-    return 3;
+    return 30;
   }
 }

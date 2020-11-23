@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flame/components/animation_component.dart';
 import 'package:flame/spritesheet.dart';
 import 'package:shootinggame/bullets/BasicBullet.dart';
@@ -5,6 +7,7 @@ import 'package:shootinggame/bullets/BulletType.dart';
 import 'package:shootinggame/enemies/Enemy.dart';
 import 'package:shootinggame/enemies/EnemyType.dart';
 import 'package:shootinggame/screens/player/WalkingEntity.dart';
+import 'package:shootinggame/screens/util/SizeHolder.dart';
 
 class BasicEnemy extends Enemy {
   EnemyType _type;
@@ -62,7 +65,8 @@ class BasicEnemy extends Enemy {
       default:
         aniPath = 'monster.png';
     }
-    entity = WalkingEntity(aniPath, _txtWidth, _txtHeight);
+    entity = WalkingEntity(aniPath, _txtWidth, _txtHeight,
+        Size(baseAnimationWidth, baseAnimationHeight));
   }
 
   @override

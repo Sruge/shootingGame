@@ -18,16 +18,16 @@ class PlayGround extends BaseWidget {
   List<double> speed = [0, 0];
 
   double speedfactor;
-  StoryHandler _storyHandler;
+  StoryHandler storyHandler;
   bool showDeal;
   TableOverlay _table;
 
   PlayGround(int char) {
-    _bg = DynamicBackground(0, 0, 'original.jpeg');
+    _bg = DynamicBackground(0, 0, 'bg.png');
 
     _player = Player(char);
     speedfactor = 0.2;
-    _storyHandler = StoryHandler();
+    storyHandler = StoryHandler();
     showDeal = false;
   }
   @override
@@ -38,7 +38,7 @@ class PlayGround extends BaseWidget {
       showDeal = false;
       speed = getSpeed(detail);
       _player.onTapDown(
-          detail, _storyHandler.getEnemies(), _storyHandler.friends, speed, () {
+          detail, storyHandler.getEnemies(), storyHandler.friends, speed, () {
         screenManager.switchScreen(ScreenState.kMenuScreen);
       });
 
@@ -49,7 +49,7 @@ class PlayGround extends BaseWidget {
   @override
   void render(Canvas canvas) {
     _bg.render(canvas);
-    _storyHandler.render(canvas);
+    storyHandler.render(canvas);
     _player.render(canvas);
     if (showDeal) _table.render(canvas);
   }
@@ -59,7 +59,7 @@ class PlayGround extends BaseWidget {
     _bg.resize();
 
     _player.resize();
-    _storyHandler.resize();
+    storyHandler.resize();
   }
 
   @override
@@ -70,8 +70,8 @@ class PlayGround extends BaseWidget {
 
     _bg.update(t, speed);
     _player.update(
-        t, speed, _storyHandler.getEnemies(), _storyHandler.getPresents());
-    _storyHandler.update(t, speed, _player);
+        t, speed, storyHandler.getEnemies(), storyHandler.getPresents());
+    storyHandler.update(t, speed, _player);
   }
 
   List<double> getSpeed(TapDownDetails detail) {
@@ -105,9 +105,5 @@ class PlayGround extends BaseWidget {
     _table = TableOverlay(x, y);
     _table.resize();
     showDeal = true;
-  }
-
-  void setSpeed(List<double> speed) {
-    speed = [speed[0], speed[1]];
   }
 }

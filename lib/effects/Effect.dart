@@ -21,7 +21,7 @@ class Effect {
   Effect(this.type, String imgUrl, this.player, this.enemy) {
     state = EffectState.Active;
     timer = 0;
-    totalDuration = 1;
+    totalDuration = 2;
     if (imgUrl.isNotEmpty) {
       renderSomething = true;
       final sprShe = SpriteSheet(
@@ -47,11 +47,11 @@ class Effect {
 
   void update(double t, double x, double y) {
     timer += t;
+    effect.x = x;
+    effect.y = y;
     if (timer > totalDuration) state = EffectState.Ended;
 
     if (renderSomething) {
-      effect.x = x;
-      effect.y = y;
       effect.update(t);
     }
   }

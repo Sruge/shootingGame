@@ -21,13 +21,23 @@ class SpecialBullet {
   double damage;
   double speedfactor;
   double lifetime, _timer;
+  int _txtWidth, _txtHeight;
 
-  SpecialBullet(double x, double y, double width, double height, bulletSpeedX,
-      bulletSpeedY, String aniPath, this.speedfactor) {
+  SpecialBullet(
+      double x,
+      double y,
+      double width,
+      double height,
+      bulletSpeedX,
+      bulletSpeedY,
+      String aniPath,
+      this._txtWidth,
+      this._txtHeight,
+      this.speedfactor) {
     final sprshee = SpriteSheet(
         imageName: aniPath,
-        textureWidth: 32,
-        textureHeight: 32,
+        textureWidth: _txtWidth,
+        textureHeight: _txtHeight,
         columns: 4,
         rows: 1);
 
@@ -41,10 +51,14 @@ class SpecialBullet {
 
     this.x = x;
     this.y = y;
-    this.bulletSpeedX =
-        bulletSpeedX * speedfactor / (bulletSpeedX.abs() + bulletSpeedY.abs());
-    this.bulletSpeedY =
-        bulletSpeedY * speedfactor / (bulletSpeedX.abs() + bulletSpeedY.abs());
+    if (!(bulletSpeedX == 0 || bulletSpeedY == 0)) {
+      this.bulletSpeedX = bulletSpeedX *
+          speedfactor /
+          (bulletSpeedX.abs() + bulletSpeedY.abs());
+      this.bulletSpeedY = bulletSpeedY *
+          speedfactor /
+          (bulletSpeedX.abs() + bulletSpeedY.abs());
+    }
   }
 
   bool isDead() {
@@ -79,16 +93,12 @@ class SpecialBullet {
   void update(double t, List<double> speed) {
     _timer += t;
     setSpeed(speed);
+
+    x = x + bulletSpeedX - t * _speedX * screenSize.width;
+    y = y + bulletSpeedY - t * _speedY * screenSize.width;
     specialBullet.update(t);
-    specialBullet.x = x;
-    specialBullet.y = y;
-    x = specialBullet.x + bulletSpeedX - t * _speedX * screenSize.width;
-    y = specialBullet.y + bulletSpeedY - t * _speedY * screenSize.width;
 
     if (_timer > lifetime) die();
-
-    if (x < 0 || x > screenSize.width * 3 || y < 0 || y > screenSize.height * 2)
-      die();
   }
 
   void setSpeed(List<double> speed) {
@@ -100,7 +110,13 @@ class SpecialBullet {
     _state = EntityState.Dead;
   }
 
-  void hitPlayer(Player player) {}
+  void hitPlayer(Player player) {
+    player.health -= damage;
+    die();
+  }
 
-  void hitEnemy(Enemy enemy) {}
+  void hitEnemy(Enemy enemy) {
+    enemy.health -= damage;
+    die();
+  }
 }

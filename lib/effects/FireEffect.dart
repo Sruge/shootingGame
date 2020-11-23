@@ -1,6 +1,7 @@
 import 'package:shootinggame/effects/Effect.dart';
 import 'package:shootinggame/effects/EffectType.dart';
 import 'package:shootinggame/enemies/Enemy.dart';
+import 'package:shootinggame/entities/EntityState.dart';
 import 'package:shootinggame/screens/player/Player.dart';
 
 import 'EffectState.dart';
@@ -20,9 +21,15 @@ class FireEffect extends Effect {
     if (timer > totalDuration) {
       if (_player != null) {
         _player.health -= 3;
+        if (_player.health <= 0) {
+          _player.die();
+        }
         state = EffectState.Ended;
       } else if (_enemy != null) {
         _enemy.health -= 3;
+        if (_enemy.health <= 0) {
+          _enemy.state = EntityState.Dead;
+        }
         state = EffectState.Ended;
       }
     }

@@ -13,7 +13,8 @@ class SmokeBullet extends SpecialBullet {
   double height;
 
   SmokeBullet(double x, double y, double _bulletSpeedX, double _bulletSpeedY)
-      : super(x, y, 20, 20, _bulletSpeedX, _bulletSpeedY, 'smoke.png', 0) {
+      : super(x, y, 20, 20, _bulletSpeedX, _bulletSpeedY, 'wind.png', 128, 128,
+            0) {
     damage = 5;
     width = 20;
     height = 20;
@@ -31,6 +32,8 @@ class SmokeBullet extends SpecialBullet {
     height += t * 50;
     specialBullet.width = width;
     specialBullet.height = height;
+    x -= t * 25;
+    y -= t * 25;
     super.update(t, speed);
   }
 

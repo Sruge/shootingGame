@@ -6,6 +6,8 @@ import 'package:flame/components/component.dart';
 import 'package:flame/spritesheet.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
+import 'package:shootinggame/effects/Effect.dart';
+import 'package:shootinggame/effects/HealEffect.dart';
 import 'package:shootinggame/enemies/PresentType.dart';
 
 import 'package:shootinggame/entities/EntityState.dart';
@@ -135,7 +137,10 @@ class Present {
   void hit(Player player) {
     switch (_type) {
       case PresentType.Health:
-        player.health += player.maxHealth * 0.2;
+        player.health += player.maxHealth * 0.1;
+        Effect effect = HealEffect(player, null);
+        effect.resize(0, 0);
+        player.effects.add(effect);
         if (player.health > player.maxHealth) player.health = player.maxHealth;
         break;
       case PresentType.Bullets:

@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:shootinggame/screens/game_screens/CharacterScreen.dart';
 import 'package:shootinggame/screens/game_screens/MainScreen.dart';
 import 'package:shootinggame/screens/util/SizeHolder.dart';
+import 'package:shootinggame/screens/util/StoryHandler.dart';
 
 import '../BaseWidget.dart';
 import 'PlayGround.dart';
@@ -103,5 +104,9 @@ class ScreenManager extends Game with TapDetector {
 
   void showDeal(double x, double y) {
     _playScreen?.openDeal(x, y);
+  }
+
+  StoryHandler getStoryHandler() {
+    return _playScreen.storyHandler;
   }
 }

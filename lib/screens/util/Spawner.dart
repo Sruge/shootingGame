@@ -56,7 +56,7 @@ class Spawner {
     }
     if (_timer > _nextBossSpawn && bosses.isNotEmpty) {
       _storyHandler.enemies.add(bosses.first);
-      _storyHandler.enemies.removeAt(0);
+      bosses.removeAt(0);
       _nextBossSpawn = _timer + _bossSpawnInterval;
     }
     if (_timer > _nextFriendSpawn) {

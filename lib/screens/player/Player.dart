@@ -5,6 +5,7 @@ import 'package:flutter/rendering.dart';
 import 'package:shootinggame/bullets/BasicBullet.dart';
 import 'package:shootinggame/bullets/Bullet.dart';
 import 'package:shootinggame/bullets/BulletType.dart';
+import 'package:shootinggame/bullets/FreezeBullet.dart';
 import 'package:shootinggame/effects/Effect.dart';
 import 'package:shootinggame/effects/EffectState.dart';
 import 'package:shootinggame/enemies/Enemy.dart';
@@ -29,7 +30,7 @@ class Player {
   double maxHealth;
   Healthbar _healthbar;
 
-  List<Bullet> _bullets;
+  List<Bullet> bullets;
   List<SpecialBullet> _specialBullets;
   bool move;
   int bulletCount;
@@ -38,23 +39,25 @@ class Player {
   int score;
   double bulletLifetimeFctr;
   double dmgFctr;
+  bool frozen;
 
   Player(int char) {
     health = 20;
     maxHealth = 20;
     _healthbar = Healthbar(10, 10, bulletCount, coins, score);
-    _bullets = List.empty(growable: true);
+    bullets = List.empty(growable: true);
     _specialBullets = List.empty(growable: true);
     move = false;
     effects = List.empty(growable: true);
-    bulletCount = 40;
-    maxBulletCount = 50;
+    bulletCount = 100;
+    maxBulletCount = 500;
     speedfactor = 0.2;
     coins = 0;
     score = 0;
     _btnBar = ButtonBar();
     bulletLifetimeFctr = 0.7;
     dmgFctr = 2;
+    frozen = false;
     // _btnBar.add(EffectType.Fire);
     //_btnBar.add(EffectType.Purple);
 
@@ -72,28 +75,31 @@ class Player {
       default:
     }
 
-    _player = WalkingEntity(playerPath, 32, 48);
+    _player = WalkingEntity(
+        playerPath, 32, 48, Size(baseAnimationWidth, baseAnimationHeight));
   }
   void onTapDown(TapDownDetails detail, List<Enemy> enemies,
       List<Friend> friends, List<double> speed, Function fn) {
-    move = true;
-    _healthbar.onTapDown(detail, fn);
+    if (!frozen) {
+      move = true;
+      _healthbar.onTapDown(detail, fn);
 
-    for (int i = 0; i < enemies.length; i++) {
-      if (enemies[i].contains(detail.globalPosition)) {
-        move = false;
-        //shootSpecial(detail.globalPosition, speed);
-        shoot(detail.globalPosition, speed);
-        break;
+      for (int i = 0; i < enemies.length; i++) {
+        if (enemies[i].contains(detail.globalPosition)) {
+          move = false;
+          shootSpecial(detail.globalPosition, speed);
+          //shoot(detail.globalPosition, speed);
+          break;
+        }
       }
-    }
-    if (move) {
-      for (int i = 0; i < friends.length; i++) {
-        if (friends[i].contains(detail.globalPosition)) {
-          if (friends[i].overlaps(_player.toRect())) {
-            move = false;
-            friends[i].die();
-            friends[i].trigger();
+      if (move) {
+        for (int i = 0; i < friends.length; i++) {
+          if (friends[i].contains(detail.globalPosition)) {
+            if (friends[i].overlaps(_player.toRect())) {
+              move = false;
+              friends[i].die();
+              friends[i].trigger();
+            }
           }
         }
       }
@@ -109,7 +115,7 @@ class Player {
       effect.render(canvas);
       canvas.restore();
     });
-    _bullets.forEach((b) {
+    bullets.forEach((b) {
       canvas.save();
       b.render(canvas);
       canvas.restore();
@@ -133,7 +139,7 @@ class Player {
     _player.x = (screenSize.width - screenSize.width * 0.06) / 2;
     _player.y = (screenSize.height - screenSize.height * 0.14) / 2;
     _player.resize();
-    _bullets.forEach((b) {
+    bullets.forEach((b) {
       b.resize();
     });
     _specialBullets.forEach((b) {
@@ -146,6 +152,7 @@ class Player {
 
   void update(double t, List<double> speed, List<Enemy> enemies,
       List<Present> presents) {
+    if (health <= 0) die();
     _player.update(t, speed);
 
     _healthbar.update(maxHealth, health, bulletCount, score, coins);
@@ -156,12 +163,12 @@ class Player {
         present.die();
       }
     });
-    for (int i = 0; i < _bullets.length; i++) {
-      _bullets[i].update(t, speed);
+    for (int i = 0; i < bullets.length; i++) {
+      bullets[i].update(t, speed);
       enemies.forEach((e) {
-        if (e.overlaps(_bullets[i].toRect())) {
-          e.getHit(_bullets[i]);
-          _bullets[i].die();
+        if (e.overlaps(bullets[i].toRect())) {
+          e.getHit(bullets[i]);
+          bullets[i].die();
         }
       });
     }
@@ -173,7 +180,7 @@ class Player {
         }
       });
     }
-    _bullets.removeWhere((element) => element.isDead());
+    bullets.removeWhere((element) => element.isDead());
     _specialBullets.removeWhere((element) => element.isDead());
     effects.forEach((element) {
       element.update(t, _player.x, _player.y);
@@ -207,14 +214,14 @@ class Player {
           bulletLifetimeFctr,
           dmgFctr);
       bullet.resize();
-      _bullets.add(bullet);
+      bullets.add(bullet);
       bulletCount -= 1;
     }
   }
 
   void shootSpecial(Offset pos, List<double> speed) {
     if (bulletCount > 0) {
-      FireBullet bullet = FireBullet(
+      FreezeBullet bullet = FreezeBullet(
           screenSize.width / 2, screenSize.height / 2, speed[0], speed[1]);
       bullet.resize();
       _specialBullets.add(bullet);

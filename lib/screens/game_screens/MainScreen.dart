@@ -22,7 +22,7 @@ class MainScreen extends BaseWidget {
   PositionComponent _title;
   int _activeChar;
   MainScreen() {
-    _bg = Background('playground.png');
+    _bg = Background('bg.png');
     _activeChar = 0;
     _newGame = GameButton(
       ButtonType.Normal,

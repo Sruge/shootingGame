@@ -1,15 +1,15 @@
 import 'package:flame/components/animation_component.dart';
 import 'package:flame/spritesheet.dart';
-import 'package:shootinggame/enemies/BasicBullet.dart';
-import 'package:shootinggame/enemies/BulletType.dart';
-import 'package:shootinggame/enemies/EffectType.dart';
+import 'package:shootinggame/bullets/BasicBullet.dart';
+import 'package:shootinggame/bullets/BulletType.dart';
+import 'package:shootinggame/effects/EffectType.dart';
 import 'package:shootinggame/enemies/Enemy.dart';
 import 'package:shootinggame/enemies/EnemyType.dart';
 import 'package:shootinggame/enemies/FriendType.dart';
 import 'package:shootinggame/screens/game_screens/ScreenManager.dart';
 
-import 'Bullet.dart';
-import 'FreezeBullet.dart';
+import '../bullets/Bullet.dart';
+import '../bullets/FreezeBullet.dart';
 import 'Friend.dart';
 
 class Dealer extends Friend {

@@ -1,23 +1,18 @@
 import 'dart:ui';
 
-import 'package:flame/components/animation_component.dart';
-import 'package:flame/components/component.dart';
-
-import 'package:flame/spritesheet.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
-import 'package:shootinggame/enemies/BasicBullet.dart';
-import 'package:shootinggame/enemies/Bullet.dart';
-import 'package:shootinggame/enemies/BulletType.dart';
-import 'package:shootinggame/enemies/Effect.dart';
-import 'package:shootinggame/enemies/EffectType.dart';
+import 'package:shootinggame/bullets/BasicBullet.dart';
+import 'package:shootinggame/bullets/Bullet.dart';
+import 'package:shootinggame/bullets/BulletType.dart';
+import 'package:shootinggame/effects/Effect.dart';
+import 'package:shootinggame/effects/EffectType.dart';
 import 'package:shootinggame/enemies/Enemy.dart';
-import 'package:shootinggame/enemies/FireBullet.dart';
+import 'package:shootinggame/bullets/FireBullet.dart';
 import 'package:shootinggame/enemies/Friend.dart';
 import 'package:shootinggame/enemies/Present.dart';
-import 'package:shootinggame/enemies/SpecialBullet.dart';
-import 'package:shootinggame/screens/game_screens/ScreenManager.dart';
-import 'package:shootinggame/screens/game_screens/ScreenState.dart';
+import 'package:shootinggame/bullets/SpecialBullet.dart';
+
 import 'package:shootinggame/screens/player/ButtonBar.dart';
 import 'package:shootinggame/screens/player/Healthbar.dart';
 import 'package:shootinggame/screens/util/SizeHolder.dart';
@@ -26,7 +21,6 @@ import 'WalkingEntity.dart';
 
 class Player {
   WalkingEntity _player;
-  PositionComponent _standingPlayer;
   Effect _effect;
   bool _isEffected;
   double speedfactor;
@@ -35,7 +29,6 @@ class Player {
   double health;
   double maxHealth;
   Healthbar _healthbar;
-  bool _flipRender;
 
   List<Bullet> _bullets;
   List<SpecialBullet> _specialBullets;
@@ -52,7 +45,6 @@ class Player {
     health = 20;
     maxHealth = 20;
     _healthbar = Healthbar(10, 10, bulletCount, coins, score);
-    _flipRender = false;
     _bullets = List.empty(growable: true);
     _specialBullets = List.empty(growable: true);
     move = false;
@@ -64,7 +56,7 @@ class Player {
     coins = 0;
     score = 0;
     _btnBar = ButtonBar();
-    bulletLifetimeFctr = 1;
+    bulletLifetimeFctr = 0.7;
     dmgFctr = 2;
     // _btnBar.add(EffectType.Fire);
     //_btnBar.add(EffectType.Purple);
@@ -195,8 +187,6 @@ class Player {
         _isEffected = false;
       }
     }
-
-    setFlipRender(speed[0]);
   }
 
   void getHit(Bullet bullet) {
@@ -208,11 +198,6 @@ class Player {
 
   Rect toRect() {
     return _player.toRect();
-  }
-
-  void setFlipRender(double speedX) {
-    if (speedX < 0) _flipRender = false;
-    if (speedX > 0) _flipRender = true;
   }
 
   bool isMoving() {
@@ -246,7 +231,6 @@ class Player {
   }
 
   void die() {
-    print('The Player has died, reviving!');
     health = 20;
   }
 

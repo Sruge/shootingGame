@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flame/components/component.dart';
 import 'package:flutter/gestures.dart';
-import 'package:shootinggame/enemies/EffectType.dart';
+import 'package:shootinggame/effects/EffectType.dart';
 
 import 'package:shootinggame/entities/EntityState.dart';
 import 'package:shootinggame/screens/player/Player.dart';

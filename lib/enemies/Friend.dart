@@ -1,30 +1,24 @@
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:flame/animation.dart';
 import 'package:flame/components/animation_component.dart';
-import 'package:flame/components/component.dart';
 import 'package:flame/sprite.dart';
-import 'package:flame/spritesheet.dart';
 import 'package:flutter/gestures.dart';
-import 'package:shootinggame/enemies/BulletType.dart';
-import 'package:shootinggame/enemies/EffectType.dart';
+import 'package:shootinggame/bullets/Bullet.dart';
+import 'package:shootinggame/bullets/BulletType.dart';
+import 'package:shootinggame/bullets/SpecialBullet.dart';
+import 'package:shootinggame/effects/EffectType.dart';
 import 'package:shootinggame/enemies/EnemyHealthbar.dart';
-import 'package:shootinggame/enemies/EnemyType.dart';
-import 'package:shootinggame/enemies/SpecialBullet.dart';
-import 'package:shootinggame/entities/AssetsSizes.dart';
+
 import 'package:shootinggame/entities/EntityState.dart';
-import 'package:shootinggame/screens/player/Player.dart';
-import 'package:shootinggame/screens/player/Healthbar.dart';
+
 import 'package:shootinggame/screens/util/SizeHolder.dart';
 
-import 'Bullet.dart';
 import 'FriendType.dart';
 
 class Friend {
   double _timer;
   double attackInterval;
-  List<Bullet> _bullets;
   AnimationComponent entity;
   EntityState _state;
   double _distanceToCenter;
@@ -35,20 +29,16 @@ class Friend {
   double health;
   double maxHealth;
   FriendType type;
-  BulletType _bulletType;
 
-  List<Sprite> _sprites = List<Sprite>();
   int leftOrDown;
   double enemySpeedY;
 
   double enemySpeedX;
   double enemySpeedFactor;
-  EnemyhealthBar _enemyhealthBar;
   List<SpecialBullet> specialBullets;
 
   Friend(this.type) {
     _timer = 0;
-    _bullets = List.empty(growable: true);
     _state = EntityState.Normal;
     _flipRender = false;
     enemySpeedX = 0;

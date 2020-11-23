@@ -1,15 +1,10 @@
-import 'dart:ui';
-
-import 'package:flame/components/animation_component.dart';
-import 'package:flame/components/component.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter/rendering.dart';
-import 'package:shootinggame/enemies/Bullet.dart';
-import 'package:shootinggame/enemies/Effect.dart';
-import 'package:shootinggame/enemies/EffectType.dart';
+import 'package:shootinggame/effects/Effect.dart';
+import 'package:shootinggame/effects/EffectType.dart';
+import 'package:shootinggame/effects/PurpleEffect.dart';
+import 'package:shootinggame/enemies/Enemy.dart';
 import 'package:shootinggame/screens/player/Player.dart';
 
-import 'Enemy.dart';
 import 'SpecialBullet.dart';
 
 class PurpleBullet extends SpecialBullet {
@@ -42,13 +37,13 @@ class PurpleBullet extends SpecialBullet {
 
   @override
   void hitPlayer(Player player) {
-    player.addEffect(Effect(EffectType.Purple, 5, player, null));
+    player.addEffect(PurpleEffect(player, null));
     die();
   }
 
   @override
   void hitEnemy(Enemy enemy) {
-    enemy.addEffect(Effect(EffectType.Purple, 5, null, enemy));
+    enemy.addEffect(PurpleEffect(null, enemy));
     die();
   }
 }

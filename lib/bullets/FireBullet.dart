@@ -1,9 +1,10 @@
 import 'package:flutter/gestures.dart';
-import 'package:shootinggame/enemies/EffectType.dart';
+import 'package:shootinggame/effects/Effect.dart';
+import 'package:shootinggame/effects/EffectType.dart';
+import 'package:shootinggame/effects/FireEffect.dart';
+import 'package:shootinggame/enemies/Enemy.dart';
 import 'package:shootinggame/screens/player/Player.dart';
 
-import 'Effect.dart';
-import 'Enemy.dart';
 import 'SpecialBullet.dart';
 
 class FireBullet extends SpecialBullet {
@@ -26,13 +27,13 @@ class FireBullet extends SpecialBullet {
 
   @override
   void hitPlayer(Player player) {
-    player.addEffect(Effect(EffectType.Fire, 5, player, null));
+    player.addEffect(FireEffect(player, null));
     die();
   }
 
   @override
   void hitEnemy(Enemy enemy) {
-    enemy.addEffect(Effect(EffectType.Fire, 5, null, enemy));
+    enemy.addEffect(FireEffect(null, enemy));
     die();
   }
 }

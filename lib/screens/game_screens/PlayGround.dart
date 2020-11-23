@@ -1,11 +1,6 @@
-import 'dart:math';
 import 'dart:ui';
 
-import 'package:flame/components/component.dart';
-import 'package:flutter/src/gestures/tap.dart';
 import 'package:flutter/widgets.dart';
-import 'package:shootinggame/enemies/Enemy.dart';
-import 'package:shootinggame/enemies/Bullet.dart';
 import 'package:shootinggame/screens/game_screens/ScreenManager.dart';
 import 'package:shootinggame/screens/game_screens/TableOverlay.dart';
 import 'package:shootinggame/screens/player/Player.dart';
@@ -28,7 +23,7 @@ class PlayGround extends BaseWidget {
   TableOverlay _table;
 
   PlayGround(int char) {
-    _bg = DynamicBackground(0, 0, 'playground.png');
+    _bg = DynamicBackground(0, 0, 'original.jpeg');
 
     _player = Player(char);
     speedfactor = 0.2;
@@ -37,7 +32,6 @@ class PlayGround extends BaseWidget {
   }
   @override
   void onTapDown(TapDownDetails detail, Function fn) {
-    print(speedfactor);
     if (showDeal && _table.contains(detail.globalPosition)) {
       _table.onTapDown(detail, _player);
     } else {
@@ -114,7 +108,6 @@ class PlayGround extends BaseWidget {
   }
 
   void setSpeed(List<double> speed) {
-    print('setting playgroujnd speed');
     speed = [speed[0], speed[1]];
   }
 }

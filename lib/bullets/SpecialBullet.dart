@@ -1,17 +1,14 @@
 import 'dart:ui';
 
 import 'package:flame/components/animation_component.dart';
-import 'package:flame/components/component.dart';
 import 'package:flame/spritesheet.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
-import 'package:shootinggame/enemies/EffectType.dart';
+import 'package:shootinggame/enemies/Enemy.dart';
 
 import 'package:shootinggame/entities/EntityState.dart';
 import 'package:shootinggame/screens/player/Player.dart';
 import 'package:shootinggame/screens/util/SizeHolder.dart';
-
-import 'Enemy.dart';
 
 class SpecialBullet {
   AnimationComponent specialBullet;

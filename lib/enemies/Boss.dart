@@ -1,21 +1,14 @@
 import 'dart:math';
 
-import 'package:flame/components/animation_component.dart';
-import 'package:flame/spritesheet.dart';
-import 'package:flutter/rendering.dart';
-import 'package:shootinggame/enemies/BasicBullet.dart';
-import 'package:shootinggame/enemies/BulletType.dart';
+import 'package:shootinggame/bullets/BasicBullet.dart';
+import 'package:shootinggame/bullets/BulletType.dart';
 import 'package:shootinggame/enemies/Enemy.dart';
-import 'package:shootinggame/enemies/EnemyType.dart';
-import 'package:shootinggame/enemies/FireBullet.dart';
-import 'package:shootinggame/enemies/SpecialBullet.dart';
+import 'package:shootinggame/bullets/SpecialBullet.dart';
 import 'package:shootinggame/entities/EntityState.dart';
-import 'package:shootinggame/screens/game_screens/ScreenManager.dart';
 import 'package:shootinggame/screens/player/WalkingEntity.dart';
 import 'package:shootinggame/screens/util/SizeHolder.dart';
 
-import 'Bullet.dart';
-import 'FreezeBullet.dart';
+import '../bullets/Bullet.dart';
 
 class Boss extends Enemy {
   double _disappearTimer;

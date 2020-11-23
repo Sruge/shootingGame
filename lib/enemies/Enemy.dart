@@ -2,21 +2,21 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/gestures.dart';
-import 'package:shootinggame/enemies/BulletType.dart';
-import 'package:shootinggame/enemies/Effect.dart';
+import 'package:shootinggame/bullets/BulletType.dart';
+import 'package:shootinggame/effects/Effect.dart';
 import 'package:shootinggame/enemies/EnemyHealthbar.dart';
-import 'package:shootinggame/enemies/SpecialBullet.dart';
+import 'package:shootinggame/bullets/SpecialBullet.dart';
 import 'package:shootinggame/entities/EntityState.dart';
 
 import 'package:shootinggame/screens/player/WalkingEntity.dart';
 import 'package:shootinggame/screens/util/SizeHolder.dart';
 
-import 'Bullet.dart';
-import 'EffectType.dart';
-import 'FireBullet.dart';
-import 'FreezeBullet.dart';
-import 'PurpleBullet.dart';
-import 'SmokeBullet.dart';
+import '../bullets/Bullet.dart';
+import '../effects/EffectType.dart';
+import '../bullets/FireBullet.dart';
+import '../bullets/FreezeBullet.dart';
+import '../bullets/PurpleBullet.dart';
+import '../bullets/SmokeBullet.dart';
 
 class Enemy {
   double _timer;

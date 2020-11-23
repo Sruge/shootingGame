@@ -22,7 +22,6 @@ class EnemyhealthBar {
     paintBlack.color = Color(0xff000000);
   }
 
-  @override
   void render(Canvas canvas) {
     canvas.drawRect(_healthbarBorder, paintBlack);
     canvas.drawRect(_healthbarGreen, paintGreen);

@@ -1,14 +1,10 @@
-import 'dart:ui';
-
-import 'package:flame/components/animation_component.dart';
-import 'package:flame/components/component.dart';
 import 'package:flutter/gestures.dart';
-import 'package:shootinggame/enemies/Bullet.dart';
-import 'package:shootinggame/enemies/EffectType.dart';
+import 'package:shootinggame/effects/Effect.dart';
+import 'package:shootinggame/effects/EffectType.dart';
+import 'package:shootinggame/effects/FreezeEffect.dart';
+import 'package:shootinggame/enemies/Enemy.dart';
 import 'package:shootinggame/screens/player/Player.dart';
 
-import 'Effect.dart';
-import 'Enemy.dart';
 import 'SpecialBullet.dart';
 
 class FreezeBullet extends SpecialBullet {
@@ -25,13 +21,13 @@ class FreezeBullet extends SpecialBullet {
 
   @override
   void hitPlayer(Player player) {
-    player.addEffect(Effect(EffectType.Freeze, 1, player, null));
+    player.addEffect(FreezeEffect(player, null));
     die();
   }
 
   @override
   void hitEnemy(Enemy enemy) {
-    enemy.addEffect(Effect(EffectType.Freeze, 5, null, enemy));
+    enemy.addEffect(FreezeEffect(null, enemy));
     die();
   }
 }

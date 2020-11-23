@@ -2,8 +2,9 @@ import 'dart:ui';
 
 import 'package:flame/components/component.dart';
 import 'package:flutter/gestures.dart';
-import 'package:shootinggame/enemies/Bullet.dart';
-import 'package:shootinggame/enemies/BulletType.dart';
+
+import 'Bullet.dart';
+import 'BulletType.dart';
 
 class BasicBullet extends Bullet {
   double damage;

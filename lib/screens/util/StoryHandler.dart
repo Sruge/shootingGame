@@ -1,99 +1,58 @@
 import 'dart:math';
-import 'dart:typed_data';
 import 'dart:ui';
 
-import 'package:shootinggame/enemies/BasicEnemy.dart';
-import 'package:shootinggame/enemies/Boss.dart';
-import 'package:shootinggame/enemies/Bullet.dart';
-import 'package:shootinggame/enemies/Dealer.dart';
-import 'package:shootinggame/enemies/EffectType.dart';
+import 'package:shootinggame/bullets/Bullet.dart';
+import 'package:shootinggame/bullets/SpecialBullet.dart';
 import 'package:shootinggame/enemies/Enemy.dart';
-import 'package:shootinggame/enemies/EnemyType.dart';
 import 'package:shootinggame/enemies/Friend.dart';
-import 'package:shootinggame/enemies/FriendType.dart';
 import 'package:shootinggame/enemies/Present.dart';
 import 'package:shootinggame/enemies/PresentType.dart';
-import 'package:shootinggame/enemies/SpecialBullet.dart';
-import 'package:shootinggame/screens/game_screens/ScreenManager.dart';
 import 'package:shootinggame/screens/player/Player.dart';
-import 'package:shootinggame/screens/game_screens/ScreenState.dart';
+import 'package:shootinggame/screens/util/Spawner.dart';
+
+import 'Level.dart';
 
 class StoryHandler {
-  final int maxSpawnInterval = 10000;
-  final int minSpawnInterval = 10000;
-  final int intervalChange = 3;
-  final int maxEnemies = 4;
-  int currentInterval;
-  int nextSpawn;
-  int nextBossSpawn;
-  int nextFriendSpawn;
-  List<Enemy> _enemies;
+  List<Enemy> enemies;
   List<Bullet> _bullets;
   List<SpecialBullet> _specialBullets;
-  List<EnemyType> _enemyTypes;
   List<Friend> friends;
   Random _random;
+  List<PresentType> nextPresents;
 
   List<Present> _presents;
+  Spawner _spawner;
+  Level _level;
 
   StoryHandler() {
     start();
   }
 
   void start() {
-    _enemyTypes = List.empty(growable: true);
-    _enemyTypes.add(EnemyType.One);
-    // _enemyTypes.add(EnemyType.Two);
-    // _enemyTypes.add(EnemyType.Three);
-    // _enemyTypes.add(EnemyType.Four);
-    //_enemyTypes.add(EnemyType.Five);
-    currentInterval = maxSpawnInterval;
-    nextSpawn = DateTime.now().millisecondsSinceEpoch + currentInterval;
-    nextBossSpawn = DateTime.now().millisecondsSinceEpoch + 2;
-    nextFriendSpawn = DateTime.now().millisecondsSinceEpoch + 1;
-
-    _enemies = List.empty(growable: true);
-
+    enemies = List.empty(growable: true);
     _bullets = List.empty(growable: true);
     _specialBullets = List.empty(growable: true);
-
     _presents = List.empty(growable: true);
     friends = List.empty(growable: true);
+    nextPresents = List.empty(growable: true);
     _random = Random();
+    _level = Level(0);
+    _spawner = Spawner(_level, this);
   }
 
   void update(double t, List<double> bgSpeed, Player player) {
-    int nowTimestamp = DateTime.now().millisecondsSinceEpoch;
-    if (nowTimestamp >= nextSpawn && _enemies.length < maxEnemies) {
-      if (currentInterval > minSpawnInterval) {
-        currentInterval -= intervalChange;
-        currentInterval -= (currentInterval * .02).toInt();
-      }
-      nextSpawn = nowTimestamp + currentInterval;
-      _enemies.add(getNewEnemy());
-    }
-    if (nowTimestamp >= nextBossSpawn) {
-      nextBossSpawn = nowTimestamp + currentInterval * 8;
-      Boss boss = Boss();
-      boss.resize();
-      _enemies.add(boss);
-    }
-    if (nowTimestamp >= nextFriendSpawn) {
-      nextFriendSpawn = nowTimestamp + currentInterval;
-      Friend friend = Dealer();
-      friend.resize();
-      friends.add(friend);
-    }
-    for (int i = 0; i < _enemies.length; i++) {
-      if (_enemies[i].isDead()) {
-        addPresent(_enemies[i].x, _enemies[i].y);
-        player.score += _enemies[i].getScore();
-        _enemies.removeAt(i);
-        i -= 1;
-      }
-    }
-    _enemies.forEach((e) {
+    //Add Enemies, Friends... from the Spawners Queues
+    _spawner.update(t);
+    //Update the enemies
+    enemies.forEach((e) {
       e.update(t, bgSpeed);
+      if (e.isDead()) {
+        if (nextPresents.isNotEmpty) {
+          _presents.add(Present(e.x, e.y, nextPresents.first));
+          nextPresents.removeAt(0);
+        }
+        player.score += e.getScore();
+      }
       if (e.specialBullets.isNotEmpty) {
         _specialBullets.add(e.specialBullets.first);
         e.specialBullets.removeAt(0);
@@ -102,10 +61,15 @@ class StoryHandler {
         _bullets.add(e.getAttack());
       }
     });
+    enemies.removeWhere((element) => element.isDead());
+
+    //Update the friends
     friends.forEach((f) {
       f.update(t, bgSpeed);
     });
+    friends.removeWhere((element) => element.isDead());
 
+    //Update the presents
     for (int i = 0; i < _presents.length; i++) {
       _presents[i].update(t, bgSpeed);
       if (_presents[i].isDead()) {
@@ -113,6 +77,8 @@ class StoryHandler {
         i -= 1;
       }
     }
+
+    //Update the bullets
     for (int i = 0; i < _bullets.length; i++) {
       _bullets[i].update(t, bgSpeed);
       if (_bullets[i].overlaps(player.toRect())) {
@@ -120,19 +86,20 @@ class StoryHandler {
         _bullets[i].die();
       }
     }
+    _bullets.removeWhere((element) => element.isDead());
+
+    //Update the special bullets
     for (int i = 0; i < _specialBullets.length; i++) {
       _specialBullets[i].update(t, bgSpeed);
       if (_specialBullets[i].overlaps(player.toRect())) {
         _specialBullets[i].hitPlayer(player);
       }
     }
-    _bullets.removeWhere((element) => element.isDead());
     _specialBullets.removeWhere((element) => element.isDead());
-    friends.removeWhere((element) => element.isDead());
   }
 
   void render(Canvas canvas) {
-    _enemies.forEach((e) {
+    enemies.forEach((e) {
       e.render(canvas);
     });
     _bullets.forEach((b) {
@@ -149,25 +116,8 @@ class StoryHandler {
     });
   }
 
-  Enemy getNewEnemy() {
-    Random random = Random();
-    int rand = random.nextInt(_enemyTypes.length);
-    BasicEnemy enemy = BasicEnemy(_enemyTypes[rand]);
-    enemy.resize();
-    return enemy;
-  }
-
-  void addPresent(double x, double y) {
-    int rand = _random.nextInt(10);
-    if (rand > 7)
-      _presents.add(Present(x, y, PresentType.Health));
-    else if (rand > 4)
-      _presents.add(Present(x, y, PresentType.Bullets));
-    else if (rand > 0) _presents.add(Present(x, y, PresentType.Coin));
-  }
-
   List<Enemy> getEnemies() {
-    return _enemies;
+    return enemies;
   }
 
   List<Present> getPresents() {
@@ -175,7 +125,7 @@ class StoryHandler {
   }
 
   void resize() {
-    _enemies.forEach((e) {
+    enemies.forEach((e) {
       e.resize();
     });
     _bullets.forEach((b) {

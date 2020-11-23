@@ -1,7 +1,7 @@
 import 'package:flame/components/animation_component.dart';
 import 'package:flame/spritesheet.dart';
-import 'package:shootinggame/enemies/BasicBullet.dart';
-import 'package:shootinggame/enemies/BulletType.dart';
+import 'package:shootinggame/bullets/BasicBullet.dart';
+import 'package:shootinggame/bullets/BulletType.dart';
 import 'package:shootinggame/enemies/Enemy.dart';
 import 'package:shootinggame/enemies/EnemyType.dart';
 import 'package:shootinggame/screens/player/WalkingEntity.dart';

@@ -87,8 +87,8 @@ class Player {
       for (int i = 0; i < enemies.length; i++) {
         if (enemies[i].contains(detail.globalPosition)) {
           move = false;
-          shootSpecial(detail.globalPosition, speed);
-          //shoot(detail.globalPosition, speed);
+          //shootSpecial(detail.globalPosition, speed);
+          shoot(detail.globalPosition, speed);
           break;
         }
       }

@@ -21,6 +21,7 @@ class StoryHandler {
   List<PresentType> nextPresents;
 
   List<Present> _presents;
+  int level;
   Spawner _spawner;
   Level _level;
 
@@ -39,9 +40,16 @@ class StoryHandler {
     _level = Level(0);
     _spawner = Spawner(_level, this);
     nextPresents.add(PresentType.Health);
+    level = 0;
   }
 
   void update(double t, List<double> bgSpeed, Player player) {
+    // update level
+    if ((player.score / 20).floor() >= level) {
+      level = 22;
+      _level = Level(level * 3 + 2);
+      _spawner = Spawner(_level, this);
+    }
     //Add Enemies, Friends... from the Spawners Queues
     _spawner.update(t);
     //Update the enemies

@@ -11,7 +11,7 @@ import 'package:shootinggame/screens/util/SizeHolder.dart';
 
 import '../../bullets/Bullet.dart';
 
-class Boss extends Enemy {
+class Phoenix extends Enemy {
   double _disappearTimer;
   double health;
   EntityState state;
@@ -22,19 +22,17 @@ class Boss extends Enemy {
   double _specialAttackTimer;
 
   double _specialAttackInterval;
-  Boss() : super() {
+  Phoenix() : super() {
     health = 30;
     maxHealth = 30;
     specialBullets = List.empty(growable: true);
     state = EntityState.Normal;
     attackRange = 200;
     attackInterval = 2;
-    bulletTypes = [
-      BulletType.Fire,
-    ];
+    bulletTypes = [BulletType.Fire];
 
-    entity = WalkingEntity(
-        'boss.png', 32, 48, Size(baseAnimationWidth, baseAnimationHeight));
+    entity = WalkingEntity('phoenix.png', 96, 96,
+        Size(baseAnimationWidth * 2, baseAnimationHeight * 2));
     attackRange = 150;
     attackInterval = 4;
     enemySpeedFactor = 0.03;

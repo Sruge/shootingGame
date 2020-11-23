@@ -28,7 +28,12 @@ class Bahamut extends Enemy {
     state = EntityState.Normal;
     attackRange = 200;
     attackInterval = 2;
-    bulletTypes = [BulletType.Purple, BulletType.Fire];
+    bulletTypes = [
+      BulletType.Purple,
+      BulletType.Fire,
+      BulletType.Freeze,
+      BulletType.Smoke
+    ];
 
     entity = WalkingEntity('bahamut.png', 96, 96,
         Size(baseAnimationWidth * 2, baseAnimationHeight * 2));

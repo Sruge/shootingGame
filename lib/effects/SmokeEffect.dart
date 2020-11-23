@@ -7,7 +7,7 @@ class SmokeEffect extends Effect {
   Player _player;
   Enemy _enemy;
   SmokeEffect(this._player, this._enemy)
-      : super(EffectType.Gold, 'smoke.png') {}
+      : super(EffectType.Gold, 'smoke.png', _player, _enemy) {}
 
   void update(t, x, y) {
     if (_player != null) {

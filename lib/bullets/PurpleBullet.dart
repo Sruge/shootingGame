@@ -37,13 +37,13 @@ class PurpleBullet extends SpecialBullet {
 
   @override
   void hitPlayer(Player player) {
-    player.addEffect(PurpleEffect(player, null));
+    player.effects.add(PurpleEffect(player, null));
     die();
   }
 
   @override
   void hitEnemy(Enemy enemy) {
-    enemy.addEffect(PurpleEffect(null, enemy));
+    enemy.effects.add(PurpleEffect(null, enemy));
     die();
   }
 }

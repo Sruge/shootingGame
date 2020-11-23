@@ -3,25 +3,33 @@ import 'package:shootinggame/effects/EffectType.dart';
 import 'package:shootinggame/enemies/Enemy.dart';
 import 'package:shootinggame/screens/player/Player.dart';
 
-class FireEffect extends Effect {
-  double _timer, _totalDuration;
+import 'EffectState.dart';
 
+class FireEffect extends Effect {
   Player _player;
   Enemy _enemy;
-  FireEffect(this._player, this._enemy) : super(EffectType.Gold, 'fire.png') {
-    _timer = 0;
-    _totalDuration = 4;
+  FireEffect(this._player, this._enemy)
+      : super(EffectType.Gold, 'fire.png', _player, _enemy) {
+    timer = 0;
+    totalDuration = 4;
+    renderSomething = true;
   }
 
   void update(t, x, y) {
-    if (_timer > _totalDuration) {
+    timer += t;
+    if (timer > totalDuration) {
       if (_player != null) {
         _player.health -= 3;
+        state = EffectState.Ended;
       } else if (_enemy != null) {
         _enemy.health -= 3;
+        state = EffectState.Ended;
       }
-      type = EffectType.None;
     }
-    super.update(t, x, y);
+    if (renderSomething) {
+      effect.x = x;
+      effect.y = y;
+      effect.update(t);
+    }
   }
 }

@@ -33,11 +33,11 @@ class GoldenBullet extends SpecialBullet {
 
   @override
   void hitPlayer(Player player) {
-    player.addEffect(GoldenEffect(player, null));
+    player.effects.add(GoldenEffect(player, null));
   }
 
   @override
   void hitEnemy(Enemy enemy) {
-    enemy.addEffect(GoldenEffect(null, enemy));
+    enemy.effects.add(GoldenEffect(null, enemy));
   }
 }

@@ -1,0 +1,1 @@
+enum EffectState { Active, Ended }

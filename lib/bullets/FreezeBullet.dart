@@ -21,13 +21,17 @@ class FreezeBullet extends SpecialBullet {
 
   @override
   void hitPlayer(Player player) {
-    player.addEffect(FreezeEffect(player, null));
+    Effect effect = FreezeEffect(player, null);
+    effect.resize(x, y);
+    player.effects.add(effect);
     die();
   }
 
   @override
   void hitEnemy(Enemy enemy) {
-    enemy.addEffect(FreezeEffect(null, enemy));
+    Effect effect = FreezeEffect(null, enemy);
+    effect.resize(enemy.x, enemy.y);
+    enemy.effects.add(effect);
     die();
   }
 }

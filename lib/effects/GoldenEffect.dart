@@ -5,5 +5,5 @@ import 'package:shootinggame/screens/player/Player.dart';
 
 class GoldenEffect extends Effect {
   GoldenEffect(Player player, Enemy enemy)
-      : super(EffectType.Gold, 'goldenBullet.png') {}
+      : super(EffectType.Gold, 'goldenBullet.png', player, enemy) {}
 }

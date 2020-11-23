@@ -5,5 +5,5 @@ import 'package:shootinggame/screens/player/Player.dart';
 
 class PurpleEffect extends Effect {
   PurpleEffect(Player player, Enemy enemy)
-      : super(EffectType.Gold, 'purpleBullets.png') {}
+      : super(EffectType.Gold, 'purpleBullets.png', player, enemy) {}
 }

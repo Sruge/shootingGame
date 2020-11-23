@@ -36,11 +36,11 @@ class SmokeBullet extends SpecialBullet {
 
   @override
   void hitPlayer(Player player) {
-    player.addEffect(SmokeEffect(player, null));
+    if (player.effects.isEmpty) player.effects.add(SmokeEffect(player, null));
   }
 
   @override
   void hitEnemy(Enemy enemy) {
-    enemy.addEffect(SmokeEffect(null, enemy));
+    if (enemy.effects.isEmpty) enemy.effects.add(SmokeEffect(null, enemy));
   }
 }

@@ -27,13 +27,17 @@ class FireBullet extends SpecialBullet {
 
   @override
   void hitPlayer(Player player) {
-    player.addEffect(FireEffect(player, null));
+    Effect effect = FireEffect(player, null);
+    effect.resize(x, y);
+    player.effects.add(effect);
     die();
   }
 
   @override
   void hitEnemy(Enemy enemy) {
-    enemy.addEffect(FireEffect(null, enemy));
+    Effect effect = FireEffect(null, enemy);
+    effect.resize(enemy.x, enemy.y);
+    enemy.effects.add(effect);
     die();
   }
 }

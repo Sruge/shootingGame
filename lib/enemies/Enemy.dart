@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/gestures.dart';
 import 'package:shootinggame/bullets/BulletType.dart';
 import 'package:shootinggame/effects/Effect.dart';
+import 'package:shootinggame/effects/EffectState.dart';
 import 'package:shootinggame/enemies/EnemyHealthbar.dart';
 import 'package:shootinggame/bullets/SpecialBullet.dart';
 import 'package:shootinggame/entities/EntityState.dart';
@@ -34,8 +35,7 @@ class Enemy {
   List<SpecialBullet> specialBullets;
   WalkingEntity entity;
   EntityState state;
-  Effect _effect;
-  bool _isEffected;
+  List<Effect> effects;
   Random random;
   List<BulletType> bulletTypes;
   double bulletLifetimeFctr;
@@ -49,9 +49,9 @@ class Enemy {
     enemySpeedFactor = 0.05;
     _enemyhealthBar = EnemyhealthBar(0, 0);
     specialBullets = List.empty(growable: true);
-    _isEffected = false;
     random = Random();
     bulletTypes = List.empty(growable: true);
+    effects = List.empty(growable: true);
     bulletLifetimeFctr = 1;
     dmgFctr = 1;
   }
@@ -133,11 +133,11 @@ class Enemy {
     canvas.save();
     _enemyhealthBar.render(canvas);
     canvas.restore();
-    if (_isEffected) {
+    effects.forEach((effect) {
       canvas.save();
-      _effect.render(canvas);
+      effect.render(canvas);
       canvas.restore();
-    }
+    });
   }
 
   void resize() {
@@ -164,6 +164,9 @@ class Enemy {
         break;
     }
     _enemyhealthBar.resize(x, y);
+    effects.forEach((effect) {
+      effect.resize(x, y);
+    });
   }
 
   void update(double t, List<double> bgSpeed) {
@@ -192,12 +195,10 @@ class Enemy {
     entity.y = y;
     entity.update(t, [enemySpeedX, enemySpeedY]);
     _enemyhealthBar.updateRect(maxHealth, health, x, y);
-    if (_isEffected) {
-      _effect.update(t, x, y);
-      if (_effect.getType() == EffectType.None) {
-        _isEffected = false;
-      }
-    }
+    effects.forEach((effect) {
+      effect.update(t, x, y);
+    });
+    effects.removeWhere((element) => element.state == EffectState.Ended);
   }
 
   double getDistanceToCenter() {
@@ -208,11 +209,5 @@ class Enemy {
 
   int getScore() {
     return 1;
-  }
-
-  void addEffect(Effect effect) {
-    effect.resize(entity.x, entity.y);
-    _effect = effect;
-    _isEffected = true;
   }
 }

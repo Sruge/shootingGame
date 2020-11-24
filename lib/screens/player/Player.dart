@@ -6,14 +6,17 @@ import 'package:shootinggame/bullets/BasicBullet.dart';
 import 'package:shootinggame/bullets/Bullet.dart';
 import 'package:shootinggame/bullets/BulletType.dart';
 import 'package:shootinggame/bullets/FreezeBullet.dart';
+import 'package:shootinggame/bullets/GoldenBullet.dart';
 import 'package:shootinggame/effects/Effect.dart';
 import 'package:shootinggame/effects/EffectState.dart';
 import 'package:shootinggame/effects/EffectType.dart';
+import 'package:shootinggame/effects/HealEffect.dart';
 import 'package:shootinggame/enemies/Enemy.dart';
 import 'package:shootinggame/bullets/FireBullet.dart';
-import 'package:shootinggame/enemies/Friend.dart';
+import 'package:shootinggame/friends/Friend.dart';
 import 'package:shootinggame/enemies/Present.dart';
 import 'package:shootinggame/bullets/SpecialBullet.dart';
+import 'package:shootinggame/screens/player/AttackType.dart';
 
 import 'package:shootinggame/screens/player/ButtonBar.dart';
 import 'package:shootinggame/screens/player/Healthbar.dart';
@@ -30,6 +33,7 @@ class Player {
   double health;
   double maxHealth;
   Healthbar _healthbar;
+  AttackType attackType;
 
   List<Bullet> bullets;
   List<SpecialBullet> _specialBullets;
@@ -41,6 +45,10 @@ class Player {
   double bulletLifetimeFctr;
   double dmgFctr;
   bool frozen;
+  int slots;
+
+  bool attack;
+  BulletType bulletType;
 
   Player(int char) {
     health = 20;
@@ -49,19 +57,23 @@ class Player {
     bullets = List.empty(growable: true);
     _specialBullets = List.empty(growable: true);
     move = false;
+    attack = false;
     effects = List.empty(growable: true);
     bulletCount = 100;
     maxBulletCount = 500;
     speedfactor = 0.2;
-    coins = 0;
+    coins = 20;
     score = 0;
-    _btnBar = ButtonBar();
+    slots = 1;
+    _btnBar = ButtonBar(slots);
     bulletLifetimeFctr = 0.7;
     dmgFctr = 2;
     frozen = false;
-    _btnBar.add(EffectType.Fire);
-    //_btnBar.add(EffectType.Fire);
-    //_btnBar.add(EffectType.Fire);
+    attackType = AttackType.Normal;
+    bulletType = BulletType.One;
+    addAttack(AttackType.Fire, 5);
+    addAttack(AttackType.Freeze, 5);
+    addAttack(AttackType.Heal, 5);
 
     String playerPath;
     switch (char) {
@@ -82,29 +94,40 @@ class Player {
   }
   void onTapDown(TapDownDetails detail, List<Enemy> enemies,
       List<Friend> friends, List<double> speed, Function fn) {
-    if (!frozen) {
-      move = true;
-      _healthbar.onTapDown(detail, fn);
+    move = true;
+    attack = true;
 
-      for (int i = 0; i < enemies.length; i++) {
-        if (enemies[i].contains(detail.globalPosition)) {
-          move = false;
-          //shootSpecial(detail.globalPosition, speed);
-          shoot(detail.globalPosition, speed);
-          break;
-        }
-      }
+    if (!frozen) {
+      _healthbar.onTapDown(detail, fn, this);
+      _btnBar.onTapDown(detail, this);
       if (move) {
-        for (int i = 0; i < friends.length; i++) {
-          if (friends[i].contains(detail.globalPosition)) {
-            if (friends[i].overlaps(_player.toRect())) {
+        if (attackType == AttackType.Normal) {
+          for (int i = 0; i < enemies.length; i++) {
+            if (enemies[i].contains(detail.globalPosition)) {
               move = false;
-              friends[i].die();
-              friends[i].trigger();
+              shoot(detail.globalPosition, speed);
+              break;
             }
           }
+          if (move) {
+            for (int i = 0; i < friends.length; i++) {
+              if (friends[i].contains(detail.globalPosition)) {
+                if (friends[i].overlaps(_player.toRect())) {
+                  move = false;
+                  friends[i].trigger();
+                  friends[i].die();
+                }
+              }
+            }
+          }
+        } else if (move) {
+          shoot(detail.globalPosition, speed);
+          _btnBar.deactivateAll();
+          move = false;
         }
       }
+    } else {
+      move = false;
     }
   }
 
@@ -206,32 +229,66 @@ class Player {
   }
 
   void shoot(Offset pos, List<double> speed) {
-    if (bulletCount > 0) {
-      BasicBullet bullet = BasicBullet(
-          screenSize.width / 2,
-          screenSize.height / 2,
-          speed[0],
-          speed[1],
-          BulletType.One,
-          bulletLifetimeFctr,
-          dmgFctr);
-      bullet.resize();
-      bullets.add(bullet);
-      bulletCount -= 1;
-    }
-  }
-
-  void shootSpecial(Offset pos, List<double> speed) {
-    if (bulletCount > 0) {
-      FreezeBullet bullet = FreezeBullet(
-          screenSize.width / 2, screenSize.height / 2, speed[0], speed[1]);
-      bullet.resize();
-      _specialBullets.add(bullet);
-      bulletCount -= 1;
+    _btnBar.reduceCount(attackType);
+    switch (attackType) {
+      case AttackType.Normal:
+        if (bulletCount > 0) {
+          BasicBullet bullet = BasicBullet(
+              screenSize.width / 2,
+              screenSize.height / 2,
+              speed[0],
+              speed[1],
+              bulletType,
+              bulletLifetimeFctr,
+              dmgFctr);
+          bullet.resize();
+          bullets.add(bullet);
+          bulletCount -= 1;
+        }
+        break;
+      case AttackType.Heal:
+        HealEffect effect = HealEffect(this, null);
+        effect.totalDuration = 5;
+        effect.resize(_player.x, _player.y);
+        effects.add(effect);
+        attackType = AttackType.Normal;
+        break;
+      case AttackType.Fire:
+        FireBullet bullet = FireBullet(
+            screenSize.width / 2, screenSize.height / 2, speed[0], speed[1]);
+        bullet.resize();
+        _specialBullets.add(bullet);
+        attackType = AttackType.Normal;
+        break;
+      case AttackType.Freeze:
+        FreezeBullet bullet = FreezeBullet(
+            screenSize.width / 2, screenSize.height / 2, speed[0], speed[1]);
+        bullet.resize();
+        _specialBullets.add(bullet);
+        attackType = AttackType.Normal;
+        break;
+      case AttackType.Night:
+        GoldenBullet bullet = GoldenBullet(
+            screenSize.width / 2, screenSize.height / 2, speed[0], speed[1]);
+        bullet.resize();
+        _specialBullets.add(bullet);
+        attackType = AttackType.Normal;
+        break;
+      default:
+        break;
     }
   }
 
   void die() {
     health = 20;
+  }
+
+  void addSlot() {
+    slots += 1;
+    _btnBar.addSlot();
+  }
+
+  void addAttack(AttackType type, int count) {
+    _btnBar.addAttack(type, count);
   }
 }

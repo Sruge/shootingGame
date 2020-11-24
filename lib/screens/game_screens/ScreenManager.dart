@@ -6,6 +6,7 @@ import 'package:flame/gestures.dart';
 import 'package:flame/util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:shootinggame/friends/DealerBord.dart';
 import 'package:shootinggame/screens/game_screens/CharacterScreen.dart';
 import 'package:shootinggame/screens/game_screens/MainScreen.dart';
 import 'package:shootinggame/screens/util/SizeHolder.dart';
@@ -102,7 +103,7 @@ class ScreenManager extends Game with TapDetector {
     print('new speedfactor: ${_playScreen.speedfactor}');
   }
 
-  void showDeal(double x, double y) {
+  void showDeal(double x, double y, DealerBord dealerBord) {
     _playScreen?.openDeal(x, y);
   }
 

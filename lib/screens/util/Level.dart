@@ -27,6 +27,7 @@ class Level {
   List<PresentType> presentTypes;
   List<Enemy> bosses;
   Level(int level) {
+    print('Creating Level: $level');
     spawnInterval = 20;
     friendSpawnInterval = 8;
     bossSpawnInterval = 70;
@@ -38,7 +39,12 @@ class Level {
     presentSpawnInterval = 15;
     enemyTypes = [EnemyType.One];
     bosses = List.empty(growable: true);
-    presentTypes = [PresentType.Bullets, PresentType.Health, PresentType.Coin];
+    presentTypes = [
+      // PresentType.Bullets,
+      // PresentType.Health,
+      // PresentType.Coin,
+      PresentType.Freeze
+    ];
     if (level > 3) {
       enemyTypes.add(EnemyType.Two);
       Boss boss = Boss();

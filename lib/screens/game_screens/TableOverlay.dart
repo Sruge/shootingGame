@@ -26,7 +26,7 @@ class TableOverlay {
         rows: 1);
     _coin = SpriteComponent.fromSprite(0, 0, sprShe.getSprite(0, 0));
     _speedText = SpriteComponent.fromSprite(0, 0, Sprite('speed.png'));
-    _rangeText = SpriteComponent.fromSprite(0, 0, Sprite('range.png'));
+    _rangeText = SpriteComponent.fromSprite(0, 0, Sprite('heal.png'));
   }
   void onTapDown(TapDownDetails detail, Player player) {
     if (_speedText.toRect().contains(detail.globalPosition)) {
@@ -36,6 +36,7 @@ class TableOverlay {
     }
     if (_rangeText.toRect().contains(detail.globalPosition)) {
       player.bulletLifetimeFctr += 1;
+      _rangeText = SpriteComponent.fromSprite(0, 0, Sprite('healOut.png'));
     }
   }
 

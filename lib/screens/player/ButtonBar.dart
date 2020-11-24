@@ -1,35 +1,54 @@
 import 'package:flame/components/component.dart';
 import 'package:flame/sprite.dart';
-import 'package:flutter/src/gestures/tap.dart';
+import 'package:flutter/gestures.dart';
 import 'package:shootinggame/effects/EffectType.dart';
 import 'dart:ui';
 
-import 'package:shootinggame/screens/BaseWidget.dart';
+import 'package:shootinggame/screens/player/AttackType.dart';
 import 'package:shootinggame/screens/player/SpecialAttackBtn.dart';
 import 'package:shootinggame/screens/util/SizeHolder.dart';
 
-class ButtonBar extends BaseWidget {
+import 'Player.dart';
+
+class ButtonBar {
   List<SpecialAttackBtn> _buttons;
   PositionComponent _buttonBar;
 
   PositionComponent _topBar;
-  double _distanceButton;
   double firstBtnX;
   double y;
-  ButtonBar() {
-    _distanceButton = screenSize.width * 0.03;
+  int activeButton;
+  ButtonBar(int buttonCount) {
     _buttons = List.empty(growable: true);
     _buttonBar = SpriteComponent.fromSprite(0, 0, Sprite('buttonBar.png'));
     _topBar = SpriteComponent.fromSprite(0, 0, Sprite('buttonBar.png'));
     _topBar.renderFlipY = true;
+    activeButton = null;
+    for (int i = 0; i < buttonCount; i++) {
+      _buttons.add(SpecialAttackBtn(AttackType.Normal, 0, 0, 0));
+    }
   }
 
-  @override
-  void onTapDown(TapDownDetails detail, Function fn) {
-    // TODO: implement onTapDown
+  void onTapDown(TapDownDetails detail, Player player) {
+    if (_buttonBar.toRect().contains(detail.globalPosition)) {
+      player.move = false;
+    }
+    for (int i = 0; i < _buttons.length; i++) {
+      if (_buttons[i].toRect().contains(detail.globalPosition)) {
+        player.move = false;
+        if (_buttons[i].type != AttackType.Normal) {
+          if (_buttons[i].isActive) {
+            _buttons[i].isActive = false;
+            player.attackType = AttackType.Normal;
+          } else {
+            _buttons[i].isActive = true;
+            player.attackType = _buttons[i].getAttackType();
+          }
+        }
+      }
+    }
   }
 
-  @override
   void render(Canvas canvas) {
     canvas.save();
     _buttonBar.render(canvas);
@@ -44,37 +63,70 @@ class ButtonBar extends BaseWidget {
     });
   }
 
-  @override
   void resize() {
     _buttonBar.width = screenSize.width * 0.25;
     _buttonBar.height = screenSize.height * 0.10;
     _buttonBar.x = screenSize.width * 0.375;
     _buttonBar.y = screenSize.height * 0.90;
-    y = screenSize.height - screenSize.width * 0.03 - screenSize.width * 0.05;
-    _buttons.forEach((element) {
-      element.resize();
-    });
-    _topBar.width = screenSize.width * 0.50;
-    _topBar.height = screenSize.height * 0.10;
-    _topBar.x = screenSize.width * 0.25;
-    _topBar.y = 0;
-  }
+    y = screenSize.height - screenSize.height * 0.16;
 
-  @override
-  void update(double t) {
-    firstBtnX =
-        (screenSize.width - (screenSize.width * 0.07) * _buttons.length) / 2;
+    _topBar.width = screenSize.width * 0.60;
+    _topBar.height = screenSize.height * 0.10;
+    _topBar.x = screenSize.width * 0.2;
+    _topBar.y = 0;
+    double barWidth = screenSize.width * 0.05 * _buttons.length +
+        screenSize.width * 0.03 * (_buttons.length - 1);
+
+    firstBtnX = (screenSize.width - barWidth) / 2;
+
     double pushDistance = 0;
 
     _buttons.forEach((element) {
-      element.update(t);
       element.x = firstBtnX + pushDistance;
       element.y = y;
       pushDistance += screenSize.width * 0.07;
+      element.resize();
     });
   }
 
-  void add(EffectType _type) {
-    _buttons.add(SpecialAttackBtn(_type, 0, 0));
+  void update(double t) {
+    for (int i = 0; i < _buttons.length; i++) {
+      if (_buttons[i].type != AttackType.Normal && _buttons[i].count <= 0) {
+        _buttons[i] = SpecialAttackBtn(AttackType.Normal, 0, 0, 0);
+        resize();
+      }
+      _buttons[i].update(t);
+    }
+  }
+
+  void addSlot() {
+    if (_buttons.length < 4) {
+      _buttons.add(SpecialAttackBtn(AttackType.Normal, 0, 0, 0));
+      resize();
+    }
+  }
+
+  void addAttack(AttackType type, int count) {
+    for (int i = 0; i < _buttons.length; i++) {
+      if (_buttons[i].type == AttackType.Normal) {
+        _buttons[i] = SpecialAttackBtn(type, count, screenSize.width - 20, 0);
+        resize();
+        break;
+      }
+    }
+  }
+
+  void deactivateAll() {
+    _buttons.forEach((element) {
+      element.isActive = false;
+    });
+  }
+
+  void reduceCount(AttackType type) {
+    _buttons.forEach((element) {
+      if (element.type == type) {
+        element.count -= 1;
+      }
+    });
   }
 }

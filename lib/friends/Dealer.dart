@@ -1,25 +1,22 @@
 import 'package:flame/components/animation_component.dart';
 import 'package:flame/spritesheet.dart';
-import 'package:shootinggame/bullets/BasicBullet.dart';
-import 'package:shootinggame/bullets/BulletType.dart';
 import 'package:shootinggame/effects/EffectType.dart';
-import 'package:shootinggame/enemies/Enemy.dart';
-import 'package:shootinggame/enemies/EnemyType.dart';
-import 'package:shootinggame/enemies/FriendType.dart';
 import 'package:shootinggame/screens/game_screens/ScreenManager.dart';
 
-import '../bullets/Bullet.dart';
-import '../bullets/FreezeBullet.dart';
+import 'DealerBord.dart';
 import 'Friend.dart';
+import 'FriendType.dart';
 
 class Dealer extends Friend {
   AnimationComponent entity;
   String aniPath;
+  DealerBord _dealerBord;
   Dealer() : super(FriendType.Dealer) {
     attackRange = 130;
     attackInterval = 3;
     health = 4;
     maxHealth = 4;
+    _dealerBord = DealerBord(true);
 
     switch (type) {
       case FriendType.Dealer:
@@ -47,14 +44,11 @@ class Dealer extends Friend {
 
   @override
   EffectType getEffect() {
-    if (type == FriendType.Dealer)
-      return EffectType.Deal;
-    else
-      return EffectType.None;
+    return EffectType.Deal;
   }
 
   @override
   void trigger() {
-    screenManager.showDeal(x, y);
+    screenManager.showDeal(x, y, _dealerBord);
   }
 }

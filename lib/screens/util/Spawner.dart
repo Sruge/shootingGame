@@ -1,12 +1,11 @@
 import 'dart:math';
 
 import 'package:shootinggame/enemies/BasicEnemy.dart';
-import 'package:shootinggame/enemies/Dealer.dart';
 import 'package:shootinggame/enemies/Enemy.dart';
 import 'package:shootinggame/enemies/EnemyType.dart';
-import 'package:shootinggame/enemies/Friend.dart';
-import 'package:shootinggame/enemies/Present.dart';
 import 'package:shootinggame/enemies/PresentType.dart';
+import 'package:shootinggame/friends/Dealer.dart';
+import 'package:shootinggame/friends/Friend.dart';
 import 'package:shootinggame/screens/util/StoryHandler.dart';
 
 import 'Level.dart';
@@ -38,7 +37,7 @@ class Spawner {
     _enemyTypes = level.enemyTypes;
     _maxEnemies = level.maxEnemies;
     _nextSpawn = 0;
-    _nextBossSpawn = 2;
+    _nextBossSpawn = 20;
     _nextFriendSpawn = _friendSpawnInterval;
     _nextPresentSpawn = _presentSpawnInterval;
     bosses = level.bosses;

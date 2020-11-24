@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:flame/animation.dart';
@@ -5,12 +6,13 @@ import 'package:flame/components/animation_component.dart';
 import 'package:flame/components/component.dart';
 import 'package:flame/spritesheet.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter/services.dart';
 import 'package:shootinggame/effects/Effect.dart';
+import 'package:shootinggame/effects/EffectType.dart';
 import 'package:shootinggame/effects/HealEffect.dart';
 import 'package:shootinggame/enemies/PresentType.dart';
 
 import 'package:shootinggame/entities/EntityState.dart';
+import 'package:shootinggame/screens/player/AttackType.dart';
 import 'package:shootinggame/screens/player/Player.dart';
 import 'package:shootinggame/screens/util/SizeHolder.dart';
 
@@ -39,9 +41,9 @@ class Present {
         break;
       case PresentType.Coin:
         final coinSheet = SpriteSheet(
-            imageName: 'coin.png',
-            textureWidth: 32,
-            textureHeight: 32,
+            imageName: 'coin3.png',
+            textureWidth: 128,
+            textureHeight: 128,
             columns: 4,
             rows: 1);
         Animation coinimation = coinSheet.createAnimation(0, stepTime: 0.2);
@@ -152,6 +154,9 @@ class Present {
         player.coins += 1;
         break;
       case PresentType.Freeze:
+        Random random = Random();
+        player.addAttack(
+            AttackType.values[random.nextInt(AttackType.values.length)], 3);
         break;
       default:
         break;

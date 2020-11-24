@@ -4,9 +4,9 @@ import 'dart:ui';
 import 'package:shootinggame/bullets/Bullet.dart';
 import 'package:shootinggame/bullets/SpecialBullet.dart';
 import 'package:shootinggame/enemies/Enemy.dart';
-import 'package:shootinggame/enemies/Friend.dart';
 import 'package:shootinggame/enemies/Present.dart';
 import 'package:shootinggame/enemies/PresentType.dart';
+import 'package:shootinggame/friends/Friend.dart';
 import 'package:shootinggame/screens/player/Player.dart';
 import 'package:shootinggame/screens/util/Spawner.dart';
 
@@ -39,15 +39,15 @@ class StoryHandler {
     _random = Random();
     _level = Level(0);
     _spawner = Spawner(_level, this);
-    nextPresents.add(PresentType.Health);
+    nextPresents.add(PresentType.Coin);
     level = 0;
   }
 
   void update(double t, List<double> bgSpeed, Player player) {
     // update level
     if ((player.score / 20).floor() >= level) {
-      level = 22;
-      _level = Level(level * 3 + 2);
+      level += 1;
+      _level = Level(6);
       _spawner = Spawner(_level, this);
     }
     //Add Enemies, Friends... from the Spawners Queues

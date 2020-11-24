@@ -1,18 +1,21 @@
 import 'dart:ui';
 import 'dart:ui';
 
+import 'package:flame/components/component.dart';
+import 'package:flame/sprite.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 import 'package:shootinggame/screens/util/SizeHolder.dart';
 
 import '../BaseWidget.dart';
+import 'Player.dart';
 
 class Healthbar {
   Rect _healthbarGreen;
   Rect _healthbarRed;
   Rect _healthbarBorder;
   Rect _bulletCountRect;
-  Rect _coinsRect;
+  SpriteComponent _coinsRect;
   Rect _scoreRect;
   int _bulletCount;
   double maxHealth;
@@ -58,7 +61,6 @@ class Healthbar {
     );
   }
 
-  @override
   void render(Canvas canvas) {
     Paint paintGreen = Paint();
     paintGreen.color = Color(0xff00ff00);
@@ -78,7 +80,7 @@ class Healthbar {
     canvas.drawRect(_healthbarRed, paintRed);
     canvas.drawRect(_bulletCountRect, paintBullet);
     canvas.drawRect(_scoreRect, paintScore);
-    canvas.drawRect(_coinsRect, paintCoins);
+    _coinsRect.render(canvas);
     tpBullets.paint(canvas, bulletsTextOffset);
     tpScore.paint(canvas, scoreTextOffset);
     tpCoins.paint(canvas, coinsTextOffset);
@@ -96,7 +98,9 @@ class Healthbar {
         screenSize.width / 3 - 2, 18, greenSize + redSize + 4, 34);
     _bulletCountRect = Rect.fromLTWH(screenSize.width / 1.5 + 20, 18, 34, 34);
     _scoreRect = Rect.fromLTWH(screenSize.width / 1.5 + 60, 18, 34, 34);
-    _coinsRect = Rect.fromLTWH(screenSize.width / 1.5 + 100, 18, 34, 34);
+    _coinsRect = SpriteComponent.fromSprite(34, 34, Sprite('coinsCount.png'));
+    _coinsRect.x = screenSize.width / 1.5 + 100;
+    _coinsRect.y = 18;
   }
 
   void updateRect(double maxH, double h) {
@@ -143,8 +147,8 @@ class Healthbar {
     );
     tpCoins.layout();
     coinsTextOffset = Offset(
-      _coinsRect.center.dx - (tpCoins.width / 2),
-      _coinsRect.top + (_coinsRect.height * .5) - (tpCoins.height / 2),
+      (_coinsRect.x - _coinsRect.width) / 2 - (tpCoins.width / 2),
+      _coinsRect.y + (_coinsRect.height * .5) - (tpCoins.height / 2),
     );
   }
 
@@ -153,8 +157,11 @@ class Healthbar {
     updateCounts(bullets, score, coins);
   }
 
-  void onTapDown(TapDownDetails detail, Function fn) {
-    if (_healthbarBorder.contains(detail.globalPosition)) fn();
+  void onTapDown(TapDownDetails detail, Function fn, Player player) {
+    if (_healthbarBorder.contains(detail.globalPosition)) {
+      player.move = false;
+      fn();
+    }
   }
 
   void setSpeed(List<double> speed) {}

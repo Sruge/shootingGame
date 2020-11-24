@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/widgets.dart';
+import 'package:shootinggame/friends/DealerBord.dart';
 import 'package:shootinggame/screens/game_screens/ScreenManager.dart';
 import 'package:shootinggame/screens/game_screens/TableOverlay.dart';
 import 'package:shootinggame/screens/player/Player.dart';
@@ -20,7 +21,7 @@ class PlayGround extends BaseWidget {
   double speedfactor;
   StoryHandler storyHandler;
   bool showDeal;
-  TableOverlay _table;
+  DealerBord _dealerBord;
 
   PlayGround(int char) {
     _bg = DynamicBackground(0, 0, 'bg.png');
@@ -32,8 +33,9 @@ class PlayGround extends BaseWidget {
   }
   @override
   void onTapDown(TapDownDetails detail, Function fn) {
-    if (showDeal && _table.contains(detail.globalPosition)) {
-      _table.onTapDown(detail, _player);
+    if (showDeal &&
+        _dealerBord.table.toRect().contains(detail.globalPosition)) {
+      _dealerBord.onTapDown(detail, _player);
     } else {
       showDeal = false;
       speed = getSpeed(detail);
@@ -51,7 +53,7 @@ class PlayGround extends BaseWidget {
     _bg.render(canvas);
     storyHandler.render(canvas);
     _player.render(canvas);
-    if (showDeal) _table.render(canvas);
+    if (showDeal) _dealerBord.render(canvas);
   }
 
   @override
@@ -102,8 +104,8 @@ class PlayGround extends BaseWidget {
   }
 
   void openDeal(double x, double y) {
-    _table = TableOverlay(x, y);
-    _table.resize();
+    _dealerBord = DealerBord(true);
+    _dealerBord.resize(x, y);
     showDeal = true;
   }
 }

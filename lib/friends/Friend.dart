@@ -2,13 +2,9 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flame/components/animation_component.dart';
-import 'package:flame/sprite.dart';
 import 'package:flutter/gestures.dart';
-import 'package:shootinggame/bullets/Bullet.dart';
-import 'package:shootinggame/bullets/BulletType.dart';
 import 'package:shootinggame/bullets/SpecialBullet.dart';
 import 'package:shootinggame/effects/EffectType.dart';
-import 'package:shootinggame/enemies/EnemyHealthbar.dart';
 
 import 'package:shootinggame/entities/EntityState.dart';
 

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:shootinggame/enemies/bosses/Altima.dart';
 import 'package:shootinggame/enemies/bosses/Bahamut.dart';
 import 'package:shootinggame/enemies/bosses/Boss.dart';
@@ -23,42 +25,53 @@ class Level {
   double attackRangeMultiplier;
   double attackIntervalMultiplier;
   double enemySpeedMultiplier;
+  double healtMulti;
+
   List<EnemyType> enemyTypes;
   List<PresentType> presentTypes;
   List<Enemy> bosses;
+  Random _random;
   Level(int level) {
+    _random = Random();
     print('Creating Level: $level');
-    spawnInterval = 20;
-    friendSpawnInterval = 8;
-    bossSpawnInterval = 70;
+    spawnInterval = 10 + _random.nextInt(10).toDouble();
+    bossSpawnInterval = 30 + _random.nextInt(60).toDouble();
+    friendSpawnInterval = 30;
+    presentSpawnInterval = 15;
+
     dmgMultiplier = 1;
-    bulletLifetimeMultiplier = 1 + level * 0.1;
+    bulletLifetimeMultiplier = 1;
     attackRangeMultiplier = 1;
     attackIntervalMultiplier = 1 - level * 0.02;
+    healtMulti = 1;
+    enemySpeedMultiplier = 1;
+
     maxEnemies = 6;
-    presentSpawnInterval = 15;
     enemyTypes = [EnemyType.One];
     bosses = List.empty(growable: true);
     presentTypes = [
-      // PresentType.Bullets,
-      // PresentType.Health,
-      // PresentType.Coin,
+      PresentType.Bullets,
+      PresentType.Health,
+      PresentType.Coin,
       PresentType.Freeze
     ];
-    if (level > 3) {
+    if (level > 1) {
       enemyTypes.add(EnemyType.Two);
       Boss boss = Boss();
       boss.resize();
       bosses.add(boss);
     }
-    if (level > 6) {
+    if (level > 2) {
       enemyTypes.add(EnemyType.Three);
       Killer killer = Killer();
       killer.resize();
       bosses.add(killer);
-      attackRangeMultiplier = 2;
+      bulletLifetimeMultiplier = 3;
+      healtMulti = 5;
+      enemySpeedMultiplier = 2;
+      dmgMultiplier = 3;
     }
-    if (level > 9) {
+    if (level > 4) {
       Phoenix phoenix = Phoenix();
       phoenix.resize();
       bosses.add(phoenix);
@@ -66,36 +79,36 @@ class Level {
       dmgMultiplier = 2;
       spawnInterval = 7;
     }
-    if (level > 12) {
+    if (level > 6) {
       enemyTypes.add(EnemyType.Four);
 
       Russia russia = Russia();
       russia.resize();
       bosses.add(russia);
     }
-    if (level > 15) {
+    if (level > 7) {
       Princessserenity princessserenity = Princessserenity();
       princessserenity.resize();
       bosses.add(princessserenity);
-      //spawnInterval = 2;
+      spawnInterval = 6;
     }
-    if (level > 18) {
+    if (level > 9) {
       enemyTypes.add(EnemyType.Five);
       Leviathan leviathan = Leviathan();
       leviathan.resize();
       bosses.add(leviathan);
     }
-    if (level > 21) {
+    if (level > 11) {
       Altima altima = Altima();
       altima.resize();
       bosses.add(altima);
     }
-    if (level > 24) {
+    if (level > 12) {
       Kainhighwind kainhighwind = Kainhighwind();
       kainhighwind.resize();
       bosses.add(kainhighwind);
     }
-    if (level > 27) {
+    if (level > 13) {
       Bahamut bahamut = Bahamut();
       bahamut.resize();
       bosses.add(bahamut);

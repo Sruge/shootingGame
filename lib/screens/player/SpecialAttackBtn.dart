@@ -2,6 +2,7 @@ import 'package:flame/components/animation_component.dart';
 import 'package:flame/components/component.dart';
 import 'package:flame/sprite.dart';
 import 'package:flame/spritesheet.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter/src/gestures/tap.dart';
 import 'package:shootinggame/effects/EffectType.dart';
 import 'dart:ui';
@@ -17,7 +18,13 @@ class SpecialAttackBtn extends BaseWidget {
   bool isActive;
   double x, y;
   int count;
+  TextPainter tpCount;
+  Offset countTextOffset;
   SpecialAttackBtn(this.type, this.count, this.x, this.y) {
+    tpCount = TextPainter(
+      textAlign: TextAlign.center,
+      textDirection: TextDirection.ltr,
+    );
     isActive = false;
     String imgUrl;
     switch (type) {
@@ -70,6 +77,9 @@ class SpecialAttackBtn extends BaseWidget {
     else
       _button.render(canvas);
     canvas.restore();
+    canvas.save();
+    tpCount.paint(canvas, countTextOffset);
+    canvas.restore();
   }
 
   @override
@@ -83,6 +93,13 @@ class SpecialAttackBtn extends BaseWidget {
       _buttonActive.x = x;
       _buttonActive.y = y + screenSize.height * 0.02;
     }
+    tpCount.text = TextSpan(
+      text: (count).toString(),
+      style: TextStyle(color: Color(0xffffffff), fontSize: 25),
+    );
+    tpCount.layout();
+    countTextOffset = Offset(_button.x + (_button.width - tpCount.width) / 2,
+        _button.y + (_button.height - tpCount.height) / 2);
   }
 
   @override
@@ -95,6 +112,11 @@ class SpecialAttackBtn extends BaseWidget {
     } else {
       _button.update(t);
     }
+    tpCount.text = TextSpan(
+      text: (count).toString(),
+      style: TextStyle(color: Color(0xffffffff), fontSize: 16),
+    );
+    tpCount.layout();
   }
 
   Rect toRect() {

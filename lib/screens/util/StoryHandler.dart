@@ -45,9 +45,9 @@ class StoryHandler {
 
   void update(double t, List<double> bgSpeed, Player player) {
     // update level
-    if ((player.score / 20).floor() >= level) {
+    if ((player.score / 15).floor() >= level) {
       level += 1;
-      _level = Level(6);
+      _level = Level(level);
       _spawner = Spawner(_level, this);
     }
     //Add Enemies, Friends... from the Spawners Queues

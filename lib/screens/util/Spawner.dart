@@ -20,6 +20,12 @@ class Spawner {
   double _nextBossSpawn;
   double _nextFriendSpawn;
   double _nextPresentSpawn;
+  double _dmgMultiplier;
+  double _attackRange;
+  double _bulletLifetime;
+  double _attackInterval;
+  double _healthMulti;
+  double _enemySpeed;
   List<EnemyType> _enemyTypes;
   List<PresentType> _presentTypes;
   Random _random;
@@ -42,13 +48,25 @@ class Spawner {
     _nextPresentSpawn = _presentSpawnInterval;
     bosses = level.bosses;
     _presentTypes = level.presentTypes;
+    _attackInterval = level.attackIntervalMultiplier;
+    _attackRange = level.attackRangeMultiplier;
+    _dmgMultiplier = level.dmgMultiplier;
+    _bulletLifetime = level.bulletLifetimeMultiplier;
+    _healthMulti = level.healtMulti;
+    _enemySpeed = level.enemySpeedMultiplier;
   }
 
   update(double t) {
     _timer += t;
     if (_timer > _nextSpawn) {
-      BasicEnemy enemy =
-          BasicEnemy(_enemyTypes[_random.nextInt(_enemyTypes.length)]);
+      BasicEnemy enemy = BasicEnemy(
+          _enemyTypes[_random.nextInt(_enemyTypes.length)],
+          _dmgMultiplier,
+          _attackRange,
+          _attackInterval,
+          _bulletLifetime,
+          _healthMulti,
+          _enemySpeed);
       enemy.resize();
       _storyHandler.enemies.add(enemy);
       _nextSpawn = _timer + _spawnInterval;

@@ -15,7 +15,7 @@ import '../BaseWidget.dart';
 class PlayGround extends BaseWidget {
   DynamicBackground _bg;
 
-  Player _player;
+  Player player;
   List<double> speed = [0, 0];
 
   double speedfactor;
@@ -26,7 +26,7 @@ class PlayGround extends BaseWidget {
   PlayGround(int char) {
     _bg = DynamicBackground(0, 0, 'bg.png');
 
-    _player = Player(char);
+    player = Player(char);
     speedfactor = 0.2;
     storyHandler = StoryHandler();
     showDeal = false;
@@ -35,16 +35,16 @@ class PlayGround extends BaseWidget {
   void onTapDown(TapDownDetails detail, Function fn) {
     if (showDeal &&
         _dealerBord.table.toRect().contains(detail.globalPosition)) {
-      _dealerBord.onTapDown(detail, _player);
+      _dealerBord.onTapDown(detail, player);
     } else {
       showDeal = false;
       speed = getSpeed(detail);
-      _player.onTapDown(
+      player.onTapDown(
           detail, storyHandler.getEnemies(), storyHandler.friends, speed, () {
         screenManager.switchScreen(ScreenState.kMenuScreen);
       });
 
-      if (_player.move) _bg.onTapDown(detail, speed);
+      if (player.move) _bg.onTapDown(detail, speed);
     }
   }
 
@@ -52,7 +52,7 @@ class PlayGround extends BaseWidget {
   void render(Canvas canvas) {
     _bg.render(canvas);
     storyHandler.render(canvas);
-    _player.render(canvas);
+    player.render(canvas);
     if (showDeal) _dealerBord.render(canvas);
   }
 
@@ -60,20 +60,20 @@ class PlayGround extends BaseWidget {
   void resize() {
     _bg.resize();
 
-    _player.resize();
+    player.resize();
     storyHandler.resize();
   }
 
   @override
   void update(double t) {
-    _player.speedfactor = speedfactor;
-    if (_bg.hasReachedDestinationOrBorder()) _player.move = false;
-    if (!_player.move) speed = [0, 0];
+    player.speedfactor = speedfactor;
+    if (_bg.hasReachedDestinationOrBorder()) player.move = false;
+    if (!player.move) speed = [0, 0];
 
     _bg.update(t, speed);
-    _player.update(
+    player.update(
         t, speed, storyHandler.getEnemies(), storyHandler.getPresents());
-    storyHandler.update(t, speed, _player);
+    storyHandler.update(t, speed, player);
   }
 
   List<double> getSpeed(TapDownDetails detail) {

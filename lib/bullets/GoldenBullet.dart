@@ -48,8 +48,9 @@ class GoldenBullet extends SpecialBullet {
   @override
   void hitEnemy(Enemy enemy) {
     if (enemy.effects.isEmpty) {
-      GoldenEffect effect = GoldenEffect(null, enemy);
-
+      StoryHandler handler = screenManager.getStoryHandler();
+      Player player = screenManager.getPlayer();
+      Shield effect = Shield(player, enemy, handler);
       effect.resize(x, y);
       enemy.effects.add(effect);
     }

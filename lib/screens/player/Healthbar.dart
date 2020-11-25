@@ -7,15 +7,14 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 import 'package:shootinggame/screens/util/SizeHolder.dart';
 
-import '../BaseWidget.dart';
 import 'Player.dart';
 
 class Healthbar {
   Rect _healthbarGreen;
   Rect _healthbarRed;
   Rect _healthbarBorder;
-  Rect _bulletCountRect;
   SpriteComponent _coinsRect;
+  SpriteComponent _bulletsRect;
   Rect _scoreRect;
   int _bulletCount;
   double maxHealth;
@@ -23,14 +22,33 @@ class Healthbar {
   TextPainter tpBullets;
   TextPainter tpCoins;
   TextPainter tpScore;
+  TextPainter tpHealth;
   Offset bulletsTextOffset;
   Offset coinsTextOffset;
   Offset scoreTextOffset;
+  Offset healthTextOffset;
+
   int _coins;
   int _score;
+  Paint paintGreen;
+  Paint paintRed;
+  Paint paintBlack;
+  Paint paintBullet;
+  Paint paintScore;
 
   Healthbar(this.maxHealth, this.health, this._bulletCount, this._coins,
       this._score) {
+    paintGreen = Paint();
+    paintGreen.color = Color(0xff00ff00);
+    paintRed = Paint();
+    paintRed.color = Color(0xffff0000);
+    paintBlack = Paint();
+    paintBlack.color = Color(0xff000000);
+    paintBullet = Paint();
+    paintBullet.color = Color(0xffdcb430);
+    paintScore = Paint();
+    paintScore.color = Color(0xff50006c);
+
     double greenSize = (health / maxHealth) * 100;
     double redSize = ((maxHealth - health) / maxHealth) * 100;
     _healthbarGreen =
@@ -39,52 +57,44 @@ class Healthbar {
         Rect.fromLTWH(screenSize.width / 3 + greenSize, 20, redSize * 2, 30);
     _healthbarBorder = Rect.fromLTWH(
         screenSize.width / 3 - 2, 18, greenSize + redSize + 4, 34);
-    _bulletCountRect = Rect.fromLTWH(screenSize.width / 1.5 + 40, 18, 34, 34);
 
     tpBullets = TextPainter(
       textAlign: TextAlign.center,
       textDirection: TextDirection.ltr,
     );
 
-    _bulletCountRect = Rect.fromLTWH(screenSize.width / 1.5 + 40, 18, 34, 34);
-
     tpCoins = TextPainter(
       textAlign: TextAlign.center,
       textDirection: TextDirection.ltr,
     );
 
-    _bulletCountRect = Rect.fromLTWH(screenSize.width / 1.5 + 40, 18, 34, 34);
-
     tpScore = TextPainter(
+      textAlign: TextAlign.center,
+      textDirection: TextDirection.ltr,
+    );
+
+    tpHealth = TextPainter(
       textAlign: TextAlign.center,
       textDirection: TextDirection.ltr,
     );
   }
 
   void render(Canvas canvas) {
-    Paint paintGreen = Paint();
-    paintGreen.color = Color(0xff00ff00);
-    Paint paintRed = Paint();
-    paintRed.color = Color(0xffff0000);
-    Paint paintBlack = Paint();
-    paintBlack.color = Color(0xff000000);
-    Paint paintBullet = Paint();
-    paintBullet.color = Color(0xffdcb430);
-    Paint paintCoins = Paint();
-    paintCoins.color = Color(0xfff8f004);
-    Paint paintScore = Paint();
-    paintScore.color = Color(0xff50006c);
     canvas.save();
     canvas.drawRect(_healthbarBorder, paintBlack);
     canvas.drawRect(_healthbarGreen, paintGreen);
     canvas.drawRect(_healthbarRed, paintRed);
-    canvas.drawRect(_bulletCountRect, paintBullet);
     canvas.drawRect(_scoreRect, paintScore);
+    canvas.save();
     _coinsRect.render(canvas);
+    canvas.restore();
+    canvas.save();
+    _bulletsRect.render(canvas);
+    canvas.restore();
     tpBullets.paint(canvas, bulletsTextOffset);
     tpScore.paint(canvas, scoreTextOffset);
     tpCoins.paint(canvas, coinsTextOffset);
-    canvas.restore();
+    tpHealth.paint(canvas, healthTextOffset);
   }
 
   void resize() {
@@ -95,24 +105,37 @@ class Healthbar {
     _healthbarRed =
         Rect.fromLTWH(screenSize.width / 3 + greenSize, 20, redSize * 2, 30);
     _healthbarBorder = Rect.fromLTWH(
-        screenSize.width / 3 - 2, 18, greenSize + redSize + 4, 34);
-    _bulletCountRect = Rect.fromLTWH(screenSize.width / 1.5 + 20, 18, 34, 34);
-    _scoreRect = Rect.fromLTWH(screenSize.width / 1.5 + 60, 18, 34, 34);
+        (screenSize.width - 100) / 2, 18, greenSize + redSize + 4, 32);
+    _scoreRect = Rect.fromLTWH(screenSize.width / 3 - 10 - 48, 18, 48, 32);
+    _bulletsRect =
+        SpriteComponent.fromSprite(48, 32, Sprite('bulletcount.png'));
+    _bulletsRect.x = screenSize.width / 1.5 + 10;
+    _bulletsRect.y = 18;
     _coinsRect = SpriteComponent.fromSprite(34, 34, Sprite('coinsCount.png'));
-    _coinsRect.x = screenSize.width / 1.5 + 100;
+    _coinsRect.x = screenSize.width / 1.5 + 20 + _bulletsRect.width;
     _coinsRect.y = 18;
   }
 
   void updateRect(double maxH, double h) {
     maxHealth = maxH;
     health = h;
-    double greenSize = (health / maxHealth) * 250;
-    double redSize = ((maxHealth - health) / maxHealth) * 250;
-    _healthbarGreen = Rect.fromLTWH(screenSize.width / 3, 20, greenSize, 30);
+    double greenSize = (health / maxHealth) * screenSize.width / 3;
+    double redSize = ((maxHealth - health) / maxHealth) * screenSize.width / 3;
+    _healthbarGreen = Rect.fromLTWH(screenSize.width / 3, 20, greenSize, 28);
     _healthbarRed =
-        Rect.fromLTWH(screenSize.width / 3 + greenSize, 20, redSize, 30);
+        Rect.fromLTWH(screenSize.width / 3 + greenSize, 20, redSize, 28);
     _healthbarBorder = Rect.fromLTWH(
-        screenSize.width / 3 - 2, 18, greenSize + redSize + 4, 34);
+        (screenSize.width - screenSize.width / 3) / 2 - 2,
+        18,
+        greenSize + redSize + 4,
+        32);
+    tpHealth.text = TextSpan(
+      text: '${h.toInt()}/${maxH.toInt()}',
+      style: TextStyle(color: Color(0xffffffff), fontSize: 16),
+    );
+    tpHealth.layout();
+    healthTextOffset = Offset((screenSize.width - tpHealth.width) / 2,
+        _healthbarBorder.top + (_healthbarBorder.height - tpHealth.height) / 2);
   }
 
   void updateCounts(int bulletCount, int score, int coins) {
@@ -125,10 +148,8 @@ class Healthbar {
     );
     tpBullets.layout();
     bulletsTextOffset = Offset(
-      _bulletCountRect.center.dx - (tpBullets.width / 2),
-      _bulletCountRect.top +
-          (_bulletCountRect.height * .5) -
-          (tpBullets.height / 2),
+      _bulletsRect.x + ((_bulletsRect.width - tpBullets.width) / 2),
+      _bulletsRect.y + ((_bulletsRect.height - tpBullets.height) / 2),
     );
 
     tpScore.text = TextSpan(
@@ -147,8 +168,8 @@ class Healthbar {
     );
     tpCoins.layout();
     coinsTextOffset = Offset(
-      (_coinsRect.x - _coinsRect.width) / 2 - (tpCoins.width / 2),
-      _coinsRect.y + (_coinsRect.height * .5) - (tpCoins.height / 2),
+      _coinsRect.x + ((_coinsRect.width - tpCoins.width) / 2),
+      _coinsRect.y + ((_coinsRect.height - tpCoins.height) / 2),
     );
   }
 

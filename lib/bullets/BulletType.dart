@@ -1,1 +1,1 @@
-enum BulletType { One, Two, Freeze, Fire, Purple, Smoke, Gold }
+enum BulletType { One, Two, Three, Freeze, Fire, Purple, Smoke, Gold }

@@ -15,7 +15,21 @@ class BasicEnemy extends Enemy {
   BulletType _bulletType;
   String aniPath;
   int _txtWidth, _txtHeight;
-  BasicEnemy(this._type) : super() {
+  double _attackRange,
+      _attackInterval,
+      _bulletLifetime,
+      _dmgMultiplier,
+      _healtMulti,
+      _enemySpeed;
+  BasicEnemy(
+      this._type,
+      this._dmgMultiplier,
+      this._attackRange,
+      this._attackInterval,
+      this._bulletLifetime,
+      this._healtMulti,
+      this._enemySpeed)
+      : super() {
     attackRange = 130;
     attackInterval = 3;
     health = 4;
@@ -24,41 +38,56 @@ class BasicEnemy extends Enemy {
     switch (_type) {
       case EnemyType.One:
         aniPath = 'priest.png';
-        attackRange = 200;
-        attackInterval = 2;
-        bulletLifetimeFctr = 2;
+        attackRange = 200 * _attackRange;
+        attackInterval = 2 * _attackInterval;
+        bulletLifetimeFctr = 2 * _bulletLifetime;
+        dmgFctr = 1 * _dmgMultiplier;
+        _bulletType = BulletType.One;
+        maxHealth = 4 * _healtMulti;
         _txtWidth = 32;
         _txtHeight = 48;
         break;
       case EnemyType.Two:
         aniPath = 'monster.png';
-        attackRange = 150;
-        attackInterval = 5;
-        bulletLifetimeFctr = 1;
+        attackRange = 200 * _attackRange;
+        attackInterval = 2 * _attackInterval;
+        bulletLifetimeFctr = 2 * _bulletLifetime;
+        dmgFctr = 1 * _dmgMultiplier;
+        _bulletType = BulletType.One;
+        maxHealth = 4 * _healtMulti;
         _txtWidth = 32;
         _txtHeight = 48;
         break;
       case EnemyType.Three:
         aniPath = 'angel.png';
-        attackRange = 75;
-        attackInterval = 4;
-        bulletLifetimeFctr = 1;
+        attackRange = 200 * _attackRange;
+        attackInterval = 2 * _attackInterval;
+        bulletLifetimeFctr = 2 * _bulletLifetime;
+        dmgFctr = 1 * _dmgMultiplier;
+        _bulletType = BulletType.Two;
+        maxHealth = 4 * _healtMulti;
         _txtWidth = 48;
         _txtHeight = 48;
         break;
       case EnemyType.Four:
         aniPath = 'ryuk.png';
-        attackRange = 120;
-        attackInterval = 4;
-        bulletLifetimeFctr = 1;
+        attackRange = 200 * _attackRange;
+        attackInterval = 2 * _attackInterval;
+        bulletLifetimeFctr = 2 * _bulletLifetime;
+        dmgFctr = 1 * _dmgMultiplier;
+        _bulletType = BulletType.Two;
+        maxHealth = 4 * _healtMulti;
         _txtWidth = 48;
         _txtHeight = 64;
         break;
       case EnemyType.Five:
         aniPath = 'ray.png';
-        attackRange = 130;
-        attackInterval = 3;
-        bulletLifetimeFctr = 1;
+        attackRange = 200 * _attackRange;
+        attackInterval = 2 * _attackInterval;
+        bulletLifetimeFctr = 2 * _bulletLifetime;
+        dmgFctr = 1 * _dmgMultiplier;
+        _bulletType = BulletType.Three;
+        maxHealth = 4 * _healtMulti;
         _txtWidth = 32;
         _txtHeight = 52;
         break;
@@ -72,11 +101,9 @@ class BasicEnemy extends Enemy {
   @override
   BasicBullet getAttack() {
     List<double> coords = getAttackingCoordinates();
-    if (_type == EnemyType.One)
-      _bulletType = BulletType.One;
-    else if (_type == EnemyType.Two) _bulletType = BulletType.Two;
     BasicBullet bullet = BasicBullet(coords[0], coords[1], coords[2], coords[3],
         _bulletType, bulletLifetimeFctr, dmgFctr);
+
     return bullet;
   }
 }

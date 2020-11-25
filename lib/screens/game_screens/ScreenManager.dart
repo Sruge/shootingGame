@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:shootinggame/friends/DealerBord.dart';
 import 'package:shootinggame/screens/game_screens/CharacterScreen.dart';
 import 'package:shootinggame/screens/game_screens/MainScreen.dart';
+import 'package:shootinggame/screens/player/Player.dart';
 import 'package:shootinggame/screens/util/SizeHolder.dart';
 import 'package:shootinggame/screens/util/StoryHandler.dart';
 
@@ -109,5 +110,9 @@ class ScreenManager extends Game with TapDetector {
 
   StoryHandler getStoryHandler() {
     return _playScreen.storyHandler;
+  }
+
+  Player getPlayer() {
+    return _playScreen.player;
   }
 }

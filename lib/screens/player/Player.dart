@@ -51,8 +51,8 @@ class Player {
   BulletType bulletType;
 
   Player(int char) {
-    health = 20;
-    maxHealth = 20;
+    health = 2000;
+    maxHealth = 2000;
     _healthbar = Healthbar(10, 10, bulletCount, coins, score);
     bullets = List.empty(growable: true);
     _specialBullets = List.empty(growable: true);
@@ -62,9 +62,9 @@ class Player {
     bulletCount = 100;
     maxBulletCount = 500;
     speedfactor = 0.2;
-    coins = 20;
+    coins = 2;
     score = 0;
-    slots = 1;
+    slots = 2;
     _btnBar = ButtonBar(slots);
     bulletLifetimeFctr = 0.7;
     dmgFctr = 2;
@@ -72,7 +72,7 @@ class Player {
     attackType = AttackType.Normal;
     bulletType = BulletType.One;
     addAttack(AttackType.Fire, 5);
-    addAttack(AttackType.Freeze, 5);
+    addAttack(AttackType.Night, 5);
     addAttack(AttackType.Heal, 5);
 
     String playerPath;

@@ -1,6 +1,7 @@
 import 'package:flame/components/component.dart';
 import 'package:flame/sprite.dart';
 import 'package:flutter/gestures.dart';
+import 'package:flutter/painting.dart';
 import 'package:shootinggame/effects/EffectType.dart';
 import 'dart:ui';
 
@@ -18,12 +19,14 @@ class ButtonBar {
   double firstBtnX;
   double y;
   int activeButton;
+
   ButtonBar(int buttonCount) {
     _buttons = List.empty(growable: true);
     _buttonBar = SpriteComponent.fromSprite(0, 0, Sprite('buttonBar.png'));
     _topBar = SpriteComponent.fromSprite(0, 0, Sprite('buttonBar.png'));
     _topBar.renderFlipY = true;
     activeButton = null;
+
     for (int i = 0; i < buttonCount; i++) {
       _buttons.add(SpecialAttackBtn(AttackType.Normal, 0, 0, 0));
     }
@@ -112,6 +115,9 @@ class ButtonBar {
         _buttons[i] = SpecialAttackBtn(type, count, screenSize.width - 20, 0);
         resize();
         break;
+      } else if (_buttons[i].type == type) {
+        _buttons[i].count += count;
+        break;
       }
     }
   }
@@ -124,7 +130,7 @@ class ButtonBar {
 
   void reduceCount(AttackType type) {
     _buttons.forEach((element) {
-      if (element.type == type) {
+      if (type != AttackType.Normal && element.type == type) {
         element.count -= 1;
       }
     });

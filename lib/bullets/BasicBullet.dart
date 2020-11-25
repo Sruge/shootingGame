@@ -11,7 +11,7 @@ class BasicBullet extends Bullet {
   BulletType _type;
   BasicBullet(double x, double y, double _bulletSpeedX, double _bulletSpeedY,
       this._type, lifetimeFctr, damageFctr)
-      : super(x, y, _bulletSpeedX, _bulletSpeedY, 4) {
+      : super(x, y, _bulletSpeedX, _bulletSpeedY, damageFctr * 4) {
     if (_type == BulletType.One) {
       damage = damageFctr;
       lifetime = lifetime * lifetimeFctr;
@@ -19,6 +19,10 @@ class BasicBullet extends Bullet {
       damage = 2 * damageFctr;
       lifetime = 2 * lifetime * lifetimeFctr;
       bullet = SpriteComponent.square(9, 'redBullet.png');
+    } else if (_type == BulletType.Three) {
+      damage = 3 * damageFctr;
+      lifetime = 3 * lifetime * lifetimeFctr;
+      bullet = SpriteComponent.square(9, 'greenBullet.png');
     }
   }
 

@@ -22,15 +22,15 @@ class DealerItem {
     clicked = false;
     switch (_type) {
       case DealerItemType.Bullets:
-        button = SpriteComponent.fromSprite(0, 0, Sprite('speed.png'));
+        button = SpriteComponent.fromSprite(0, 0, Sprite('bullets.png'));
         buttonClicked =
-            SpriteComponent.fromSprite(0, 0, Sprite('speedout.png'));
+            SpriteComponent.fromSprite(0, 0, Sprite('bulletsout.png'));
 
         break;
       case DealerItemType.SpecialBullets:
-        button = SpriteComponent.fromSprite(0, 0, Sprite('speed.png'));
+        button = SpriteComponent.fromSprite(0, 0, Sprite('rainbow.png'));
         buttonClicked =
-            SpriteComponent.fromSprite(0, 0, Sprite('speedout.png'));
+            SpriteComponent.fromSprite(0, 0, Sprite('rainbowout.png'));
 
         break;
       case DealerItemType.Health:
@@ -50,9 +50,9 @@ class DealerItem {
 
         break;
       case DealerItemType.Range:
-        button = SpriteComponent.fromSprite(0, 0, Sprite('speed.png'));
+        button = SpriteComponent.fromSprite(0, 0, Sprite('range.png'));
         buttonClicked =
-            SpriteComponent.fromSprite(0, 0, Sprite('speedout.png'));
+            SpriteComponent.fromSprite(0, 0, Sprite('rangeout.png'));
         break;
       default:
     }

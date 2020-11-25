@@ -49,7 +49,7 @@ class Effect {
     timer += t;
     effect.x = x;
     effect.y = y;
-    if (timer > totalDuration) state = EffectState.Ended;
+    if (timer > totalDuration) end();
 
     if (renderSomething) {
       effect.update(t);
@@ -63,5 +63,9 @@ class Effect {
       effect.width = screenSize.width * 0.06;
       effect.height = screenSize.height * 0.14;
     }
+  }
+
+  void end() {
+    state = EffectState.Ended;
   }
 }

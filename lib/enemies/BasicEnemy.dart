@@ -30,11 +30,6 @@ class BasicEnemy extends Enemy {
       this._healtMulti,
       this._enemySpeed)
       : super() {
-    attackRange = 130;
-    attackInterval = 3;
-    health = 4;
-    maxHealth = 4;
-
     switch (_type) {
       case EnemyType.One:
         aniPath = 'priest.png';
@@ -43,7 +38,8 @@ class BasicEnemy extends Enemy {
         bulletLifetimeFctr = 2 * _bulletLifetime;
         dmgFctr = 1 * _dmgMultiplier;
         _bulletType = BulletType.One;
-        maxHealth = 4 * _healtMulti;
+        maxHealth = 20 * _healtMulti;
+        health = maxHealth;
         _txtWidth = 32;
         _txtHeight = 48;
         break;
@@ -54,7 +50,8 @@ class BasicEnemy extends Enemy {
         bulletLifetimeFctr = 2 * _bulletLifetime;
         dmgFctr = 1 * _dmgMultiplier;
         _bulletType = BulletType.One;
-        maxHealth = 4 * _healtMulti;
+        maxHealth = 30 * _healtMulti;
+        health = maxHealth;
         _txtWidth = 32;
         _txtHeight = 48;
         break;
@@ -65,7 +62,8 @@ class BasicEnemy extends Enemy {
         bulletLifetimeFctr = 2 * _bulletLifetime;
         dmgFctr = 1 * _dmgMultiplier;
         _bulletType = BulletType.Two;
-        maxHealth = 4 * _healtMulti;
+        maxHealth = 40 * _healtMulti;
+        health = maxHealth;
         _txtWidth = 48;
         _txtHeight = 48;
         break;
@@ -76,7 +74,8 @@ class BasicEnemy extends Enemy {
         bulletLifetimeFctr = 2 * _bulletLifetime;
         dmgFctr = 1 * _dmgMultiplier;
         _bulletType = BulletType.Two;
-        maxHealth = 4 * _healtMulti;
+        maxHealth = 70 * _healtMulti;
+        health = maxHealth;
         _txtWidth = 48;
         _txtHeight = 64;
         break;
@@ -87,7 +86,8 @@ class BasicEnemy extends Enemy {
         bulletLifetimeFctr = 2 * _bulletLifetime;
         dmgFctr = 1 * _dmgMultiplier;
         _bulletType = BulletType.Three;
-        maxHealth = 4 * _healtMulti;
+        maxHealth = 200 * _healtMulti;
+        health = maxHealth;
         _txtWidth = 32;
         _txtHeight = 52;
         break;

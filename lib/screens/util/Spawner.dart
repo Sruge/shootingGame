@@ -11,12 +11,12 @@ import 'package:shootinggame/screens/util/StoryHandler.dart';
 import 'Level.dart';
 
 class Spawner {
-  double _spawnInterval;
+  double spawnInterval;
   double _bossSpawnInterval;
   double _friendSpawnInterval;
   double _presentSpawnInterval;
   double _maxEnemies = 6;
-  double _nextSpawn;
+  double nextSpawn;
   double _nextBossSpawn;
   double _nextFriendSpawn;
   double _nextPresentSpawn;
@@ -36,13 +36,13 @@ class Spawner {
     _storyHandler = storyHandler;
     _timer = 0;
     _random = Random();
-    _spawnInterval = level.spawnInterval;
+    spawnInterval = level.spawnInterval;
     _bossSpawnInterval = level.bossSpawnInterval;
     _friendSpawnInterval = level.friendSpawnInterval;
     _presentSpawnInterval = level.presentSpawnInterval;
     _enemyTypes = level.enemyTypes;
     _maxEnemies = level.maxEnemies;
-    _nextSpawn = 0;
+    nextSpawn = 0;
     _nextBossSpawn = 20;
     _nextFriendSpawn = _friendSpawnInterval;
     _nextPresentSpawn = _presentSpawnInterval;
@@ -52,13 +52,13 @@ class Spawner {
     _attackRange = level.attackRangeMultiplier;
     _dmgMultiplier = level.dmgMultiplier;
     _bulletLifetime = level.bulletLifetimeMultiplier;
-    _healthMulti = level.healtMulti;
+    _healthMulti = level.healthMulti;
     _enemySpeed = level.enemySpeedMultiplier;
   }
 
   update(double t) {
     _timer += t;
-    if (_timer > _nextSpawn) {
+    if (_timer > nextSpawn) {
       BasicEnemy enemy = BasicEnemy(
           _enemyTypes[_random.nextInt(_enemyTypes.length)],
           _dmgMultiplier,
@@ -69,7 +69,7 @@ class Spawner {
           _enemySpeed);
       enemy.resize();
       _storyHandler.enemies.add(enemy);
-      _nextSpawn = _timer + _spawnInterval;
+      nextSpawn = _timer + spawnInterval;
     }
     if (_timer > _nextBossSpawn && bosses.isNotEmpty) {
       _storyHandler.enemies.add(bosses.first);

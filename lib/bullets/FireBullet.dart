@@ -28,6 +28,7 @@ class FireBullet extends SpecialBullet {
 
   @override
   void hitPlayer(Player player) {
+    super.hitPlayer(player);
     Effect effect = FireEffect(player, null);
     effect.resize(x, y);
     player.effects.add(effect);
@@ -36,6 +37,8 @@ class FireBullet extends SpecialBullet {
 
   @override
   void hitEnemy(Enemy enemy) {
+    super.hitEnemy(enemy);
+
     Effect effect = FireEffect(null, enemy);
     effect.resize(enemy.x, enemy.y);
     enemy.effects.add(effect);

@@ -18,7 +18,7 @@ class GoldenBullet extends SpecialBullet {
   GoldenBullet(double x, double y, double _bulletSpeedX, double _bulletSpeedY)
       : super(x, y, 20, 20, _bulletSpeedX, _bulletSpeedY, 'goldenBullet.png',
             32, 32, 5) {
-    damage = 5;
+    damage = 50;
     width = 20;
     height = 20;
     lifetime = 5;

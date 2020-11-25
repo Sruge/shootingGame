@@ -8,6 +8,7 @@ import 'package:shootinggame/bullets/SpecialBullet.dart';
 import 'package:shootinggame/entities/EntityState.dart';
 import 'package:shootinggame/screens/player/WalkingEntity.dart';
 import 'package:shootinggame/screens/util/SizeHolder.dart';
+import 'package:shootinggame/screens/util/StoryHandler.dart';
 
 import '../../bullets/Bullet.dart';
 
@@ -62,14 +63,14 @@ class Bahamut extends Enemy {
   }
 
   @override
-  void update(double t, List<double> speed) {
+  void update(double t, List<double> speed, StoryHandler storyHandler) {
     _specialAttackTimer += t;
     if (_specialAttackTimer > _specialAttackInterval) {
       specialBullets.add(getSpecialAttack());
       _specialAttackTimer = 0;
     }
 
-    super.update(t, speed);
+    super.update(t, speed, storyHandler);
   }
 
   int getScore() {

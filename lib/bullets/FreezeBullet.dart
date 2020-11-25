@@ -13,7 +13,7 @@ class FreezeBullet extends SpecialBullet {
   FreezeBullet(double x, double y, double _bulletSpeedX, double _bulletSpeedY)
       : super(x, y, 16, 16, _bulletSpeedX, _bulletSpeedY, 'freezeTrans.png', 32,
             32, 3) {
-    damage = 5;
+    damage = 20;
     lifetime = 2;
   }
 

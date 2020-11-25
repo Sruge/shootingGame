@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flame/components/component.dart';
 import 'package:flutter/gestures.dart';
 import 'package:shootinggame/effects/EffectType.dart';
+import 'package:shootinggame/enemies/Enemy.dart';
 
 import 'package:shootinggame/entities/EntityState.dart';
 import 'package:shootinggame/screens/player/Player.dart';
@@ -24,7 +25,7 @@ class Bullet {
     bullet = SpriteComponent.square(7, 'bullet.png');
     _state = EntityState.Normal;
     setSpeed([0, 0]);
-    damage = 1;
+    damage = 20;
     _timer = 0;
     lifetime = 1;
 
@@ -91,5 +92,15 @@ class Bullet {
 
   EffectType getEffect() {
     return EffectType.None;
+  }
+
+  void hitPlayer(Player player) {
+    player.health -= damage;
+    die();
+  }
+
+  void hitEnemy(Enemy enemy) {
+    enemy.health -= damage;
+    die();
   }
 }

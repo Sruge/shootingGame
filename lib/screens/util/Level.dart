@@ -25,7 +25,8 @@ class Level {
   double attackRangeMultiplier;
   double attackIntervalMultiplier;
   double enemySpeedMultiplier;
-  double healtMulti;
+  double healthMulti;
+  double timeToNextLevel;
 
   List<EnemyType> enemyTypes;
   List<PresentType> presentTypes;
@@ -33,17 +34,17 @@ class Level {
   Random _random;
   Level(int level) {
     _random = Random();
-    print('Creating Level: $level');
-    spawnInterval = 10 + _random.nextInt(10).toDouble();
-    bossSpawnInterval = 30 + _random.nextInt(60).toDouble();
-    friendSpawnInterval = 30;
+    spawnInterval = 10 + _random.nextInt(20).toDouble() - level * 0.1;
+    bossSpawnInterval = 0 + _random.nextInt(10).toDouble();
+    friendSpawnInterval = 3;
     presentSpawnInterval = 15;
+    timeToNextLevel = 120;
 
     dmgMultiplier = 1;
     bulletLifetimeMultiplier = 1;
     attackRangeMultiplier = 1;
     attackIntervalMultiplier = 1 - level * 0.02;
-    healtMulti = 1;
+    healthMulti = 1;
     enemySpeedMultiplier = 1;
 
     maxEnemies = 6;
@@ -55,9 +56,9 @@ class Level {
       PresentType.Coin,
       PresentType.Freeze
     ];
-    if (level > 1) {
+    if (level >= 0) {
       enemyTypes.add(EnemyType.Two);
-      Boss boss = Boss();
+      Kainhighwind boss = Kainhighwind();
       boss.resize();
       bosses.add(boss);
     }
@@ -67,7 +68,7 @@ class Level {
       killer.resize();
       bosses.add(killer);
       bulletLifetimeMultiplier = 3;
-      healtMulti = 5;
+      healthMulti = 5;
       enemySpeedMultiplier = 2;
       dmgMultiplier = 3;
     }
@@ -113,5 +114,14 @@ class Level {
       bahamut.resize();
       bosses.add(bahamut);
     }
+    print('Creating Level: $level: ${this.toString()}');
+  }
+
+  String toString() {
+    String level = 'EnemyTypes: $enemyTypes, Bosses: $bosses, PresentTypes: $presentTypes, ' +
+        'SpawnInterval: $spawnInterval BossSpawnInterval: $bossSpawnInterval, FriendSpawninterval: $friendSpawnInterval, PresentSpawnInterval: $presentSpawnInterval, ' +
+        'Damage: $dmgMultiplier, BulletLifeTime: $bulletLifetimeMultiplier, AttackRange: $attackRangeMultiplier, AttackInterval: $attackIntervalMultiplier, ' +
+        'SpeedMultiplier: $enemySpeedMultiplier, HealthMulti: $healthMulti, Duration: $timeToNextLevel';
+    return level;
   }
 }

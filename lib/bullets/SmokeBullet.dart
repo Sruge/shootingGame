@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/gestures.dart';
 import 'package:shootinggame/effects/Effect.dart';
 import 'package:shootinggame/effects/EffectType.dart';
@@ -11,14 +13,18 @@ class SmokeBullet extends SpecialBullet {
   double damage;
   double width;
   double height;
+  double num;
+  Random random;
 
   SmokeBullet(double x, double y, double _bulletSpeedX, double _bulletSpeedY)
-      : super(x, y, 20, 20, _bulletSpeedX, _bulletSpeedY, 'wind.png', 128, 128,
+      : super(x, y, 20, 20, _bulletSpeedX, _bulletSpeedY, 'smoke.png', 64, 64,
             0) {
     damage = 5;
     width = 20;
     height = 20;
     lifetime = 5;
+    random = Random();
+    num = (random.nextDouble() - 0.5) * 100;
   }
 
   @override
@@ -30,10 +36,12 @@ class SmokeBullet extends SpecialBullet {
   void update(double t, List<double> speed) {
     width += t * 50;
     height += t * 50;
+    double num = random.nextDouble() - 0.5;
     specialBullet.width = width;
     specialBullet.height = height;
-    x -= t * 25;
+    x -= t * 25 + t * 70 * num;
     y -= t * 25;
+    t * 70 * num;
     super.update(t, speed);
   }
 

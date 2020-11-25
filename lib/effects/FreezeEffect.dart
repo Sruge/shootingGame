@@ -19,7 +19,7 @@ class FreezeEffect extends Effect {
       _player.frozen = true;
     } else if (enemy != null) {
       _initialSpeed = enemy.enemySpeedFactor;
-      enemy.enemySpeedFactor = 0;
+      enemy.frozen = true;
     }
   }
 
@@ -31,7 +31,7 @@ class FreezeEffect extends Effect {
         //screenManager.setSpeedfactor(0.2, true);
         state = EffectState.Ended;
       } else if (_enemy != null) {
-        _enemy.enemySpeedFactor = 0.05;
+        _enemy.frozen = false;
         state = EffectState.Ended;
       }
     }

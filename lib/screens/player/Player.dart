@@ -11,6 +11,8 @@ import 'package:shootinggame/effects/Effect.dart';
 import 'package:shootinggame/effects/EffectState.dart';
 import 'package:shootinggame/effects/EffectType.dart';
 import 'package:shootinggame/effects/HealEffect.dart';
+import 'package:shootinggame/effects/IceEffect.dart';
+import 'package:shootinggame/effects/Sparkle.dart';
 import 'package:shootinggame/enemies/Enemy.dart';
 import 'package:shootinggame/bullets/FireBullet.dart';
 import 'package:shootinggame/friends/Friend.dart';
@@ -72,8 +74,14 @@ class Player {
     attackType = AttackType.Normal;
     bulletType = BulletType.One;
     addAttack(AttackType.Fire, 5);
-    addAttack(AttackType.Night, 5);
+    addAttack(AttackType.Freeze, 5);
     addAttack(AttackType.Heal, 5);
+    Effect iceEffect = IceEffect(this, null);
+    iceEffect.resize(0, 0);
+    effects.add(iceEffect);
+    Effect sparkle = Sparkle(this, null);
+    sparkle.resize(0, 0);
+    effects.add(sparkle);
 
     String playerPath;
     switch (char) {
@@ -192,8 +200,7 @@ class Player {
       bullets[i].update(t, speed);
       enemies.forEach((e) {
         if (e.overlaps(bullets[i].toRect())) {
-          e.getHit(bullets[i]);
-          bullets[i].die();
+          bullets[i].hitEnemy(e);
         }
       });
     }
@@ -280,7 +287,7 @@ class Player {
   }
 
   void die() {
-    health = 20;
+    health = maxHealth;
   }
 
   void addSlot() {

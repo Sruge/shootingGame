@@ -7,6 +7,7 @@ import 'package:shootinggame/bullets/SpecialBullet.dart';
 import 'package:shootinggame/effects/EffectType.dart';
 
 import 'package:shootinggame/entities/EntityState.dart';
+import 'package:shootinggame/screens/player/WalkingEntity.dart';
 
 import 'package:shootinggame/screens/util/SizeHolder.dart';
 
@@ -15,16 +16,15 @@ import 'FriendType.dart';
 class Friend {
   double _timer;
   double attackInterval;
-  AnimationComponent entity;
-  EntityState _state;
+  WalkingEntity entity;
+  EntityState state;
   double _distanceToCenter;
   double attackRange;
-  bool _flipRender;
+  bool flipRender;
   double x;
   double y;
   double health;
   double maxHealth;
-  FriendType type;
 
   int leftOrDown;
   double enemySpeedY;
@@ -33,13 +33,13 @@ class Friend {
   double enemySpeedFactor;
   List<SpecialBullet> specialBullets;
 
-  Friend(this.type) {
+  Friend() {
     _timer = 0;
-    _state = EntityState.Normal;
-    _flipRender = false;
+    state = EntityState.Normal;
+    flipRender = false;
     enemySpeedX = 0;
     enemySpeedY = 0;
-    enemySpeedFactor = 0.05;
+    enemySpeedFactor = 0.2;
     specialBullets = List.empty(growable: true);
     Random random = Random();
     leftOrDown = random.nextInt(2);
@@ -53,6 +53,8 @@ class Friend {
       return false;
     }
   }
+
+  void update(double t, List<double> speed) {}
 
   List<double> getAttackingCoordinates() {
     double sumDistance = (entity.x - screenSize.width * 0.94 / 2).abs() +
@@ -80,7 +82,7 @@ class Friend {
   }
 
   bool isDead() {
-    return _state == EntityState.Dead;
+    return state == EntityState.Dead;
   }
 
   void onTapDown(TapDownDetails detail, Function fn) {}
@@ -94,11 +96,11 @@ class Friend {
   }
 
   void render(Canvas canvas) {
-    if (_flipRender) {
-      entity.renderFlipX = true;
-    } else {
-      entity.renderFlipX = false;
-    }
+    // if (flipRender) {
+    //   entity.renderFlipX = true;
+    // } else {
+    //   entity.renderFlipX = false;
+    // }
     entity.x = x;
     entity.y = y;
     canvas.save();
@@ -107,8 +109,8 @@ class Friend {
   }
 
   void resize() {
-    entity.width = screenSize.width * 0.06;
-    entity.height = screenSize.height * 0.14;
+    // entity.width = screenSize.width * 0.06;
+    // entity.height = screenSize.height * 0.14;
 
     int spawnUpDownLeftRight = Random().nextInt(4);
     double spawnPos = Random().nextDouble();
@@ -130,30 +132,7 @@ class Friend {
         y = screenSize.height * spawnPos;
         break;
     }
-  }
-
-  void update(double t, List<double> bgSpeed) {
-    _timer += t;
-
-    if (leftOrDown < 1)
-      enemySpeedX = 0.05;
-    else
-      enemySpeedY = 0.05;
-
-    if (enemySpeedX < 0) {
-      _flipRender = false;
-    } else if (enemySpeedX > 0) {
-      _flipRender = true;
-    }
-
-    x = x +
-        0.04 * enemySpeedX * screenSize.width -
-        t * bgSpeed[0] * screenSize.width;
-    y = y +
-        0.04 * enemySpeedY * screenSize.width -
-        t * bgSpeed[1] * screenSize.width;
-
-    entity.animation.update(t);
+    entity.resize();
   }
 
   double getDistanceToCenter() {
@@ -163,7 +142,7 @@ class Friend {
   }
 
   void die() {
-    _state = EntityState.Dead;
+    state = EntityState.Dead;
   }
 
   void trigger() {}

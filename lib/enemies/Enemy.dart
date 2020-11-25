@@ -12,6 +12,7 @@ import 'package:shootinggame/entities/EntityState.dart';
 
 import 'package:shootinggame/screens/player/WalkingEntity.dart';
 import 'package:shootinggame/screens/util/SizeHolder.dart';
+import 'package:shootinggame/screens/util/StoryHandler.dart';
 
 import '../bullets/Bullet.dart';
 import '../effects/EffectType.dart';
@@ -41,13 +42,14 @@ class Enemy {
   List<BulletType> bulletTypes;
   double bulletLifetimeFctr;
   double dmgFctr;
+  bool frozen;
 
   Enemy() {
     _timer = 0;
     state = EntityState.Normal;
     enemySpeedX = 0;
     enemySpeedY = 0;
-    enemySpeedFactor = 0.05;
+    enemySpeedFactor = 0.2;
     enemyhealthBar = EnemyhealthBar(0, 0);
     specialBullets = List.empty(growable: true);
     random = Random();
@@ -55,12 +57,18 @@ class Enemy {
     effects = List.empty(growable: true);
     bulletLifetimeFctr = 1;
     dmgFctr = 1;
+    frozen = false;
   }
 
   bool attacks() {
     if (_timer >= attackInterval && getDistanceToCenter() < attackRange) {
-      _timer = 0;
-      return true;
+      if (frozen) {
+        _timer = 0;
+        return false;
+      } else {
+        _timer = 0;
+        return true;
+      }
     } else {
       return false;
     }
@@ -114,12 +122,9 @@ class Enemy {
     return state == EntityState.Dead;
   }
 
-  void getHit(Bullet bullet) {
-    health -= bullet.damage;
-    if (health <= 0) state = EntityState.Dead;
+  void die() {
+    state = EntityState.Dead;
   }
-
-  void onTapDown(TapDownDetails detail, Function fn) {}
 
   bool contains(Offset offset) {
     return entity.toRect().contains(offset);
@@ -127,6 +132,51 @@ class Enemy {
 
   bool overlaps(Rect rect) {
     return entity.toRect().overlaps(rect);
+  }
+
+  void update(double t, List<double> bgSpeed, StoryHandler storyHandler) {
+    _timer += t;
+    if (!frozen) {
+      double sumDistance;
+      sumDistance =
+          (x - screenSize.width / 2).abs() + (y - screenSize.height / 2).abs();
+      var distanceToCenter = getDistanceToCenter();
+      enemySpeedX =
+          -(x - screenSize.width * 0.94 / 2) / sumDistance * enemySpeedFactor;
+      enemySpeedY =
+          -(y - screenSize.height * 0.86 / 2) / sumDistance * enemySpeedFactor;
+      if (distanceToCenter < attackRange - 10) {
+        enemySpeedX = 0;
+        enemySpeedY = 0;
+      }
+
+      x = x +
+          t * enemySpeedX * screenSize.width -
+          t * bgSpeed[0] * screenSize.width;
+      y = y +
+          t * enemySpeedY * screenSize.width -
+          t * bgSpeed[1] * screenSize.width;
+    }
+
+    enemyhealthBar.updateRect(maxHealth, health, x, y);
+    effects.forEach((effect) {
+      effect.update(t, x, y);
+    });
+    effects.removeWhere((element) => element.state == EffectState.Ended);
+    entity.x = x;
+    entity.y = y;
+    entity.update(t, [enemySpeedX, enemySpeedY]);
+    if (health <= 0) die();
+  }
+
+  double getDistanceToCenter() {
+    _distanceToCenter = sqrt(pow((x - screenSize.width * 0.94 / 2).abs(), 2) +
+        pow((y - screenSize.height * 0.86 / 2).abs(), 2));
+    return _distanceToCenter;
+  }
+
+  int getScore() {
+    return 1;
   }
 
   void render(Canvas canvas) {
@@ -168,48 +218,5 @@ class Enemy {
     effects.forEach((effect) {
       effect.resize(x, y);
     });
-  }
-
-  void update(double t, List<double> bgSpeed) {
-    _timer += t;
-    double sumDistance;
-    sumDistance =
-        (x - screenSize.width / 2).abs() + (y - screenSize.height / 2).abs();
-    var distanceToCenter = getDistanceToCenter();
-    enemySpeedX =
-        -(x - screenSize.width * 0.94 / 2) / sumDistance * enemySpeedFactor;
-    enemySpeedY =
-        -(y - screenSize.height * 0.86 / 2) / sumDistance * enemySpeedFactor;
-    if (distanceToCenter < attackRange - 10) {
-      enemySpeedX = 0;
-      enemySpeedY = 0;
-    }
-
-    x = x +
-        0.04 * enemySpeedX * screenSize.width -
-        t * bgSpeed[0] * screenSize.width;
-    y = y +
-        0.04 * enemySpeedY * screenSize.width -
-        t * bgSpeed[1] * screenSize.width;
-
-    enemyhealthBar.updateRect(maxHealth, health, x, y);
-    effects.forEach((effect) {
-      effect.update(t, x, y);
-    });
-    effects.removeWhere((element) => element.state == EffectState.Ended);
-    entity.x = x;
-    entity.y = y;
-    entity.update(t, [enemySpeedX, enemySpeedY]);
-    if (health <= 0) state = EntityState.Dead;
-  }
-
-  double getDistanceToCenter() {
-    _distanceToCenter = sqrt(pow((x - screenSize.width * 0.94 / 2).abs(), 2) +
-        pow((y - screenSize.height * 0.86 / 2).abs(), 2));
-    return _distanceToCenter;
-  }
-
-  int getScore() {
-    return 1;
   }
 }

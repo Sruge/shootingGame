@@ -8,6 +8,7 @@ import 'package:shootinggame/bullets/SpecialBullet.dart';
 import 'package:shootinggame/entities/EntityState.dart';
 import 'package:shootinggame/screens/player/WalkingEntity.dart';
 import 'package:shootinggame/screens/util/SizeHolder.dart';
+import 'package:shootinggame/screens/util/StoryHandler.dart';
 
 import '../../bullets/Bullet.dart';
 
@@ -30,7 +31,7 @@ class Boss extends Enemy {
     attackRange = 200;
     attackInterval = 2;
     bulletTypes = [
-      BulletType.Fire,
+      BulletType.Smoke,
     ];
 
     entity = WalkingEntity(
@@ -61,7 +62,7 @@ class Boss extends Enemy {
   }
 
   @override
-  void update(double t, List<double> speed) {
+  void update(double t, List<double> speed, StoryHandler storyHandler) {
     _disappearTimer += t;
     _specialAttackTimer += t;
     if (_specialAttackTimer > _specialAttackInterval) {
@@ -74,7 +75,7 @@ class Boss extends Enemy {
       y = random.nextDouble() * screenSize.height;
       _disappearTimer = 0;
     } else {
-      super.update(t, speed);
+      super.update(t, speed, storyHandler);
     }
   }
 

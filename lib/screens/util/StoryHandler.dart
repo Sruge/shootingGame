@@ -19,10 +19,12 @@ class StoryHandler {
   List<Friend> friends;
   Random _random;
   List<PresentType> nextPresents;
+  bool levelUpdateble;
+  double _levelTimer;
 
   List<Present> _presents;
-  int level;
-  Spawner _spawner;
+  int levelNumber;
+  Spawner spawner;
   Level _level;
 
   StoryHandler() {
@@ -38,23 +40,28 @@ class StoryHandler {
     nextPresents = List.empty(growable: true);
     _random = Random();
     _level = Level(0);
-    _spawner = Spawner(_level, this);
+    spawner = Spawner(_level, this);
     nextPresents.add(PresentType.Coin);
-    level = 0;
+    levelNumber = 0;
+    _levelTimer = 0;
+    levelUpdateble = true;
   }
 
   void update(double t, List<double> bgSpeed, Player player) {
     // update level
-    if ((player.score / 15).floor() >= level) {
-      level += 1;
-      _level = Level(level);
-      _spawner = Spawner(_level, this);
+    _levelTimer += t;
+    if (levelUpdateble && _levelTimer > _level.timeToNextLevel) {
+      _levelTimer = 0;
+      levelNumber += 1;
+      _level = Level(levelNumber);
+
+      spawner = Spawner(_level, this);
     }
     //Add Enemies, Friends... from the Spawners Queues
-    _spawner.update(t);
+    spawner.update(t);
     //Update the enemies
     enemies.forEach((e) {
-      e.update(t, bgSpeed);
+      e.update(t, bgSpeed, this);
       if (e.isDead()) {
         if (nextPresents.isNotEmpty) {
           _presents.add(Present(e.x, e.y, nextPresents.first));
@@ -92,8 +99,7 @@ class StoryHandler {
     for (int i = 0; i < bullets.length; i++) {
       bullets[i].update(t, bgSpeed);
       if (bullets[i].overlaps(player.toRect())) {
-        player.getHit(bullets[i]);
-        bullets[i].die();
+        bullets[i].hitPlayer(player);
       }
     }
     bullets.removeWhere((element) => element.isDead());

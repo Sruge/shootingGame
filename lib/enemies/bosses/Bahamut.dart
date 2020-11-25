@@ -20,29 +20,31 @@ class Bahamut extends Enemy {
   List<BulletType> bulletTypes;
   Random random;
   double _specialAttackTimer;
+  double bulletSpeedFactor;
 
   double _specialAttackInterval;
   Bahamut() : super() {
-    health = 30;
-    maxHealth = 30;
     specialBullets = List.empty(growable: true);
     state = EntityState.Normal;
-    attackRange = 200;
-    attackInterval = 2;
+    _specialAttackTimer = 0;
+
     bulletTypes = [
       BulletType.Purple,
       BulletType.Fire,
       BulletType.Freeze,
       BulletType.Smoke
     ];
-
-    entity = WalkingEntity('bahamut.png', 96, 96,
-        Size(baseAnimationWidth * 2, baseAnimationHeight * 2));
+    health = 3000;
+    maxHealth = 3000;
+    attackRange = 200;
+    attackInterval = 2;
     attackRange = 150;
     attackInterval = 4;
-    enemySpeedFactor = 0.03;
-    _specialAttackTimer = 0;
-    _specialAttackInterval = 3;
+    _specialAttackInterval = 5;
+    enemySpeedFactor = 0.15;
+    bulletSpeedFactor = 1;
+    entity = WalkingEntity('bahamut.png', 96, 96,
+        Size(baseAnimationWidth * 2, baseAnimationHeight * 2));
     random = Random();
   }
 
@@ -50,7 +52,7 @@ class Bahamut extends Enemy {
   BasicBullet getAttack() {
     List<double> coords = super.getAttackingCoordinates();
     BasicBullet bullet = BasicBullet(coords[0], coords[1], coords[2], coords[3],
-        BulletType.One, bulletLifetimeFctr, dmgFctr);
+        BulletType.Three, bulletLifetimeFctr, dmgFctr, bulletSpeedFactor);
     return bullet;
   }
 

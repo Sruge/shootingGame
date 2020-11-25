@@ -10,11 +10,22 @@ import 'SpecialBullet.dart';
 class FreezeBullet extends SpecialBullet {
   double damage;
 
-  FreezeBullet(double x, double y, double _bulletSpeedX, double _bulletSpeedY)
-      : super(x, y, 16, 16, _bulletSpeedX, _bulletSpeedY, 'freezeTrans.png', 32,
-            32, 3) {
-    damage = 20;
+  FreezeBullet(double x, double y, double _bulletSpeedX, double _bulletSpeedY,
+      double lifetimeFctr, double damageFctr, double bulletSpeed)
+      : super(
+          x,
+          y,
+          16,
+          16,
+          _bulletSpeedX,
+          _bulletSpeedY,
+          'freezeTrans.png',
+          32,
+          32,
+        ) {
+    damage = 50 * damageFctr;
     lifetime = 2;
+    speedfactor = bulletSpeed * 2;
   }
 
   void onTapDown(TapDownDetails detail, Function fn) {

@@ -24,34 +24,34 @@ class Kainhighwind extends Enemy {
   double _disappearInterval;
   double _timer;
   StoryHandler _storyHandler;
+  double bulletSpeedFactor;
 
   Kainhighwind() : super() {
-    health = 40;
-    maxHealth = 400;
     _timer = 0;
-
     specialBullets = List.empty(growable: true);
     state = EntityState.Normal;
+
     attackRange = 200;
     attackInterval = 2;
     bulletTypes = [BulletType.Freeze];
-
-    entity = WalkingEntity('kainhighwind.png', 32, 48,
-        Size(baseAnimationWidth, baseAnimationHeight));
-    attackRange = 150;
+    bulletSpeedFactor = 1.3;
+    attackRange = 180;
     attackInterval = 4;
-    enemySpeedFactor = 0.03;
+    enemySpeedFactor = 0.3;
     _disappearInterval = 10;
     _spawnChangeInterval = 15;
-    _specialAttackInterval = 3;
+    _specialAttackInterval = 5;
+
     random = Random();
+    entity = WalkingEntity('kainhighwind.png', 32, 48,
+        Size(baseAnimationWidth, baseAnimationHeight));
   }
 
   @override
   BasicBullet getAttack() {
     List<double> coords = super.getAttackingCoordinates();
     BasicBullet bullet = BasicBullet(coords[0], coords[1], coords[2], coords[3],
-        BulletType.One, bulletLifetimeFctr, dmgFctr);
+        BulletType.Two, bulletLifetimeFctr, dmgFctr, bulletSpeedFactor);
     return bullet;
   }
 
@@ -67,13 +67,13 @@ class Kainhighwind extends Enemy {
     if (_timer > _spawnChangeInterval) {
       if (_initialSpawnTime == null) {
         _initialSpawnTime = storyHandler.spawner.spawnInterval;
-        storyHandler.spawner.spawnInterval = 1;
+        storyHandler.spawner.spawnInterval = 0.8;
         storyHandler.spawner.nextSpawn -= 30;
         print(
             'Kainhighwind set Spawn Interval from $_initialSpawnTime to ${storyHandler.spawner.spawnInterval}');
-        _spawnChangeInterval += 3;
+        _spawnChangeInterval += 7;
       } else {
-        _spawnChangeInterval += 40;
+        _spawnChangeInterval += 45;
         print(
             'Kainhighwind set Spawn Interval from ${storyHandler.spawner.spawnInterval} back to $_initialSpawnTime');
         storyHandler.spawner.spawnInterval = _initialSpawnTime;

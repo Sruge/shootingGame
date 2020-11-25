@@ -31,7 +31,7 @@ class Dealer extends Friend {
     _lifetime = 10;
     _switchDirTime = 3;
     _direction = 1;
-    _dyingtime = 1;
+    _dyingtime = 0.2;
 
     _dealerBord = DealerBord(true);
     enemySpeedFactor = 0.05;
@@ -73,7 +73,7 @@ class Dealer extends Friend {
         if (_timer > _lifetime + _dyingtime) die();
       } else {
         state = EntityState.Dying;
-        enemySpeedFactor = 1;
+        enemySpeedFactor = 0.7;
       }
     }
   }

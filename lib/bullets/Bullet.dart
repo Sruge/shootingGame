@@ -21,13 +21,14 @@ class Bullet {
   double speedfactor;
   double lifetime, _timer;
 
-  Bullet(double x, double y, bulletSpeedX, bulletSpeedY, this.speedfactor) {
+  Bullet(double x, double y, bulletSpeedX, bulletSpeedY) {
     bullet = SpriteComponent.square(7, 'bullet.png');
     _state = EntityState.Normal;
     setSpeed([0, 0]);
     damage = 20;
     _timer = 0;
     lifetime = 1;
+    speedfactor = 1;
 
     this._x = x;
     this._y = y;
@@ -71,8 +72,10 @@ class Bullet {
     setSpeed(speed);
     bullet.x = _x;
     bullet.y = _y;
-    _x = bullet.x + _bulletSpeedX - t * _speedX * screenSize.width;
-    _y = bullet.y + _bulletSpeedY - t * _speedY * screenSize.width;
+    _x =
+        bullet.x + _bulletSpeedX * speedfactor - t * _speedX * screenSize.width;
+    _y =
+        bullet.y + _bulletSpeedY * speedfactor - t * _speedY * screenSize.width;
     if (_timer > lifetime) die();
 
     if (_x < 0 ||

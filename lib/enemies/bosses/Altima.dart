@@ -21,25 +21,28 @@ class Altima extends Enemy {
   List<BulletType> bulletTypes;
   Random random;
   double _specialAttackTimer;
+  double bulletSpeedFactor;
 
   double _specialAttackInterval;
   Altima() : super() {
-    health = 30;
-    maxHealth = 30;
     specialBullets = List.empty(growable: true);
     state = EntityState.Normal;
-    attackRange = 200;
-    attackInterval = 2;
-    bulletTypes = [BulletType.Smoke];
 
-    entity = WalkingEntity(
-        'altima2.png', 48, 48, Size(baseAnimationWidth, baseAnimationHeight));
-    attackRange = 150;
-    attackInterval = 4;
-    enemySpeedFactor = 0.03;
+    health = 600;
+    maxHealth = 6000;
+
+    attackRange = 200;
+    attackInterval = 1;
+    bulletTypes = [BulletType.Purple];
+
+    enemySpeedFactor = 0.2;
     _disappearTimer = 0;
     _specialAttackTimer = 0;
     _specialAttackInterval = 3;
+    bulletSpeedFactor = 1.5;
+
+    entity = WalkingEntity(
+        'altima2.png', 48, 48, Size(baseAnimationWidth, baseAnimationHeight));
     random = Random();
   }
 
@@ -47,7 +50,7 @@ class Altima extends Enemy {
   BasicBullet getAttack() {
     List<double> coords = super.getAttackingCoordinates();
     BasicBullet bullet = BasicBullet(coords[0], coords[1], coords[2], coords[3],
-        BulletType.One, bulletLifetimeFctr, dmgFctr);
+        BulletType.Two, bulletLifetimeFctr, dmgFctr, bulletSpeedFactor);
     return bullet;
   }
 

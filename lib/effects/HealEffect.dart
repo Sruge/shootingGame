@@ -26,8 +26,8 @@ class HealEffect extends Effect {
   }
 
   void update(double t, double x, double y) {
-    effect.width += t * 60;
-    effect.height += t * 30;
+    effect.width += t * 90;
+    effect.height += t * 45;
     x = x - (effect.width - screenSize.width * 0.06) / 2;
     y = y - (effect.height - screenSize.height * 0.14) / 2;
     if (_player != null) {

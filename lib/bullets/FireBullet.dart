@@ -12,13 +12,14 @@ class FireBullet extends SpecialBullet {
   double width;
   double height;
 
-  FireBullet(double x, double y, double _bulletSpeedX, double _bulletSpeedY)
-      : super(
-            x, y, 20, 20, _bulletSpeedX, _bulletSpeedY, 'fire.png', 32, 32, 3) {
-    damage = 5;
+  FireBullet(double x, double y, double _bulletSpeedX, double _bulletSpeedY,
+      double lifetimeFctr, double damageFctr, double bulletSpeed)
+      : super(x, y, 20, 20, _bulletSpeedX, _bulletSpeedY, 'fire.png', 32, 32) {
     width = 20;
     height = 20;
+    damage = 60 * damageFctr;
     lifetime = 2;
+    speedfactor = bulletSpeed * 2;
   }
 
   @override

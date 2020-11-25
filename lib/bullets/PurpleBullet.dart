@@ -11,12 +11,14 @@ class PurpleBullet extends SpecialBullet {
   double damage;
   double _timer;
 
-  PurpleBullet(double x, double y, double _bulletSpeedX, double _bulletSpeedY)
+  PurpleBullet(double x, double y, double _bulletSpeedX, double _bulletSpeedY,
+      double lifetimeFctr, double damageFctr, double bulletSpeed)
       : super(x, y, 32, 32, _bulletSpeedX, _bulletSpeedY, 'purpleBullets.png',
-            32, 32, 2) {
-    damage = 5;
+            32, 32) {
+    damage = 30 * damageFctr;
     _timer = 0;
-    lifetime = 2;
+    lifetime = 2 * lifetimeFctr;
+    speedfactor = bulletSpeed;
   }
 
   void onTapDown(TapDownDetails detail, Function fn) {

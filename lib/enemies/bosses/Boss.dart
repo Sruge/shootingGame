@@ -21,27 +21,28 @@ class Boss extends Enemy {
   List<BulletType> bulletTypes;
   Random random;
   double _specialAttackTimer;
+  double bulletSpeedFactor;
 
   double _specialAttackInterval;
   Boss() : super() {
-    health = 30;
-    maxHealth = 30;
     specialBullets = List.empty(growable: true);
     state = EntityState.Normal;
-    attackRange = 200;
-    attackInterval = 2;
+    _disappearTimer = 0;
+    _specialAttackTimer = 0;
+
     bulletTypes = [
-      BulletType.Smoke,
+      BulletType.Fire,
     ];
+    health = 3000;
+    maxHealth = 3000;
+    attackRange = 100;
+    attackInterval = 3;
+    _specialAttackInterval = 3.5;
+    enemySpeedFactor = 0.15;
+    bulletSpeedFactor = 1;
 
     entity = WalkingEntity(
         'boss.png', 32, 48, Size(baseAnimationWidth, baseAnimationHeight));
-    attackRange = 150;
-    attackInterval = 4;
-    enemySpeedFactor = 0.03;
-    _disappearTimer = 0;
-    _specialAttackTimer = 0;
-    _specialAttackInterval = 3;
     random = Random();
   }
 
@@ -49,7 +50,7 @@ class Boss extends Enemy {
   BasicBullet getAttack() {
     List<double> coords = super.getAttackingCoordinates();
     BasicBullet bullet = BasicBullet(coords[0], coords[1], coords[2], coords[3],
-        BulletType.One, bulletLifetimeFctr, dmgFctr);
+        BulletType.Three, bulletLifetimeFctr, dmgFctr, bulletSpeedFactor);
     return bullet;
   }
 

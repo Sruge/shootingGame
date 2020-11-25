@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:flame/components/animation_component.dart';
 import 'package:flutter/gestures.dart';
+import 'package:shootinggame/bullets/Bullet.dart';
 import 'package:shootinggame/bullets/SpecialBullet.dart';
 import 'package:shootinggame/effects/EffectType.dart';
 
@@ -25,6 +26,7 @@ class Friend {
   double y;
   double health;
   double maxHealth;
+  List<SpecialBullet> bullets;
 
   int leftOrDown;
   double enemySpeedY;
@@ -43,6 +45,7 @@ class Friend {
     specialBullets = List.empty(growable: true);
     Random random = Random();
     leftOrDown = random.nextInt(2);
+    bullets = [];
   }
 
   bool attacks() {
@@ -56,19 +59,12 @@ class Friend {
 
   void update(double t, List<double> speed) {}
 
-  List<double> getAttackingCoordinates() {
-    double sumDistance = (entity.x - screenSize.width * 0.94 / 2).abs() +
-        (entity.y - screenSize.height * 0.86 / 2).abs();
-    double bulletSpeedX =
-        -(entity.x - screenSize.width * 0.94 / 2) / sumDistance;
-    double bulletSpeedY =
-        -(entity.y - screenSize.height * 0.86 / 2) / sumDistance;
-    List<double> coords = [
-      entity.x + 15,
-      entity.y + 30,
-      bulletSpeedX,
-      bulletSpeedY
-    ];
+  List<double> getAttackingCoordinates(double x, double y) {
+    double sumDistance = (x - screenSize.width * 0.94 / 2).abs() +
+        (y - screenSize.height * 0.86 / 2).abs();
+    double bulletSpeedX = -(x - screenSize.width * 0.94 / 2) / sumDistance;
+    double bulletSpeedY = -(y - screenSize.height * 0.86 / 2) / sumDistance;
+    List<double> coords = [x, y, bulletSpeedX, bulletSpeedY];
 
     return coords;
   }

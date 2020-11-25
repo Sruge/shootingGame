@@ -45,6 +45,7 @@ class Player {
   int coins;
   int score;
   double bulletLifetimeFctr;
+  double bulletSpeedFctr;
   double dmgFctr;
   bool frozen;
   int slots;
@@ -53,8 +54,9 @@ class Player {
   BulletType bulletType;
 
   Player(int char) {
-    health = 2000;
-    maxHealth = 2000;
+    bool debug = true;
+    health = 200;
+    maxHealth = 200;
     _healthbar = Healthbar(10, 10, bulletCount, coins, score);
     bullets = List.empty(growable: true);
     _specialBullets = List.empty(growable: true);
@@ -62,27 +64,34 @@ class Player {
     attack = false;
     effects = List.empty(growable: true);
     bulletCount = 100;
-    maxBulletCount = 500;
+    maxBulletCount = 200;
     speedfactor = 0.2;
-    coins = 2;
+    coins = 0;
     score = 0;
-    slots = 2;
-    _btnBar = ButtonBar(slots);
+    slots = 0;
     bulletLifetimeFctr = 0.7;
-    dmgFctr = 2;
+    bulletSpeedFctr = 1;
+    dmgFctr = 1;
     frozen = false;
     attackType = AttackType.Normal;
     bulletType = BulletType.One;
-    addAttack(AttackType.Fire, 5);
-    addAttack(AttackType.Freeze, 5);
-    addAttack(AttackType.Heal, 5);
-    Effect iceEffect = IceEffect(this, null);
-    iceEffect.resize(0, 0);
-    effects.add(iceEffect);
-    Effect sparkle = Sparkle(this, null);
-    sparkle.resize(0, 0);
-    effects.add(sparkle);
+    if (debug) {
+      slots = 3;
+      bulletCount = 500;
+      maxBulletCount = 1000;
+      _btnBar = ButtonBar(slots);
 
+      coins = 20;
+      addAttack(AttackType.Fire, 5);
+      addAttack(AttackType.Freeze, 5);
+      addAttack(AttackType.Heal, 5);
+      Effect iceEffect = IceEffect(this, null);
+      iceEffect.resize(0, 0);
+      effects.add(iceEffect);
+      Effect sparkle = Sparkle(this, null);
+      sparkle.resize(0, 0);
+      effects.add(sparkle);
+    }
     String playerPath;
     switch (char) {
       case 1:
@@ -247,7 +256,8 @@ class Player {
               speed[1],
               bulletType,
               bulletLifetimeFctr,
-              dmgFctr);
+              dmgFctr,
+              bulletSpeedFctr);
           bullet.resize();
           bullets.add(bullet);
           bulletCount -= 1;
@@ -262,21 +272,39 @@ class Player {
         break;
       case AttackType.Fire:
         FireBullet bullet = FireBullet(
-            screenSize.width / 2, screenSize.height / 2, speed[0], speed[1]);
+            screenSize.width / 2,
+            screenSize.height / 2,
+            speed[0],
+            speed[1],
+            bulletLifetimeFctr,
+            dmgFctr,
+            bulletSpeedFctr);
         bullet.resize();
         _specialBullets.add(bullet);
         attackType = AttackType.Normal;
         break;
       case AttackType.Freeze:
         FreezeBullet bullet = FreezeBullet(
-            screenSize.width / 2, screenSize.height / 2, speed[0], speed[1]);
+            screenSize.width / 2,
+            screenSize.height / 2,
+            speed[0],
+            speed[1],
+            bulletLifetimeFctr,
+            dmgFctr,
+            bulletSpeedFctr);
         bullet.resize();
         _specialBullets.add(bullet);
         attackType = AttackType.Normal;
         break;
       case AttackType.Night:
         GoldenBullet bullet = GoldenBullet(
-            screenSize.width / 2, screenSize.height / 2, speed[0], speed[1]);
+            screenSize.width / 2,
+            screenSize.height / 2,
+            speed[0],
+            speed[1],
+            bulletLifetimeFctr,
+            dmgFctr,
+            bulletSpeedFctr);
         bullet.resize();
         _specialBullets.add(bullet);
         attackType = AttackType.Normal;

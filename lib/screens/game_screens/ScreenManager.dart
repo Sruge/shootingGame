@@ -90,7 +90,7 @@ class ScreenManager extends Game with TapDetector {
 
   void startNewGame(int char) {
     _playScreen = PlayGround(char);
-    _playScreen?.resize();
+    _playScreen.resize();
 
     _screenState = ScreenState.kPlayScreen;
   }
@@ -106,6 +106,10 @@ class ScreenManager extends Game with TapDetector {
 
   void showDeal(double x, double y, DealerBord dealerBord) {
     _playScreen?.openDeal(x, y);
+  }
+
+  void setTree(double power) {
+    _playScreen?.setTree(power);
   }
 
   StoryHandler getStoryHandler() {

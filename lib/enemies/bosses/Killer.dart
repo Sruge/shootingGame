@@ -21,25 +21,26 @@ class Killer extends Enemy {
   List<BulletType> bulletTypes;
   Random random;
   double _specialAttackTimer;
+  double bulletSpeedFactor;
 
   double _specialAttackInterval;
   Killer() : super() {
-    health = 30;
-    maxHealth = 30;
     specialBullets = List.empty(growable: true);
     state = EntityState.Normal;
+    _disappearTimer = 0;
+    _specialAttackTimer = 0;
+
+    health = 500;
+    maxHealth = 500;
     attackRange = 200;
-    attackInterval = 2;
+    attackInterval = 3;
+    _specialAttackInterval = 3.2;
     bulletTypes = [BulletType.Freeze, BulletType.Fire];
+    enemySpeedFactor = 0.22;
+    bulletSpeedFactor = 1.5;
 
     entity = WalkingEntity(
         'killer.png', 32, 48, Size(baseAnimationWidth, baseAnimationHeight));
-    attackRange = 150;
-    attackInterval = 4;
-    enemySpeedFactor = 0.03;
-    _disappearTimer = 0;
-    _specialAttackTimer = 0;
-    _specialAttackInterval = 3;
     random = Random();
   }
 
@@ -47,7 +48,7 @@ class Killer extends Enemy {
   BasicBullet getAttack() {
     List<double> coords = super.getAttackingCoordinates();
     BasicBullet bullet = BasicBullet(coords[0], coords[1], coords[2], coords[3],
-        BulletType.One, bulletLifetimeFctr, dmgFctr);
+        BulletType.Two, bulletLifetimeFctr, dmgFctr, bulletSpeedFactor);
     return bullet;
   }
 

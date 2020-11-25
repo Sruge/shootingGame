@@ -108,4 +108,8 @@ class PlayGround extends BaseWidget {
     _dealerBord.resize(x, y);
     showDeal = true;
   }
+
+  void setTree(double power) {
+    storyHandler.setTree(_bg.x, _bg.y, power);
+  }
 }

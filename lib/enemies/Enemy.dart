@@ -43,6 +43,7 @@ class Enemy {
   double bulletLifetimeFctr;
   double dmgFctr;
   bool frozen;
+  double bulletSpeedFctr;
 
   Enemy() {
     _timer = 0;
@@ -55,7 +56,9 @@ class Enemy {
     random = Random();
     bulletTypes = List.empty(growable: true);
     effects = List.empty(growable: true);
-    bulletLifetimeFctr = 1;
+    bulletLifetimeFctr = 0.7;
+    bulletSpeedFctr = 1;
+    enemySpeedFactor = 0.2;
     dmgFctr = 1;
     frozen = false;
   }
@@ -93,7 +96,7 @@ class Enemy {
 
   Bullet getAttack() {
     List<double> coords = getAttackingCoordinates();
-    Bullet bullet = Bullet(coords[0], coords[1], coords[2], coords[3], 2);
+    Bullet bullet = Bullet(coords[0], coords[1], coords[2], coords[3]);
     return bullet;
   }
 
@@ -102,18 +105,24 @@ class Enemy {
     int rand = random.nextInt(bulletTypes.length);
     switch (bulletTypes[rand]) {
       case BulletType.Freeze:
-        return FreezeBullet(coords[0], coords[1], coords[2], coords[3]);
+        return FreezeBullet(coords[0], coords[1], coords[2], coords[3],
+            bulletLifetimeFctr, dmgFctr, bulletSpeedFctr);
       case BulletType.Fire:
-        return FireBullet(coords[0], coords[1], coords[2], coords[3]);
+        return FireBullet(coords[0], coords[1], coords[2], coords[3],
+            bulletLifetimeFctr, dmgFctr, bulletSpeedFctr);
       case BulletType.Purple:
-        return PurpleBullet(coords[0], coords[1], coords[2], coords[3]);
+        return PurpleBullet(coords[0], coords[1], coords[2], coords[3],
+            bulletLifetimeFctr, dmgFctr, bulletSpeedFctr);
       case BulletType.Smoke:
-        return SmokeBullet(coords[0], coords[1], coords[2], coords[3]);
+        return SmokeBullet(coords[0], coords[1], coords[2], coords[3],
+            bulletLifetimeFctr, dmgFctr, bulletSpeedFctr);
       case BulletType.Gold:
-        return GoldenBullet(coords[0], coords[1], coords[2], coords[3]);
+        return GoldenBullet(coords[0], coords[1], coords[2], coords[3],
+            bulletLifetimeFctr, dmgFctr, bulletSpeedFctr);
         break;
       default:
-        PurpleBullet(coords[0], coords[1], coords[2], coords[3]);
+        PurpleBullet(coords[0], coords[1], coords[2], coords[3],
+            bulletLifetimeFctr, dmgFctr, bulletSpeedFctr);
         break;
     }
   }

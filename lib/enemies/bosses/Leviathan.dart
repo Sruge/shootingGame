@@ -21,25 +21,26 @@ class Leviathan extends Enemy {
   List<BulletType> bulletTypes;
   Random random;
   double _specialAttackTimer;
+  double bulletSpeedFactor;
 
   double _specialAttackInterval;
   Leviathan() : super() {
-    health = 30;
-    maxHealth = 30;
     specialBullets = List.empty(growable: true);
     state = EntityState.Normal;
-    attackRange = 200;
-    attackInterval = 2;
+    _disappearTimer = 0;
+    _specialAttackTimer = 0;
+
+    health = 1000;
+    maxHealth = 1000;
+    attackRange = 40;
+    attackInterval = 2.5;
+    _specialAttackInterval = 4;
     bulletTypes = [BulletType.Freeze];
+    enemySpeedFactor = 0.14;
+    bulletSpeedFactor = 2;
 
     entity = WalkingEntity('leviathan.png', 96, 96,
         Size(baseAnimationWidth * 3, baseAnimationHeight * 3));
-    attackRange = 150;
-    attackInterval = 4;
-    enemySpeedFactor = 0.03;
-    _disappearTimer = 0;
-    _specialAttackTimer = 0;
-    _specialAttackInterval = 3;
     random = Random();
   }
 
@@ -47,7 +48,7 @@ class Leviathan extends Enemy {
   BasicBullet getAttack() {
     List<double> coords = super.getAttackingCoordinates();
     BasicBullet bullet = BasicBullet(coords[0], coords[1], coords[2], coords[3],
-        BulletType.One, bulletLifetimeFctr, dmgFctr);
+        BulletType.Three, bulletLifetimeFctr, dmgFctr, bulletSpeedFactor);
     return bullet;
   }
 

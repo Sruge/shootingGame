@@ -24,16 +24,16 @@ class SpecialBullet {
   int _txtWidth, _txtHeight;
 
   SpecialBullet(
-      double x,
-      double y,
-      double width,
-      double height,
-      bulletSpeedX,
-      bulletSpeedY,
-      String aniPath,
-      this._txtWidth,
-      this._txtHeight,
-      this.speedfactor) {
+    double x,
+    double y,
+    double width,
+    double height,
+    this.bulletSpeedX,
+    this.bulletSpeedY,
+    String aniPath,
+    this._txtWidth,
+    this._txtHeight,
+  ) {
     final sprshee = SpriteSheet(
         imageName: aniPath,
         textureWidth: _txtWidth,
@@ -51,14 +51,6 @@ class SpecialBullet {
 
     this.x = x;
     this.y = y;
-    if (!(bulletSpeedX == 0 || bulletSpeedY == 0)) {
-      this.bulletSpeedX = bulletSpeedX *
-          speedfactor /
-          (bulletSpeedX.abs() + bulletSpeedY.abs());
-      this.bulletSpeedY = bulletSpeedY *
-          speedfactor /
-          (bulletSpeedX.abs() + bulletSpeedY.abs());
-    }
   }
 
   bool isDead() {
@@ -93,9 +85,10 @@ class SpecialBullet {
   void update(double t, List<double> speed) {
     _timer += t;
     setSpeed(speed);
+    speedfactor = 3;
 
-    x = x + bulletSpeedX - t * _speedX * screenSize.width;
-    y = y + bulletSpeedY - t * _speedY * screenSize.width;
+    x = x + bulletSpeedX * speedfactor - t * _speedX * screenSize.width;
+    y = y + bulletSpeedY * speedfactor - t * _speedY * screenSize.width;
     specialBullet.update(t);
 
     if (_timer > lifetime) die();

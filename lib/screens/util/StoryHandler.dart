@@ -7,7 +7,10 @@ import 'package:shootinggame/enemies/Enemy.dart';
 import 'package:shootinggame/enemies/Present.dart';
 import 'package:shootinggame/enemies/PresentType.dart';
 import 'package:shootinggame/friends/Friend.dart';
+import 'package:shootinggame/friends/Tree.dart';
+import 'package:shootinggame/screens/game_screens/ScreenManager.dart';
 import 'package:shootinggame/screens/player/Player.dart';
+import 'package:shootinggame/screens/util/SizeHolder.dart';
 import 'package:shootinggame/screens/util/Spawner.dart';
 
 import 'Level.dart';
@@ -53,7 +56,7 @@ class StoryHandler {
     if (levelUpdateble && _levelTimer > _level.timeToNextLevel) {
       _levelTimer = 0;
       levelNumber += 1;
-      _level = Level(levelNumber);
+      _level = Level(6);
 
       spawner = Spawner(_level, this);
     }
@@ -83,6 +86,10 @@ class StoryHandler {
     //Update the friends
     friends.forEach((f) {
       f.update(t, bgSpeed);
+      if (f.bullets.isNotEmpty) {
+        _specialBullets.add(f.bullets.first);
+        f.bullets.removeAt(0);
+      }
     });
     friends.removeWhere((element) => element.isDead());
 
@@ -156,5 +163,11 @@ class StoryHandler {
     friends.forEach((f) {
       f.resize();
     });
+  }
+
+  void setTree(double x, double y, double power) {
+    double rand = _random.nextDouble();
+    spawner.setTree(x + rand * screenSize.width * 2,
+        y + rand * screenSize.height * 2, power);
   }
 }

@@ -20,6 +20,7 @@ class Russia extends Enemy {
   List<SpecialBullet> specialBullets;
   List<BulletType> bulletTypes;
   Random random;
+  double bulletSpeedFactor;
   double _specialAttackTimer;
 
   double _specialAttackInterval;
@@ -28,18 +29,18 @@ class Russia extends Enemy {
     maxHealth = 30;
     specialBullets = List.empty(growable: true);
     state = EntityState.Normal;
-    attackRange = 200;
-    attackInterval = 2;
-    bulletTypes = [BulletType.Gold, BulletType.Fire];
+    _disappearTimer = 0;
+    _specialAttackTimer = 0;
+
+    bulletTypes = [BulletType.Gold, BulletType.Heal];
+    attackRange = 250;
+    attackInterval = 6;
+    enemySpeedFactor = 0.2;
+    _specialAttackInterval = 2.5;
+    bulletSpeedFactor = 1;
 
     entity = WalkingEntity(
         'russia.png', 32, 48, Size(baseAnimationWidth, baseAnimationHeight));
-    attackRange = 150;
-    attackInterval = 4;
-    enemySpeedFactor = 0.03;
-    _disappearTimer = 0;
-    _specialAttackTimer = 0;
-    _specialAttackInterval = 3;
     random = Random();
   }
 
@@ -47,16 +48,8 @@ class Russia extends Enemy {
   BasicBullet getAttack() {
     List<double> coords = super.getAttackingCoordinates();
     BasicBullet bullet = BasicBullet(coords[0], coords[1], coords[2], coords[3],
-        BulletType.One, bulletLifetimeFctr, dmgFctr);
+        BulletType.One, bulletLifetimeFctr, dmgFctr, bulletSpeedFactor);
     return bullet;
-  }
-
-  @override
-  void getHit(Bullet bullet) {
-    health -= bullet.damage;
-    if (health < 1) {
-      state = EntityState.Dead;
-    }
   }
 
   @override

@@ -11,37 +11,37 @@ class DynamicBackground {
   double _speedY;
 
   SpriteComponent _bg;
-  double _x;
-  double _y;
+  double x;
+  double y;
   double _destinationX;
   double _destinationY;
 
   DynamicBackground(this._speedX, this._speedY, String imgSrc) {
     _bg = SpriteComponent.fromSprite(0, 0, Sprite(imgSrc));
 
-    _x = 0;
-    _y = 0;
+    x = 0;
+    y = 0;
 
-    _destinationX = _x;
-    _destinationY = _y;
+    _destinationX = x;
+    _destinationY = y;
   }
 
   void onTapDown(TapDownDetails detail, List<double> speed) {
     setSpeed(speed);
-    _destinationX = _x - (detail.globalPosition.dx - screenSize.width / 2);
-    _destinationY = _y - (detail.globalPosition.dy - screenSize.height / 2);
+    _destinationX = x - (detail.globalPosition.dx - screenSize.width / 2);
+    _destinationY = y - (detail.globalPosition.dy - screenSize.height / 2);
   }
 
   void render(Canvas canvas) {
     canvas.save();
-    _bg.x = _x + screenSize.width * 3;
-    _bg.y = _y;
+    _bg.x = x + screenSize.width * 3;
+    _bg.y = y;
     _bg.render(canvas);
     canvas.restore();
 
     canvas.save();
-    _bg.x = _x;
-    _bg.y = _y;
+    _bg.x = x;
+    _bg.y = y;
     _bg.render(canvas);
     canvas.restore();
   }
@@ -57,31 +57,31 @@ class DynamicBackground {
       _speedX = 0;
       _speedY = 0;
     } else {
-      _x -= t * _speedX * screenSize.width;
-      _y -= t * _speedY * screenSize.width;
+      x -= t * _speedX * screenSize.width;
+      y -= t * _speedY * screenSize.width;
     }
   }
 
   bool hasReachedDestinationOrBorder() {
-    if ((_speedX > 0 && _x < _destinationX) ||
-        (_speedX < 0 && _x > _destinationX)) {
+    if ((_speedX > 0 && x < _destinationX) ||
+        (_speedX < 0 && x > _destinationX)) {
       return true;
     } else if ((_speedX < 0) &&
-            _x > screenSize.width / 2 - screenSize.width * 0.03 ||
+            x > screenSize.width / 2 - screenSize.width * 0.03 ||
         (_speedX > 0) &&
-            _x <
+            x <
                 -screenSize.width * 5 -
                     screenSize.width / 2 +
                     screenSize.width * 0.03) {
       return true;
     }
-    if ((_speedY > 0 && _y < _destinationY) ||
-        (_speedY < 0 && _y > _destinationY)) {
+    if ((_speedY > 0 && y < _destinationY) ||
+        (_speedY < 0 && y > _destinationY)) {
       return true;
     } else if (_speedY < 0 &&
-            _y > screenSize.height / 2 - screenSize.height * 0.05 ||
+            y > screenSize.height / 2 - screenSize.height * 0.05 ||
         _speedY > 0 &&
-            _y <
+            y <
                 -screenSize.height * 2 -
                     screenSize.height / 2 +
                     screenSize.height * 0.05) {

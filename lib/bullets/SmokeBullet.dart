@@ -13,18 +13,29 @@ class SmokeBullet extends SpecialBullet {
   double damage;
   double width;
   double height;
-  double num;
+  double rand;
   Random random;
 
-  SmokeBullet(double x, double y, double _bulletSpeedX, double _bulletSpeedY)
-      : super(x, y, 20, 20, _bulletSpeedX, _bulletSpeedY, 'smoke.png', 64, 64,
-            0) {
-    damage = 5;
+  SmokeBullet(double x, double y, double _bulletSpeedX, double _bulletSpeedY,
+      double lifetimeFctr, double damageFctr, double bulletSpeed)
+      : super(
+          x,
+          y,
+          20,
+          20,
+          _bulletSpeedX,
+          _bulletSpeedY,
+          'smoke.png',
+          64,
+          64,
+        ) {
     width = 20;
     height = 20;
+    damage = 0;
     lifetime = 5;
+    speedfactor = 0;
     random = Random();
-    num = (random.nextDouble() - 0.5) * 100;
+    double rand = (random.nextDouble() - 0.5) * 100;
   }
 
   @override
@@ -39,9 +50,8 @@ class SmokeBullet extends SpecialBullet {
     double num = random.nextDouble() - 0.5;
     specialBullet.width = width;
     specialBullet.height = height;
-    x -= t * 25 + t * 70 * num;
-    y -= t * 25;
-    t * 70 * num;
+    x -= t * 25 + t * 70 * rand;
+    y -= t * 25 + t * 70 * rand;
     super.update(t, speed);
   }
 

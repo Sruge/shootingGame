@@ -12,8 +12,8 @@ class WalkingEntity {
   double x, y;
   double speedX, speedY;
   int _txtWidth, _txtHeight;
-  Size _size;
-  WalkingEntity(String imgUrl, this._txtWidth, this._txtHeight, this._size) {
+  Size size;
+  WalkingEntity(String imgUrl, this._txtWidth, this._txtHeight, this.size) {
     this.x = 0;
     this.y = 0;
     this.speedX = 0;
@@ -34,18 +34,18 @@ class WalkingEntity {
   }
 
   void resize() {
-    _walkingDown.width = _size.width;
-    _walkingDown.height = _size.height;
+    _walkingDown.width = size.width;
+    _walkingDown.height = size.height;
     _walkingDown.x = x;
     _walkingDown.y = y;
 
-    _walkingSide.width = _size.width;
-    _walkingSide.height = _size.height;
+    _walkingSide.width = size.width;
+    _walkingSide.height = size.height;
     _walkingSide.x = x;
     _walkingSide.y = y;
 
-    _walkingUp.width = _size.width;
-    _walkingUp.height = _size.height;
+    _walkingUp.width = size.width;
+    _walkingUp.height = size.height;
     _walkingUp.x = x;
     _walkingUp.y = y;
   }

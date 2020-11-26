@@ -6,7 +6,7 @@ import 'package:shootinggame/bullets/BulletType.dart';
 import 'package:shootinggame/enemies/Enemy.dart';
 import 'package:shootinggame/bullets/SpecialBullet.dart';
 import 'package:shootinggame/entities/EntityState.dart';
-import 'package:shootinggame/screens/player/WalkingEntity.dart';
+import 'package:shootinggame/entities/WalkingEntity.dart';
 import 'package:shootinggame/screens/util/SizeHolder.dart';
 import 'package:shootinggame/screens/util/StoryHandler.dart';
 
@@ -38,13 +38,14 @@ class Russia extends Enemy {
     enemySpeedFactor = 0.2;
     _specialAttackInterval = 2.5;
     bulletSpeedFactor = 1;
+    dmgFctr = 1;
+    bulletLifetimeFctr = 1;
 
     entity = WalkingEntity(
         'russia.png', 32, 48, Size(baseAnimationWidth, baseAnimationHeight));
     random = Random();
   }
 
-  @override
   BasicBullet getAttack() {
     List<double> coords = super.getAttackingCoordinates();
     BasicBullet bullet = BasicBullet(coords[0], coords[1], coords[2], coords[3],

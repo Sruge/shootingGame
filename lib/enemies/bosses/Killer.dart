@@ -6,7 +6,7 @@ import 'package:shootinggame/bullets/BulletType.dart';
 import 'package:shootinggame/enemies/Enemy.dart';
 import 'package:shootinggame/bullets/SpecialBullet.dart';
 import 'package:shootinggame/entities/EntityState.dart';
-import 'package:shootinggame/screens/player/WalkingEntity.dart';
+import 'package:shootinggame/entities/WalkingEntity.dart';
 import 'package:shootinggame/screens/util/SizeHolder.dart';
 import 'package:shootinggame/screens/util/StoryHandler.dart';
 
@@ -38,26 +38,19 @@ class Killer extends Enemy {
     bulletTypes = [BulletType.Freeze, BulletType.Fire];
     enemySpeedFactor = 0.22;
     bulletSpeedFactor = 1.5;
+    bulletLifetimeFctr = 1.2;
+    dmgFctr = 2;
 
     entity = WalkingEntity(
         'killer.png', 32, 48, Size(baseAnimationWidth, baseAnimationHeight));
     random = Random();
   }
 
-  @override
   BasicBullet getAttack() {
     List<double> coords = super.getAttackingCoordinates();
     BasicBullet bullet = BasicBullet(coords[0], coords[1], coords[2], coords[3],
         BulletType.Two, bulletLifetimeFctr, dmgFctr, bulletSpeedFactor);
     return bullet;
-  }
-
-  @override
-  void getHit(Bullet bullet) {
-    health -= bullet.damage;
-    if (health < 1) {
-      state = EntityState.Dead;
-    }
   }
 
   @override

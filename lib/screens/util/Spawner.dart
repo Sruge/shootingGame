@@ -5,6 +5,7 @@ import 'package:shootinggame/enemies/Enemy.dart';
 import 'package:shootinggame/enemies/EnemyType.dart';
 import 'package:shootinggame/enemies/PresentType.dart';
 import 'package:shootinggame/friends/Dealer.dart';
+import 'package:shootinggame/friends/Firetree.dart';
 import 'package:shootinggame/friends/Friend.dart';
 import 'package:shootinggame/friends/FriendType.dart';
 import 'package:shootinggame/friends/Tree.dart';
@@ -19,7 +20,7 @@ class Spawner {
   double _friendSpawnInterval;
   double _presentSpawnInterval;
   double _treeSpawnInterval;
-  double _maxEnemies;
+  double maxEnemies;
   double nextSpawn;
   double _nextBossSpawn;
   double _nextFriendSpawn;
@@ -49,7 +50,7 @@ class Spawner {
     _treeSpawnInterval = level.treeSpawnInterval;
     _enemyTypes = level.enemyTypes;
     _enemyBulletSpeed = level.enemyBulletSpeed;
-    _maxEnemies = level.maxEnemies;
+    maxEnemies = level.maxEnemies;
     nextSpawn = 0;
     _nextBossSpawn = 2;
     _nextFriendSpawn = _friendSpawnInterval;
@@ -63,12 +64,12 @@ class Spawner {
     _bulletLifetime = level.bulletLifetimeMultiplier;
     _healthMulti = level.healthMulti;
     _enemySpeed = level.enemySpeedMultiplier;
-    _maxEnemies = level.maxEnemies;
+    maxEnemies = level.maxEnemies;
   }
 
   update(double t) {
     _timer += t;
-    if (_timer > nextSpawn && _storyHandler.enemies.length <= _maxEnemies) {
+    if (_timer > nextSpawn && _storyHandler.enemies.length <= maxEnemies) {
       BasicEnemy enemy = BasicEnemy(
           _enemyTypes[_random.nextInt(_enemyTypes.length)],
           _dmgMultiplier,
@@ -83,8 +84,9 @@ class Spawner {
       nextSpawn = _timer + spawnInterval;
     }
     if (_timer > _nextBossSpawn && bosses.isNotEmpty) {
-      _storyHandler.enemies.add(bosses.first);
-      bosses.removeAt(0);
+      int rand = _random.nextInt(bosses.length);
+      _storyHandler.enemies.add(bosses[rand]);
+      bosses.removeAt(rand);
       _nextBossSpawn = _timer + _bossSpawnInterval;
     }
     if (_timer > _nextFriendSpawn) {
@@ -100,13 +102,13 @@ class Spawner {
       _nextPresentSpawn = _timer + _presentSpawnInterval;
     }
     if (_timer > _nextTreeSpawn) {
-      screenManager.setTree(10);
+      screenManager.setTree(2);
       _nextTreeSpawn = _timer + _treeSpawnInterval;
     }
   }
 
   void setTree(double x, double y, double power) {
-    Tree tree = Tree(x, y, power);
+    Friend tree = Firetree(x, y, power);
     tree.resize();
     _storyHandler.friends.add(tree);
   }

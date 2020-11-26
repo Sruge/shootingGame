@@ -3,11 +3,8 @@ import 'dart:ui';
 
 import 'package:flame/animation.dart';
 import 'package:flame/components/animation_component.dart';
-import 'package:flame/components/component.dart';
 import 'package:flame/spritesheet.dart';
-import 'package:flutter/gestures.dart';
 import 'package:shootinggame/effects/Effect.dart';
-import 'package:shootinggame/effects/EffectType.dart';
 import 'package:shootinggame/effects/HealEffect.dart';
 import 'package:shootinggame/enemies/PresentType.dart';
 
@@ -17,7 +14,6 @@ import 'package:shootinggame/screens/player/Player.dart';
 import 'package:shootinggame/screens/util/SizeHolder.dart';
 
 class Present {
-  PositionComponent _present;
   double _speedX;
   double _speedY;
   double _x, _y;
@@ -25,33 +21,44 @@ class Present {
   double _lifetimeUpToNow;
   double _lifetimeMax;
   PresentType _type;
-  AnimationComponent _coin;
+  AnimationComponent _present;
 
   Present(double x, double y, this._type) {
+    String _image;
     switch (_type) {
       case PresentType.Health:
-        _present = SpriteComponent.square(32, 'greenPresent.png');
+        _image = 'greenPresentAnimation';
         break;
       case PresentType.Bullets:
-        _present = SpriteComponent.square(32, 'brownPresent.png');
-
+        _image = 'brownPresentAnimation';
         break;
-      case PresentType.Freeze:
-        _present = SpriteComponent.square(32, 'bluePresent.png');
+      case PresentType.Blue:
+        _image = 'bluePresentAnimation';
+        break;
+      case PresentType.Red:
+        _image = 'redPresentAnimation';
+        break;
+      case PresentType.Golden:
+        _image = 'goldenPresentAnimation';
+        break;
+      case PresentType.Colored:
+        _image = 'coloredPresentAnimation';
         break;
       case PresentType.Coin:
-        final coinSheet = SpriteSheet(
-            imageName: 'coin3.png',
-            textureWidth: 128,
-            textureHeight: 128,
-            columns: 4,
-            rows: 1);
-        Animation coinimation = coinSheet.createAnimation(0, stepTime: 0.2);
-        _coin = AnimationComponent(24, 24, coinimation);
+        _image = 'coin3';
         break;
       default:
         break;
     }
+
+    final sprShe = SpriteSheet(
+        imageName: '$_image.png',
+        textureWidth: 128,
+        textureHeight: 128,
+        columns: 4,
+        rows: 1);
+    Animation animation = sprShe.createAnimation(0, stepTime: 0.2);
+    _present = AnimationComponent(24, 24, animation);
     _state = EntityState.Normal;
     _lifetimeUpToNow = 0;
     _lifetimeMax = 4;
@@ -65,16 +72,8 @@ class Present {
     return _state == EntityState.Dead;
   }
 
-  void onTapDown(TapDownDetails detail, Function fn) {
-    // TODO: implement onTapDown
-  }
-
   bool overlaps(Rect rect) {
-    if (_type == PresentType.Coin) {
-      return _coin.toRect().overlaps(rect);
-    } else {
-      return _present.toRect().overlaps(rect);
-    }
+    return _present.toRect().overlaps(rect);
   }
 
   Rect toRect() {
@@ -82,29 +81,16 @@ class Present {
   }
 
   void render(Canvas canvas) {
-    if (_type == PresentType.Coin) {
-      canvas.save();
-      _coin.x = _x;
-      _coin.y = _y;
-      _coin.render(canvas);
-      canvas.restore();
-    } else {
-      canvas.save();
-      _present.x = _x;
-      _present.y = _y;
-      _present.render(canvas);
-      canvas.restore();
-    }
+    canvas.save();
+    _present.x = _x;
+    _present.y = _y;
+    _present.render(canvas);
+    canvas.restore();
   }
 
   void resize() {
-    if (_type == PresentType.Coin) {
-      _coin.x = _x;
-      _coin.y = _y;
-    } else {
-      _present.x = _x;
-      _present.y = _y;
-    }
+    _present.x = _x;
+    _present.y = _y;
   }
 
   void update(double t, List<double> speed) {
@@ -116,15 +102,17 @@ class Present {
     if (_type == PresentType.Coin) {
       _x = _x - t * _speedX * screenSize.width;
       _y = _y - t * _speedY * screenSize.width;
-      _coin.x = _x;
-      _coin.y = _y;
-      _coin.update(t);
+      _present.x = _x;
+      _present.y = _y;
+      _present.update(t);
     } else {
       _present.x = _x;
       _present.y = _y;
       _x = _present.x - t * _speedX * screenSize.width;
       _y = _present.y - t * _speedY * screenSize.width;
     }
+
+    _present.update(t);
   }
 
   void setSpeed(List<double> speed) {
@@ -141,19 +129,17 @@ class Present {
       case PresentType.Health:
         player.health += player.maxHealth * 0.1;
         Effect effect = HealEffect(player, null);
-        effect.resize(0, 0);
+        effect.resize(player.getPosition());
         player.effects.add(effect);
         if (player.health > player.maxHealth) player.health = player.maxHealth;
         break;
       case PresentType.Bullets:
-        player.bulletCount += 15;
-        if (player.bulletCount > player.maxBulletCount)
-          player.bulletCount = player.maxBulletCount;
+        player.bulletCount = player.maxBulletCount;
         break;
       case PresentType.Coin:
         player.coins += 1;
         break;
-      case PresentType.Freeze:
+      case PresentType.Blue:
         Random random = Random();
         player.addAttack(
             AttackType.values[random.nextInt(AttackType.values.length)], 3);

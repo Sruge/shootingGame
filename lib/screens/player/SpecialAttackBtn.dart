@@ -43,6 +43,12 @@ class SpecialAttackBtn extends BaseWidget {
       case AttackType.Heal:
         imgUrl = 'green';
         break;
+      case AttackType.Ice:
+        imgUrl = 'bigblue';
+        break;
+      case AttackType.Shield:
+        imgUrl = 'pink';
+        break;
       default:
         imgUrl = 'empty';
         type = AttackType.Normal;

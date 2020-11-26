@@ -2,15 +2,17 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/gestures.dart';
+import 'package:shootinggame/bullets/BasicBullet.dart';
 import 'package:shootinggame/bullets/BulletType.dart';
 import 'package:shootinggame/bullets/GoldenBullet.dart';
+import 'package:shootinggame/bullets/HealBullet.dart';
 import 'package:shootinggame/effects/Effect.dart';
 import 'package:shootinggame/effects/EffectState.dart';
 import 'package:shootinggame/enemies/EnemyHealthbar.dart';
 import 'package:shootinggame/bullets/SpecialBullet.dart';
 import 'package:shootinggame/entities/EntityState.dart';
 
-import 'package:shootinggame/screens/player/WalkingEntity.dart';
+import 'package:shootinggame/entities/WalkingEntity.dart';
 import 'package:shootinggame/screens/util/SizeHolder.dart';
 import 'package:shootinggame/screens/util/StoryHandler.dart';
 
@@ -43,23 +45,18 @@ class Enemy {
   double bulletLifetimeFctr;
   double dmgFctr;
   bool frozen;
-  double bulletSpeedFctr;
+  double bulletSpeedFactor;
 
   Enemy() {
     _timer = 0;
     state = EntityState.Normal;
     enemySpeedX = 0;
     enemySpeedY = 0;
-    enemySpeedFactor = 0.2;
     enemyhealthBar = EnemyhealthBar(0, 0);
     specialBullets = List.empty(growable: true);
     random = Random();
     bulletTypes = List.empty(growable: true);
     effects = List.empty(growable: true);
-    bulletLifetimeFctr = 0.7;
-    bulletSpeedFctr = 1;
-    enemySpeedFactor = 0.2;
-    dmgFctr = 1;
     frozen = false;
   }
 
@@ -78,15 +75,17 @@ class Enemy {
   }
 
   List<double> getAttackingCoordinates() {
-    double sumDistance = (entity.x - screenSize.width * 0.94 / 2).abs() +
-        (entity.y - screenSize.height * 0.86 / 2).abs();
-    double bulletSpeedX =
-        -(entity.x - screenSize.width * 0.94 / 2) / sumDistance;
+    final entityCenterX = entity.x + entity.size.width / 2;
+    final entityCenterY = entity.y + entity.size.height / 2;
+
+    double sumDistance = (entityCenterX - screenSize.width / 2).abs() +
+        (entityCenterY - screenSize.height / 2).abs();
+    double bulletSpeedX = -(entityCenterX - screenSize.width / 2) / sumDistance;
     double bulletSpeedY =
-        -(entity.y - screenSize.height * 0.86 / 2) / sumDistance;
+        -(entityCenterY - screenSize.height / 2) / sumDistance;
     List<double> coords = [
-      entity.x + 15,
-      entity.y + 30,
+      entityCenterX,
+      entityCenterY,
       bulletSpeedX,
       bulletSpeedY
     ];
@@ -94,10 +93,8 @@ class Enemy {
     return coords;
   }
 
-  Bullet getAttack() {
-    List<double> coords = getAttackingCoordinates();
-    Bullet bullet = Bullet(coords[0], coords[1], coords[2], coords[3]);
-    return bullet;
+  BasicBullet getAttack() {
+    return null;
   }
 
   SpecialBullet getSpecialAttack() {
@@ -106,23 +103,27 @@ class Enemy {
     switch (bulletTypes[rand]) {
       case BulletType.Freeze:
         return FreezeBullet(coords[0], coords[1], coords[2], coords[3],
-            bulletLifetimeFctr, dmgFctr, bulletSpeedFctr);
+            bulletLifetimeFctr, dmgFctr, bulletSpeedFactor);
       case BulletType.Fire:
         return FireBullet(coords[0], coords[1], coords[2], coords[3],
-            bulletLifetimeFctr, dmgFctr, bulletSpeedFctr);
+            bulletLifetimeFctr, dmgFctr, bulletSpeedFactor);
       case BulletType.Purple:
         return PurpleBullet(coords[0], coords[1], coords[2], coords[3],
-            bulletLifetimeFctr, dmgFctr, bulletSpeedFctr);
+            bulletLifetimeFctr, dmgFctr, bulletSpeedFactor);
       case BulletType.Smoke:
         return SmokeBullet(coords[0], coords[1], coords[2], coords[3],
-            bulletLifetimeFctr, dmgFctr, bulletSpeedFctr);
+            bulletLifetimeFctr, dmgFctr, bulletSpeedFactor);
       case BulletType.Gold:
         return GoldenBullet(coords[0], coords[1], coords[2], coords[3],
-            bulletLifetimeFctr, dmgFctr, bulletSpeedFctr);
+            bulletLifetimeFctr, dmgFctr, bulletSpeedFactor);
+        break;
+      case BulletType.Heal:
+        return HealBullet(coords[0], coords[1], coords[2], coords[3],
+            bulletLifetimeFctr, dmgFctr, bulletSpeedFactor);
         break;
       default:
         PurpleBullet(coords[0], coords[1], coords[2], coords[3],
-            bulletLifetimeFctr, dmgFctr, bulletSpeedFctr);
+            bulletLifetimeFctr, dmgFctr, bulletSpeedFactor);
         break;
     }
   }
@@ -225,7 +226,7 @@ class Enemy {
     }
     enemyhealthBar.resize(x, y);
     effects.forEach((effect) {
-      effect.resize(x, y);
+      effect.resize(Offset(x, y));
     });
   }
 }

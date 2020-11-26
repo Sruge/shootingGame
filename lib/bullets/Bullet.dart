@@ -21,21 +21,11 @@ class Bullet {
   double speedfactor;
   double lifetime, _timer;
 
-  Bullet(double x, double y, bulletSpeedX, bulletSpeedY) {
+  Bullet(this._x, this._y, this._bulletSpeedX, this._bulletSpeedY) {
     bullet = SpriteComponent.square(7, 'bullet.png');
     _state = EntityState.Normal;
     setSpeed([0, 0]);
-    damage = 20;
     _timer = 0;
-    lifetime = 1;
-    speedfactor = 1;
-
-    this._x = x;
-    this._y = y;
-    this._bulletSpeedX =
-        bulletSpeedX * speedfactor / (bulletSpeedX.abs() + bulletSpeedY.abs());
-    this._bulletSpeedY =
-        bulletSpeedY * speedfactor / (bulletSpeedX.abs() + bulletSpeedY.abs());
   }
 
   bool isDead() {
@@ -65,23 +55,17 @@ class Bullet {
   void resize() {
     bullet.x = _x;
     bullet.y = _y;
+    _bulletSpeedX *= speedfactor;
+    _bulletSpeedY *= speedfactor;
   }
 
   void update(double t, List<double> speed) {
     _timer += t;
     setSpeed(speed);
-    bullet.x = _x;
-    bullet.y = _y;
-    _x =
-        bullet.x + _bulletSpeedX * speedfactor - t * _speedX * screenSize.width;
-    _y =
-        bullet.y + _bulletSpeedY * speedfactor - t * _speedY * screenSize.width;
-    if (_timer > lifetime) die();
 
-    if (_x < 0 ||
-        _x > screenSize.width * 3 ||
-        _y < 0 ||
-        _y > screenSize.height * 2) die();
+    _x = _x + _bulletSpeedX * speedfactor - t * _speedX * screenSize.width;
+    _y = _y + _bulletSpeedY * speedfactor - t * _speedY * screenSize.width;
+    if (_timer > lifetime) die();
   }
 
   void setSpeed(List<double> speed) {

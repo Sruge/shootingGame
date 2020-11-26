@@ -32,6 +32,7 @@ class GoldenBullet extends SpecialBullet {
     width = 20;
     height = 20;
     lifetime = 5;
+    speedfactor = bulletSpeed * 4;
   }
 
   @override
@@ -50,7 +51,7 @@ class GoldenBullet extends SpecialBullet {
       StoryHandler handler = screenManager.getStoryHandler();
       Shield effect = Shield(player, null, handler);
       //GoldenEffect effect = GoldenEffect(player, null);
-      effect.resize(x, y);
+      effect.resize(player.getPosition());
       player.effects.add(effect);
     }
   }
@@ -61,7 +62,7 @@ class GoldenBullet extends SpecialBullet {
       StoryHandler handler = screenManager.getStoryHandler();
       Player player = screenManager.getPlayer();
       Shield effect = Shield(player, enemy, handler);
-      effect.resize(x, y);
+      effect.resize(Offset(enemy.x, enemy.y));
       enemy.effects.add(effect);
     }
   }

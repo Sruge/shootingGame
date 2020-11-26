@@ -36,12 +36,12 @@ class Level {
   Random _random;
   Level(int level) {
     _random = Random();
-    spawnInterval = 16 + _random.nextInt(4).toDouble();
+    spawnInterval = 12 + _random.nextInt(4).toDouble();
     bossSpawnInterval = 40 + _random.nextInt(60).toDouble();
     friendSpawnInterval = 12;
     presentSpawnInterval = 12;
-    treeSpawnInterval = 120;
-    timeToNextLevel = 120;
+    treeSpawnInterval = 80;
+    timeToNextLevel = 80;
 
     dmgMultiplier = 1;
     bulletLifetimeMultiplier = 0.7;
@@ -58,15 +58,34 @@ class Level {
       PresentType.Bullets,
       PresentType.Health,
       PresentType.Coin,
-      //PresentType.Freeze
+      PresentType.Blue,
+      PresentType.Colored,
+      PresentType.Golden,
+      PresentType.Red
     ];
-    if (level > 0) {
+    if (level >= 0) {
       Kainhighwind boss = Kainhighwind();
       boss.resize();
       bosses.add(boss);
+
+      // Killer killer = Killer();
+      // killer.resize();
+      // bosses.add(killer);
+
+      // Phoenix phoenix = Phoenix();
+      // phoenix.resize();
+      // bosses.add(phoenix);
+
+      // Russia russia = Russia();
+      // russia.resize();
+      // bosses.add(russia);
+
+      // Leviathan leviathan = Leviathan();
+      // leviathan.resize();
+      // bosses.add(leviathan);
       spawnInterval = 15 + _random.nextInt(4).toDouble();
     }
-    if (level > 2) {
+    if (level > 1) {
       enemyTypes.add(EnemyType.Two);
 
       Killer killer = Killer();
@@ -74,24 +93,20 @@ class Level {
       bosses.add(killer);
 
       enemyBulletSpeed = 1.1;
-      enemySpeedMultiplier = 0.25;
+      enemySpeedMultiplier = 0.2;
 
       bulletLifetimeMultiplier = 1;
       healthMulti = 5;
-      enemySpeedMultiplier = 2;
       dmgMultiplier = 1.2;
       attackIntervalMultiplier = 0.9;
       healthMulti = 1.5;
 
       spawnInterval = 15 + _random.nextInt(4).toDouble();
     }
-    if (level > 3) {
-      presentTypes.add(PresentType.Freeze);
-
+    if (level > 1) {
       Phoenix phoenix = Phoenix();
       phoenix.resize();
       bosses.add(phoenix);
-
       enemyBulletSpeed = 1.2;
       enemySpeedMultiplier = 0.3;
       attackIntervalMultiplier = 0.5;
@@ -168,9 +183,9 @@ class Level {
 
   String toString() {
     String level = 'EnemyTypes: $enemyTypes, Bosses: $bosses, PresentTypes: $presentTypes, ' +
-        'SpawnInterval: $spawnInterval BossSpawnInterval: $bossSpawnInterval, FriendSpawninterval: $friendSpawnInterval, PresentSpawnInterval: $presentSpawnInterval, ' +
+        'SpawnInterval: $spawnInterval BossSpawnInterval: $bossSpawnInterval, FriendSpawninterval: $friendSpawnInterval, PresentSpawnInterval: $presentSpawnInterval, TreeSpawnInterval: $treeSpawnInterval ' +
         'Damage: $dmgMultiplier, BulletLifeTime: $bulletLifetimeMultiplier, AttackRange: $attackRangeMultiplier, AttackInterval: $attackIntervalMultiplier, ' +
-        'SpeedMultiplier: $enemySpeedMultiplier, HealthMulti: $healthMulti, Duration: $timeToNextLevel';
+        'SpeedMultiplier: $enemySpeedMultiplier, BulletSpeedMultiplier: $enemyBulletSpeed HealthMulti: $healthMulti, Duration: $timeToNextLevel';
     return level;
   }
 }

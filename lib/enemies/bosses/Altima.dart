@@ -3,10 +3,11 @@ import 'dart:ui';
 
 import 'package:shootinggame/bullets/BasicBullet.dart';
 import 'package:shootinggame/bullets/BulletType.dart';
+import 'package:shootinggame/bullets/FreezeBullet.dart';
 import 'package:shootinggame/enemies/Enemy.dart';
 import 'package:shootinggame/bullets/SpecialBullet.dart';
 import 'package:shootinggame/entities/EntityState.dart';
-import 'package:shootinggame/screens/player/WalkingEntity.dart';
+import 'package:shootinggame/entities/WalkingEntity.dart';
 import 'package:shootinggame/screens/util/SizeHolder.dart';
 import 'package:shootinggame/screens/util/StoryHandler.dart';
 
@@ -40,13 +41,13 @@ class Altima extends Enemy {
     _specialAttackTimer = 0;
     _specialAttackInterval = 3;
     bulletSpeedFactor = 1.5;
-
+    dmgFctr = 1;
+    bulletLifetimeFctr = 1;
     entity = WalkingEntity(
         'altima2.png', 48, 48, Size(baseAnimationWidth, baseAnimationHeight));
     random = Random();
   }
 
-  @override
   BasicBullet getAttack() {
     List<double> coords = super.getAttackingCoordinates();
     BasicBullet bullet = BasicBullet(coords[0], coords[1], coords[2], coords[3],
@@ -54,12 +55,11 @@ class Altima extends Enemy {
     return bullet;
   }
 
-  @override
-  void getHit(Bullet bullet) {
-    health -= bullet.damage;
-    if (health < 1) {
-      state = EntityState.Dead;
-    }
+  SpecialBullet getSpecialAttack() {
+    List<double> coords = getAttackingCoordinates();
+
+    return FreezeBullet(coords[0], coords[1], coords[2], coords[3],
+        bulletLifetimeFctr, dmgFctr, bulletSpeedFactor);
   }
 
   @override

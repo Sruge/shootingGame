@@ -8,18 +8,17 @@ import 'package:shootinggame/screens/player/Player.dart';
 import 'SpecialBullet.dart';
 
 class FireBullet extends SpecialBullet {
-  double damage;
   double width;
   double height;
 
-  FireBullet(double x, double y, double _bulletSpeedX, double _bulletSpeedY,
+  FireBullet(double x, double y, double bulletSpeedX, double bulletSpeedY,
       double lifetimeFctr, double damageFctr, double bulletSpeed)
-      : super(x, y, 20, 20, _bulletSpeedX, _bulletSpeedY, 'fire.png', 32, 32) {
+      : super(x, y, 20, 20, bulletSpeedX, bulletSpeedY, 'fire.png', 32, 32) {
     width = 20;
     height = 20;
-    damage = 60 * damageFctr;
-    lifetime = 2;
-    speedfactor = bulletSpeed * 2;
+    this.damage = 60 * damageFctr;
+    this.lifetime = 2;
+    this.speedfactor = bulletSpeed * 4;
   }
 
   @override
@@ -31,7 +30,7 @@ class FireBullet extends SpecialBullet {
   void hitPlayer(Player player) {
     super.hitPlayer(player);
     Effect effect = FireEffect(player, null);
-    effect.resize(x, y);
+    effect.resize(player.getPosition());
     player.effects.add(effect);
     die();
   }
@@ -41,7 +40,7 @@ class FireBullet extends SpecialBullet {
     super.hitEnemy(enemy);
 
     Effect effect = FireEffect(null, enemy);
-    effect.resize(enemy.x, enemy.y);
+    effect.resize(Offset(enemy.x, enemy.y));
     enemy.effects.add(effect);
     die();
   }

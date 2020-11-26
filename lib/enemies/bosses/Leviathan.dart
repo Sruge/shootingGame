@@ -6,7 +6,7 @@ import 'package:shootinggame/bullets/BulletType.dart';
 import 'package:shootinggame/enemies/Enemy.dart';
 import 'package:shootinggame/bullets/SpecialBullet.dart';
 import 'package:shootinggame/entities/EntityState.dart';
-import 'package:shootinggame/screens/player/WalkingEntity.dart';
+import 'package:shootinggame/entities/WalkingEntity.dart';
 import 'package:shootinggame/screens/util/SizeHolder.dart';
 import 'package:shootinggame/screens/util/StoryHandler.dart';
 
@@ -38,26 +38,19 @@ class Leviathan extends Enemy {
     bulletTypes = [BulletType.Freeze];
     enemySpeedFactor = 0.14;
     bulletSpeedFactor = 2;
+    dmgFctr = 1;
+    bulletLifetimeFctr = 1;
 
     entity = WalkingEntity('leviathan.png', 96, 96,
         Size(baseAnimationWidth * 3, baseAnimationHeight * 3));
     random = Random();
   }
 
-  @override
   BasicBullet getAttack() {
     List<double> coords = super.getAttackingCoordinates();
     BasicBullet bullet = BasicBullet(coords[0], coords[1], coords[2], coords[3],
         BulletType.Three, bulletLifetimeFctr, dmgFctr, bulletSpeedFactor);
     return bullet;
-  }
-
-  @override
-  void getHit(Bullet bullet) {
-    health -= bullet.damage;
-    if (health < 1) {
-      state = EntityState.Dead;
-    }
   }
 
   @override

@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flame/components/animation_component.dart';
 import 'package:flame/spritesheet.dart';
 import 'package:shootinggame/bullets/Bullet.dart';
+import 'package:shootinggame/bullets/FireRingBullet.dart';
 import 'package:shootinggame/bullets/FreezeBullet.dart';
 import 'package:shootinggame/bullets/HealBullet.dart';
 import 'package:shootinggame/bullets/SpecialBullet.dart';
@@ -16,7 +17,7 @@ import 'DealerBord.dart';
 import 'Friend.dart';
 import 'FriendType.dart';
 
-class Tree extends Friend {
+class Firetree extends Friend {
   String aniPath;
   DealerBord _dealerBord;
   double _timer;
@@ -26,7 +27,7 @@ class Tree extends Friend {
   double _attackTime;
   List<SpecialBullet> bullets;
   double _x, _y, _power;
-  Tree(this._x, this._y, this._power) : super() {
+  Firetree(this._x, this._y, this._power) : super() {
     attackRange = 130;
     attackInterval = 3;
     _timer = 0;
@@ -39,7 +40,7 @@ class Tree extends Friend {
     enemySpeedFactor = 0;
 
     final sprShe = SpriteSheet(
-        imageName: 'tree.png',
+        imageName: 'firetree.png',
         textureWidth: 128,
         textureHeight: 128,
         columns: 4,
@@ -57,7 +58,7 @@ class Tree extends Friend {
     _tree.animation.update(t);
     if (_timer > _attackTime) {
       List<double> coords = getAttackingCoordinates(_tree.x, _tree.y);
-      HealBullet bullet = HealBullet(
+      FireRingBullet bullet = FireRingBullet(
           coords[0], coords[1], coords[2], coords[3], _power, _power, _power);
       bullet.resize();
       bullets.add(bullet);

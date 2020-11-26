@@ -43,15 +43,6 @@ class Sparkle extends Effect {
     super.update(t, x, y);
   }
 
-  void resize(double x, double y) {
-    if (renderSomething) {
-      effect.x = x;
-      effect.y = y;
-      effect.width = screenSize.width * 0.06;
-      effect.height = screenSize.height * 0.14;
-    }
-  }
-
   void end() {
     if (_player != null) {
       _player.dmgFctr = _initDmg;

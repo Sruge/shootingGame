@@ -56,7 +56,7 @@ class StoryHandler {
     if (levelUpdateble && _levelTimer > _level.timeToNextLevel) {
       _levelTimer = 0;
       levelNumber += 1;
-      _level = Level(6);
+      _level = Level(levelNumber);
 
       spawner = Spawner(_level, this);
     }

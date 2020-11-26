@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:flutter/widgets.dart';
 import 'package:shootinggame/friends/DealerBord.dart';
 import 'package:shootinggame/screens/game_screens/ScreenManager.dart';
-import 'package:shootinggame/screens/game_screens/TableOverlay.dart';
 import 'package:shootinggame/screens/player/Player.dart';
 import 'package:shootinggame/screens/game_screens/ScreenState.dart';
 import 'package:shootinggame/screens/util/DynamicBackground.dart';
@@ -18,7 +17,6 @@ class PlayGround extends BaseWidget {
   Player player;
   List<double> speed = [0, 0];
 
-  double speedfactor;
   StoryHandler storyHandler;
   bool showDeal;
   DealerBord _dealerBord;
@@ -27,7 +25,6 @@ class PlayGround extends BaseWidget {
     _bg = DynamicBackground(0, 0, 'bg.png');
 
     player = Player(char);
-    speedfactor = 0.2;
     storyHandler = StoryHandler();
     showDeal = false;
   }
@@ -45,6 +42,7 @@ class PlayGround extends BaseWidget {
       });
 
       if (player.move) _bg.onTapDown(detail, speed);
+      print(speed);
     }
   }
 
@@ -66,7 +64,6 @@ class PlayGround extends BaseWidget {
 
   @override
   void update(double t) {
-    player.speedfactor = speedfactor;
     if (_bg.hasReachedDestinationOrBorder()) player.move = false;
     if (!player.move) speed = [0, 0];
 
@@ -82,22 +79,18 @@ class PlayGround extends BaseWidget {
         (detail.globalPosition.dx - screenSize.width / 2).abs() +
             (detail.globalPosition.dy - screenSize.height / 2).abs();
     if (detail.globalPosition.dx - screenSize.width / 2 > 0) {
-      speed[0] = speedfactor *
-          ((detail.globalPosition.dx - screenSize.width / 2).abs() /
-              sumOffsets);
+      speed[0] = ((detail.globalPosition.dx - screenSize.width / 2).abs() /
+          sumOffsets);
     } else {
-      speed[0] = -speedfactor *
-          ((detail.globalPosition.dx - screenSize.width / 2).abs() /
-              sumOffsets);
+      speed[0] = -((detail.globalPosition.dx - screenSize.width / 2).abs() /
+          sumOffsets);
     }
     if (detail.globalPosition.dy - screenSize.height / 2 > 0) {
-      speed[1] = speedfactor *
-          ((detail.globalPosition.dy - screenSize.height / 2).abs() /
-              sumOffsets);
+      speed[1] = ((detail.globalPosition.dy - screenSize.height / 2).abs() /
+          sumOffsets);
     } else {
-      speed[1] = -speedfactor *
-          ((detail.globalPosition.dy - screenSize.height / 2).abs() /
-              sumOffsets);
+      speed[1] = -((detail.globalPosition.dy - screenSize.height / 2).abs() /
+          sumOffsets);
     }
 
     return speed;

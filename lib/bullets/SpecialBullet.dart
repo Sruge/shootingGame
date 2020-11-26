@@ -14,9 +14,9 @@ class SpecialBullet {
   AnimationComponent specialBullet;
   double _speedX;
   double _speedY;
-  double bulletSpeedX;
-  double bulletSpeedY;
-  double x, y;
+  double _bulletSpeedX;
+  double _bulletSpeedY;
+  double _x, _y;
   EntityState _state;
   double damage;
   double speedfactor;
@@ -24,12 +24,12 @@ class SpecialBullet {
   int _txtWidth, _txtHeight;
 
   SpecialBullet(
-    double x,
-    double y,
+    this._x,
+    this._y,
     double width,
     double height,
-    this.bulletSpeedX,
-    this.bulletSpeedY,
+    this._bulletSpeedX,
+    this._bulletSpeedY,
     String aniPath,
     this._txtWidth,
     this._txtHeight,
@@ -45,12 +45,7 @@ class SpecialBullet {
         width, height, sprshee.createAnimation(0, stepTime: 0.1));
     _state = EntityState.Normal;
     setSpeed([0, 0]);
-    damage = 1;
     _timer = 0;
-    lifetime = 1;
-
-    this.x = x;
-    this.y = y;
   }
 
   bool isDead() {
@@ -71,27 +66,29 @@ class SpecialBullet {
 
   void render(Canvas canvas) {
     canvas.save();
-    specialBullet.x = x;
-    specialBullet.y = y;
+    specialBullet.x = _x;
+    specialBullet.y = _y;
     specialBullet.render(canvas);
     canvas.restore();
   }
 
   void resize() {
-    specialBullet.x = x;
-    specialBullet.y = y;
+    specialBullet.x = _x;
+    specialBullet.y = _y;
+    _bulletSpeedX *= speedfactor;
+    _bulletSpeedY *= speedfactor;
   }
 
   void update(double t, List<double> speed) {
     _timer += t;
     setSpeed(speed);
-    speedfactor = 3;
 
-    x = x + bulletSpeedX * speedfactor - t * _speedX * screenSize.width;
-    y = y + bulletSpeedY * speedfactor - t * _speedY * screenSize.width;
-    specialBullet.update(t);
-
-    if (_timer > lifetime) die();
+    _x = _x + _bulletSpeedX * speedfactor - t * _speedX * screenSize.width;
+    _y = _y + _bulletSpeedY * speedfactor - t * _speedY * screenSize.width;
+    if (_timer > lifetime)
+      die();
+    else
+      specialBullet.update(t);
   }
 
   void setSpeed(List<double> speed) {

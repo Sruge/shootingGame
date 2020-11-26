@@ -5,7 +5,7 @@ import 'package:flame/spritesheet.dart';
 import 'package:shootinggame/effects/EffectType.dart';
 import 'package:shootinggame/entities/EntityState.dart';
 import 'package:shootinggame/screens/game_screens/ScreenManager.dart';
-import 'package:shootinggame/screens/player/WalkingEntity.dart';
+import 'package:shootinggame/entities/WalkingEntity.dart';
 import 'package:shootinggame/screens/util/SizeHolder.dart';
 
 import 'DealerBord.dart';

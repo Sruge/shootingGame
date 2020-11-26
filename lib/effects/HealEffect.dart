@@ -15,8 +15,8 @@ class HealEffect extends Effect {
     totalDuration = 1;
     final sprShe = SpriteSheet(
         imageName: 'healEffect.png',
-        textureWidth: 32,
-        textureHeight: 32,
+        textureWidth: 128,
+        textureHeight: 128,
         columns: 4,
         rows: 1);
     final ani = sprShe.createAnimation(0, stepTime: 0.1);
@@ -40,14 +40,5 @@ class HealEffect extends Effect {
     }
 
     super.update(t, x, y);
-  }
-
-  void resize(double x, double y) {
-    if (renderSomething) {
-      effect.x = x;
-      effect.y = y;
-      effect.width = screenSize.width * 0.06;
-      effect.height = screenSize.height * 0.14;
-    }
   }
 }

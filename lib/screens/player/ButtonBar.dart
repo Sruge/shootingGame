@@ -44,6 +44,9 @@ class ButtonBar {
             _buttons[i].isActive = false;
             player.attackType = AttackType.Normal;
           } else {
+            _buttons.forEach((element) {
+              element.isActive = false;
+            });
             _buttons[i].isActive = true;
             player.attackType = _buttons[i].getAttackType();
           }
@@ -96,6 +99,7 @@ class ButtonBar {
     for (int i = 0; i < _buttons.length; i++) {
       if (_buttons[i].type != AttackType.Normal && _buttons[i].count <= 0) {
         _buttons[i] = SpecialAttackBtn(AttackType.Normal, 0, 0, 0);
+        _buttons[i].count = 0;
         resize();
       }
       _buttons[i].update(t);

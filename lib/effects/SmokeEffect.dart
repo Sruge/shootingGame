@@ -11,7 +11,7 @@ class SmokeEffect extends Effect {
 
   void update(t, x, y) {
     if (_player != null) {
-      _player.health -= t;
+      _player.health -= t * 10;
     } else if (_enemy != null) {
       _enemy.health -= t;
     }

@@ -19,13 +19,13 @@ class FreezeBullet extends SpecialBullet {
           16,
           _bulletSpeedX,
           _bulletSpeedY,
-          'freezeTrans.png',
+          'freeze.png',
           32,
           32,
         ) {
     damage = 50 * damageFctr;
     lifetime = 2;
-    speedfactor = bulletSpeed * 2;
+    speedfactor = bulletSpeed * 5;
   }
 
   void onTapDown(TapDownDetails detail, Function fn) {
@@ -35,7 +35,7 @@ class FreezeBullet extends SpecialBullet {
   @override
   void hitPlayer(Player player) {
     Effect effect = FreezeEffect(player, null);
-    effect.resize(x, y);
+    effect.resize(player.getPosition());
     player.effects.add(effect);
     super.hitPlayer(player);
   }
@@ -43,7 +43,7 @@ class FreezeBullet extends SpecialBullet {
   @override
   void hitEnemy(Enemy enemy) {
     Effect effect = FreezeEffect(null, enemy);
-    effect.resize(enemy.x, enemy.y);
+    effect.resize(Offset(enemy.x, enemy.y));
     enemy.effects.add(effect);
     super.hitEnemy(enemy);
   }

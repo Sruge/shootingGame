@@ -1,12 +1,14 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:shootinggame/bullets/BasicBullet.dart';
 import 'package:shootinggame/bullets/BulletType.dart';
+import 'package:shootinggame/bullets/FireBullet.dart';
 import 'package:shootinggame/enemies/Enemy.dart';
 import 'package:shootinggame/bullets/SpecialBullet.dart';
 import 'package:shootinggame/entities/EntityState.dart';
-import 'package:shootinggame/screens/player/WalkingEntity.dart';
+import 'package:shootinggame/entities/WalkingEntity.dart';
 import 'package:shootinggame/screens/util/SizeHolder.dart';
 import 'package:shootinggame/screens/util/StoryHandler.dart';
 
@@ -21,7 +23,6 @@ class Phoenix extends Enemy {
   List<BulletType> bulletTypes;
   Random random;
   double _specialAttackTimer;
-  double bulletSpeedFactor;
 
   double _specialAttackInterval;
   Phoenix() : super() {
@@ -37,14 +38,15 @@ class Phoenix extends Enemy {
     bulletTypes = [BulletType.Fire];
     enemySpeedFactor = 0.2;
     _specialAttackInterval = 2.2;
-    bulletSpeedFactor = 1.3;
+    bulletSpeedFactor = 1;
+    dmgFctr = 2;
+    bulletLifetimeFctr = 2;
 
     entity = WalkingEntity('phoenix.png', 96, 96,
         Size(baseAnimationWidth * 2, baseAnimationHeight * 2));
     random = Random();
   }
 
-  @override
   BasicBullet getAttack() {
     List<double> coords = super.getAttackingCoordinates();
     BasicBullet bullet = BasicBullet(coords[0], coords[1], coords[2], coords[3],
@@ -53,11 +55,11 @@ class Phoenix extends Enemy {
   }
 
   @override
-  void getHit(Bullet bullet) {
-    health -= bullet.damage;
-    if (health < 1) {
-      state = EntityState.Dead;
-    }
+  SpecialBullet getSpecialAttack() {
+    List<double> coords = getAttackingCoordinates();
+
+    return FireBullet(coords[0], coords[1], coords[2], coords[3],
+        bulletLifetimeFctr, dmgFctr, bulletSpeedFactor);
   }
 
   @override

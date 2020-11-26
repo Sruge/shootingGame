@@ -12,19 +12,22 @@ import 'package:shootinggame/effects/EffectState.dart';
 import 'package:shootinggame/effects/EffectType.dart';
 import 'package:shootinggame/effects/HealEffect.dart';
 import 'package:shootinggame/effects/IceEffect.dart';
+import 'package:shootinggame/effects/Shield.dart';
 import 'package:shootinggame/effects/Sparkle.dart';
 import 'package:shootinggame/enemies/Enemy.dart';
 import 'package:shootinggame/bullets/FireBullet.dart';
 import 'package:shootinggame/friends/Friend.dart';
 import 'package:shootinggame/enemies/Present.dart';
 import 'package:shootinggame/bullets/SpecialBullet.dart';
+import 'package:shootinggame/screens/game_screens/ScreenManager.dart';
 import 'package:shootinggame/screens/player/AttackType.dart';
 
 import 'package:shootinggame/screens/player/ButtonBar.dart';
 import 'package:shootinggame/screens/player/Healthbar.dart';
 import 'package:shootinggame/screens/util/SizeHolder.dart';
+import 'package:shootinggame/screens/util/StoryHandler.dart';
 
-import 'WalkingEntity.dart';
+import '../../entities/WalkingEntity.dart';
 
 class Player {
   WalkingEntity _player;
@@ -55,6 +58,21 @@ class Player {
 
   Player(int char) {
     bool debug = true;
+    String playerPath;
+    switch (char) {
+      case 1:
+        playerPath = 'elf.png';
+        break;
+      case 2:
+        playerPath = 'elf2.png';
+        break;
+      case 3:
+        playerPath = 'elf3.png';
+        break;
+      default:
+    }
+    _player = WalkingEntity(
+        playerPath, 32, 48, Size(baseAnimationWidth, baseAnimationHeight));
     health = 200;
     maxHealth = 200;
     _healthbar = Healthbar(10, 10, bulletCount, coins, score);
@@ -69,48 +87,37 @@ class Player {
     coins = 0;
     score = 0;
     slots = 0;
-    bulletLifetimeFctr = 0.7;
+    bulletLifetimeFctr = 1.2;
     bulletSpeedFctr = 1;
     dmgFctr = 1;
     frozen = false;
     attackType = AttackType.Normal;
     bulletType = BulletType.One;
+    _btnBar = ButtonBar(slots);
     if (debug) {
       slots = 3;
+      _btnBar = ButtonBar(slots);
       bulletCount = 500;
       maxBulletCount = 1000;
-      _btnBar = ButtonBar(slots);
 
       coins = 20;
       addAttack(AttackType.Fire, 5);
       addAttack(AttackType.Freeze, 5);
       addAttack(AttackType.Heal, 5);
       Effect iceEffect = IceEffect(this, null);
-      iceEffect.resize(0, 0);
+      iceEffect.resize(getPosition());
       effects.add(iceEffect);
       Effect sparkle = Sparkle(this, null);
-      sparkle.resize(0, 0);
+      sparkle.resize(getPosition());
       effects.add(sparkle);
     }
-    String playerPath;
-    switch (char) {
-      case 1:
-        playerPath = 'elf.png';
-        break;
-      case 2:
-        playerPath = 'elf2.png';
-        break;
-      case 3:
-        playerPath = 'elf3.png';
-        break;
-      default:
-    }
-
-    _player = WalkingEntity(
-        playerPath, 32, 48, Size(baseAnimationWidth, baseAnimationHeight));
   }
   void onTapDown(TapDownDetails detail, List<Enemy> enemies,
       List<Friend> friends, List<double> speed, Function fn) {
+    double sumSpeed = speed[0].abs() + speed[1].abs();
+    speed[0] = speed[0] / sumSpeed / 5;
+    speed[1] = speed[1] / sumSpeed / 5;
+
     move = true;
     attack = true;
 
@@ -188,8 +195,9 @@ class Player {
       b.resize();
     });
     effects.forEach((e) {
-      e.resize(_player.x, _player.y);
+      e.resize(getPosition());
     });
+    //screenManager.setSpeedfactor(5, true);
   }
 
   void update(double t, List<double> speed, List<Enemy> enemies,
@@ -229,13 +237,6 @@ class Player {
     effects.removeWhere((element) => element.state == EffectState.Ended);
   }
 
-  void getHit(Bullet bullet) {
-    if (health > 0) health -= bullet.damage;
-    if (health <= 0) {
-      die();
-    }
-  }
-
   Rect toRect() {
     return _player.toRect();
   }
@@ -266,7 +267,7 @@ class Player {
       case AttackType.Heal:
         HealEffect effect = HealEffect(this, null);
         effect.totalDuration = 5;
-        effect.resize(_player.x, _player.y);
+        effect.resize(getPosition());
         effects.add(effect);
         attackType = AttackType.Normal;
         break;
@@ -309,6 +310,20 @@ class Player {
         _specialBullets.add(bullet);
         attackType = AttackType.Normal;
         break;
+      case AttackType.Ice:
+        IceEffect effect = IceEffect(this, null);
+        effect.totalDuration = 15;
+        effect.resize(getPosition());
+        effects.add(effect);
+        attackType = AttackType.Normal;
+        break;
+      case AttackType.Shield:
+        StoryHandler storyHandler = screenManager.getStoryHandler();
+        Shield shield = Shield(this, null, storyHandler);
+        shield.resize(getPosition());
+        effects.add(shield);
+        attackType = AttackType.Normal;
+        break;
       default:
         break;
     }
@@ -325,5 +340,9 @@ class Player {
 
   void addAttack(AttackType type, int count) {
     _btnBar.addAttack(type, count);
+  }
+
+  Offset getPosition() {
+    return Offset(_player.x, _player.y);
   }
 }

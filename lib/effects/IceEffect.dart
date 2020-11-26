@@ -28,13 +28,4 @@ class IceEffect extends Effect {
   void update(double t, double x, double y) {
     super.update(t, 0, 0);
   }
-
-  void resize(double x, double y) {
-    if (renderSomething) {
-      effect.x = 0;
-      effect.y = 0;
-      effect.width = screenSize.width;
-      effect.height = screenSize.height;
-    }
-  }
 }

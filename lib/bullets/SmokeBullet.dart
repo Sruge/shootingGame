@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:flutter/gestures.dart';
 import 'package:shootinggame/effects/Effect.dart';
@@ -35,7 +36,7 @@ class SmokeBullet extends SpecialBullet {
     lifetime = 5;
     speedfactor = 0;
     random = Random();
-    double rand = (random.nextDouble() - 0.5) * 100;
+    rand = (random.nextDouble() - 0.5) * 100;
   }
 
   @override
@@ -43,15 +44,20 @@ class SmokeBullet extends SpecialBullet {
     // TODO: implement onTapDown
   }
 
+  void render(Canvas canvas) {
+    canvas.save();
+    specialBullet.render(canvas);
+    canvas.restore();
+  }
+
   @override
   void update(double t, List<double> speed) {
     width += t * 50;
     height += t * 50;
-    double num = random.nextDouble() - 0.5;
     specialBullet.width = width;
     specialBullet.height = height;
-    x -= t * 25 + t * 70 * rand;
-    y -= t * 25 + t * 70 * rand;
+    specialBullet.x -= t * 25 + t * 70 * rand;
+    specialBullet.y -= t * 25 + t * 70 * rand;
     super.update(t, speed);
   }
 

@@ -6,7 +6,7 @@ import 'package:shootinggame/bullets/BasicBullet.dart';
 import 'package:shootinggame/bullets/BulletType.dart';
 import 'package:shootinggame/enemies/Enemy.dart';
 import 'package:shootinggame/enemies/EnemyType.dart';
-import 'package:shootinggame/screens/player/WalkingEntity.dart';
+import 'package:shootinggame/entities/WalkingEntity.dart';
 import 'package:shootinggame/screens/util/SizeHolder.dart';
 
 class BasicEnemy extends Enemy {
@@ -136,11 +136,12 @@ class BasicEnemy extends Enemy {
         aniPath = 'monster.png';
     }
     dmgFctr = _dmgMultiplier;
+    enemySpeedFactor = _enemySpeed;
+    bulletSpeedFactor = _bulletSpeed;
     entity = WalkingEntity(aniPath, _txtWidth, _txtHeight,
         Size(baseAnimationWidth, baseAnimationHeight));
   }
 
-  @override
   BasicBullet getAttack() {
     List<double> coords = getAttackingCoordinates();
     BasicBullet bullet = BasicBullet(coords[0], coords[1], coords[2], coords[3],

@@ -1,1 +1,1 @@
-enum PresentType { Health, Bullets, Freeze, Coin }
+enum PresentType { Health, Bullets, Coin, Blue, Golden, Colored, Red }

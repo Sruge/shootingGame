@@ -18,7 +18,7 @@ class PurpleBullet extends SpecialBullet {
     damage = 30 * damageFctr;
     _timer = 0;
     lifetime = 2 * lifetimeFctr;
-    speedfactor = bulletSpeed;
+    speedfactor = bulletSpeed * 5;
   }
 
   void onTapDown(TapDownDetails detail, Function fn) {
@@ -32,8 +32,8 @@ class PurpleBullet extends SpecialBullet {
 
   @override
   void update(double t, List<double> speed) {
-    bulletSpeedX += t * bulletSpeedX;
-    bulletSpeedY += t * bulletSpeedY;
+    // bulletSpeedX += t * bulletSpeedX;
+    // bulletSpeedY += t * bulletSpeedY;
     super.update(t, speed);
   }
 

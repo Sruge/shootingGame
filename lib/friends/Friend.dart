@@ -8,7 +8,7 @@ import 'package:shootinggame/bullets/SpecialBullet.dart';
 import 'package:shootinggame/effects/EffectType.dart';
 
 import 'package:shootinggame/entities/EntityState.dart';
-import 'package:shootinggame/screens/player/WalkingEntity.dart';
+import 'package:shootinggame/entities/WalkingEntity.dart';
 
 import 'package:shootinggame/screens/util/SizeHolder.dart';
 

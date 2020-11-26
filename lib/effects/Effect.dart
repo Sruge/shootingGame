@@ -56,10 +56,10 @@ class Effect {
     }
   }
 
-  void resize(double x, double y) {
+  void resize(Offset offset) {
     if (renderSomething) {
-      effect.x = x;
-      effect.y = y;
+      effect.x = offset.dx;
+      effect.y = offset.dy;
       effect.width = screenSize.width * 0.06;
       effect.height = screenSize.height * 0.14;
     }

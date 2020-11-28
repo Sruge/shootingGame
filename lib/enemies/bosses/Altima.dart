@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'dart:ui';
-
 import 'package:shootinggame/bullets/BasicBullet.dart';
 import 'package:shootinggame/bullets/BulletType.dart';
 import 'package:shootinggame/bullets/FreezeBullet.dart';
@@ -10,8 +9,6 @@ import 'package:shootinggame/entities/EntityState.dart';
 import 'package:shootinggame/entities/WalkingEntity.dart';
 import 'package:shootinggame/screens/util/SizeHolder.dart';
 import 'package:shootinggame/screens/util/StoryHandler.dart';
-
-import '../../bullets/Bullet.dart';
 import '../EnemyType.dart';
 
 class Altima extends Enemy {
@@ -30,8 +27,6 @@ class Altima extends Enemy {
 
   double _specialAttackInterval;
   Altima(this._power, this._storyHandler) : super() {
-    _storyHandler.levelUpdateble = false;
-
     type = EnemyType.Boss;
     specialBullets = List.empty(growable: true);
     state = EntityState.Normal;
@@ -67,6 +62,10 @@ class Altima extends Enemy {
     List<double> coords = getAttackingCoordinates();
 
     return FreezeBullet(coords[0], coords[1], coords[2], coords[3], _power);
+  }
+
+  void getCalledToTheBattlefield() {
+    _storyHandler.levelUpdateble = false;
   }
 
   @override

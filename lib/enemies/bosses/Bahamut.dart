@@ -55,6 +55,10 @@ class Bahamut extends Enemy {
     random = Random();
   }
 
+  void getCalledToTheBattlefield() {
+    _storyHandler.levelUpdateble = false;
+  }
+
   BasicBullet getAttack() {
     List<double> coords = super.getAttackingCoordinates();
     BasicBullet bullet = BasicBullet(coords[0], coords[1], coords[2], coords[3],

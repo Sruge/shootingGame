@@ -32,8 +32,6 @@ class Kainhighwind extends Enemy {
   EnemyType type;
 
   Kainhighwind(this._power, this._storyHandler) : super() {
-    _storyHandler.levelUpdateble = false;
-
     type = EnemyType.Boss;
     _timer = 0;
     specialBullets = List.empty(growable: true);
@@ -57,6 +55,10 @@ class Kainhighwind extends Enemy {
     random = Random();
     entity = WalkingEntity(
         'kainhighwind', 32, 48, Size(baseAnimationWidth, baseAnimationHeight));
+  }
+
+  void getCalledToTheBattlefield() {
+    _storyHandler.levelUpdateble = false;
   }
 
   BasicBullet getAttack() {

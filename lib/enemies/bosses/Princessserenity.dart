@@ -10,8 +10,6 @@ import 'package:shootinggame/entities/EntityState.dart';
 import 'package:shootinggame/entities/WalkingEntity.dart';
 import 'package:shootinggame/screens/util/SizeHolder.dart';
 import 'package:shootinggame/screens/util/StoryHandler.dart';
-
-import '../../bullets/Bullet.dart';
 import '../EnemyType.dart';
 
 class Princessserenity extends Enemy {
@@ -50,6 +48,10 @@ class Princessserenity extends Enemy {
     entity = WalkingEntity('princessserenity', 32, 48,
         Size(baseAnimationWidth, baseAnimationHeight));
     random = Random();
+  }
+
+  void getCalledToTheBattlefield() {
+    _storyHandler.levelUpdateble = false;
   }
 
   BasicBullet getAttack() {

@@ -15,8 +15,6 @@ import 'package:shootinggame/entities/WalkingEntity.dart';
 import 'package:shootinggame/screens/game_screens/ScreenManager.dart';
 import 'package:shootinggame/screens/util/SizeHolder.dart';
 import 'package:shootinggame/screens/util/StoryHandler.dart';
-
-import '../../bullets/Bullet.dart';
 import '../EnemyType.dart';
 
 class Boss extends Enemy {
@@ -28,12 +26,10 @@ class Boss extends Enemy {
   List<SpecialBullet> specialBullets;
   List<BulletType> bulletTypes;
   Random random;
-  double _specialAttackTimer;
   double bulletSpeedFactor;
   double _power;
   double _nextBeamTime;
   bool _beamingNow;
-  double _beamingTimer;
   StoryHandler _storyHandler;
   double _beamingDuration;
   double _initialSpeedFactor;
@@ -45,7 +41,6 @@ class Boss extends Enemy {
     specialBullets = List.empty(growable: true);
     state = EntityState.Normal;
     _bossTimer = 0;
-    _specialAttackTimer = 0;
     _beamingNow = false;
 
     bulletTypes = [
@@ -76,6 +71,10 @@ class Boss extends Enemy {
     _beaming =
         AnimationComponent(32, 38, sprShe.createAnimation(0, stepTime: 0.1));
     random = Random();
+  }
+
+  void getCalledToTheBattlefield() {
+    _storyHandler.levelUpdateble = false;
   }
 
   BasicBullet getAttack() {

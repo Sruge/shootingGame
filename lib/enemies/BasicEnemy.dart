@@ -1,7 +1,5 @@
 import 'dart:ui';
 
-import 'package:flame/components/animation_component.dart';
-import 'package:flame/spritesheet.dart';
 import 'package:shootinggame/bullets/BasicBullet.dart';
 import 'package:shootinggame/bullets/BulletType.dart';
 import 'package:shootinggame/enemies/Enemy.dart';
@@ -34,7 +32,7 @@ class BasicEnemy extends Enemy {
       : super() {
     switch (_type) {
       case EnemyType.One:
-        aniPath = 'priest.png';
+        aniPath = 'priest';
         attackRange = 200 * _attackRange;
         attackInterval = 2.5 * _attackInterval;
         bulletLifetimeFctr = 2 * _bulletLifetime;
@@ -45,7 +43,7 @@ class BasicEnemy extends Enemy {
         _txtHeight = 48;
         break;
       case EnemyType.Two:
-        aniPath = 'monster.png';
+        aniPath = 'monster';
         attackRange = 150 * _attackRange;
         attackInterval = 2.5 * _attackInterval;
         bulletLifetimeFctr = 2 * _bulletLifetime;
@@ -56,7 +54,7 @@ class BasicEnemy extends Enemy {
         _txtHeight = 48;
         break;
       case EnemyType.Three:
-        aniPath = 'angel.png';
+        aniPath = 'angel';
         attackRange = 130 * _attackRange;
         attackInterval = 1.8 * _attackInterval;
         bulletLifetimeFctr = 2 * _bulletLifetime;
@@ -67,7 +65,7 @@ class BasicEnemy extends Enemy {
         _txtHeight = 48;
         break;
       case EnemyType.Four:
-        aniPath = 'ryuk.png';
+        aniPath = 'ryuk';
         attackRange = 250 * _attackRange;
         attackInterval = 2.5 * _attackInterval;
         bulletLifetimeFctr = 2 * _bulletLifetime;
@@ -78,7 +76,7 @@ class BasicEnemy extends Enemy {
         _txtHeight = 64;
         break;
       case EnemyType.Five:
-        aniPath = 'ray.png';
+        aniPath = 'ray';
         attackRange = 100 * _attackRange;
         attackInterval = 2.2 * _attackInterval;
         bulletLifetimeFctr = 2 * _bulletLifetime;
@@ -89,7 +87,7 @@ class BasicEnemy extends Enemy {
         _txtHeight = 52;
         break;
       case EnemyType.Six:
-        aniPath = 'bunte.png';
+        aniPath = 'bunte';
         attackRange = 180 * _attackRange;
         attackInterval = 4 * _attackInterval;
         bulletLifetimeFctr = 2 * _bulletLifetime;
@@ -100,7 +98,7 @@ class BasicEnemy extends Enemy {
         _txtHeight = 52;
         break;
       case EnemyType.PirateOne:
-        aniPath = 'pirate1.png';
+        aniPath = 'pirate1';
         attackRange = 50 * _attackRange;
         attackInterval = 2.5 * _attackInterval;
         bulletLifetimeFctr = 2 * _bulletLifetime;
@@ -111,7 +109,7 @@ class BasicEnemy extends Enemy {
         _txtHeight = 52;
         break;
       case EnemyType.PirateTwo:
-        aniPath = 'pirate2.png';
+        aniPath = 'pirate2';
         attackRange = 100 * _attackRange;
         attackInterval = 2.2 * _attackInterval;
         bulletLifetimeFctr = 2 * _bulletLifetime;
@@ -122,7 +120,7 @@ class BasicEnemy extends Enemy {
         _txtHeight = 52;
         break;
       case EnemyType.PirateThree:
-        aniPath = 'pirate3.png';
+        aniPath = 'pirate3';
         attackRange = 150 * _attackRange;
         attackInterval = 1.9 * _attackInterval;
         bulletLifetimeFctr = 2 * _bulletLifetime;
@@ -133,7 +131,7 @@ class BasicEnemy extends Enemy {
         _txtHeight = 52;
         break;
       default:
-        aniPath = 'monster.png';
+        aniPath = 'monster';
     }
     dmgFctr = _dmgMultiplier;
     enemySpeedFactor = _enemySpeed;

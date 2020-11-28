@@ -15,8 +15,8 @@ class DealerItem {
   bool clicked;
   double width, height;
   DealerItemType _type;
-  int _price;
-  DealerItem(this._type, this._price) {
+  int price;
+  DealerItem(this._type, this.price) {
     x = y = 0;
     width = height = 0;
     clicked = false;
@@ -58,10 +58,10 @@ class DealerItem {
     }
   }
   void onTapDown(TapDownDetails detail, Player player) {
-    if (!clicked && player.coins >= _price) {
+    if (!clicked && player.coins >= price) {
       if (button.toRect().contains(detail.globalPosition)) {
         clicked = true;
-        player.coins -= _price;
+        player.coins -= price;
         switch (_type) {
           case DealerItemType.Bullets:
             print(_type);
@@ -80,7 +80,7 @@ class DealerItem {
             break;
           case DealerItemType.Speed:
             print(_type);
-            screenManager.setSpeedfactor(1.2, false);
+            player.speedfactor = player.speedfactor * 1.2;
             break;
           case DealerItemType.Range:
             player.bulletLifetimeFctr += 1;

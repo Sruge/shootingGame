@@ -10,15 +10,16 @@ import 'SpecialBullet.dart';
 class PurpleBullet extends SpecialBullet {
   double damage;
   double _timer;
+  double _power;
 
   PurpleBullet(double x, double y, double _bulletSpeedX, double _bulletSpeedY,
-      double lifetimeFctr, double damageFctr, double bulletSpeed)
+      this._power)
       : super(x, y, 32, 32, _bulletSpeedX, _bulletSpeedY, 'purpleBullets.png',
             32, 32) {
-    damage = 30 * damageFctr;
+    damage = 30 * _power;
     _timer = 0;
-    lifetime = 2 * lifetimeFctr;
-    speedfactor = bulletSpeed * 5;
+    lifetime = 2 * _power;
+    speedfactor = 5;
   }
 
   void onTapDown(TapDownDetails detail, Function fn) {

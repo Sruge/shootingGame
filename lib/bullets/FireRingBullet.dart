@@ -13,22 +13,18 @@ class FireRingBullet extends SpecialBullet {
   double width;
   double height;
   BulletType type;
+  double _power;
 
-  FireRingBullet(double x, double y, double bulletSpeedX, double bulletSpeedY,
-      double lifetimeFctr, double damageFctr, double bulletSpeed)
+  FireRingBullet(
+      double x, double y, double bulletSpeedX, double bulletSpeedY, this._power)
       : super(x, y, 16, 16, bulletSpeedX, bulletSpeedY, 'healbullet.png', 64,
             64) {
     type = BulletType.Heal;
     width = 20;
     height = 20;
-    damage = -100 * damageFctr;
-    lifetime = 3 * lifetimeFctr;
-    speedfactor = 0.8 * bulletSpeed;
-  }
-
-  @override
-  void onTapDown(TapDownDetails detail, Function fn) {
-    // TODO: implement onTapDown
+    damage = -100 * _power;
+    lifetime = 3 * _power;
+    speedfactor = 1.6 * _power;
   }
 
   @override

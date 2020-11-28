@@ -1,15 +1,17 @@
 import 'dart:math';
 
+import 'package:flutter/painting.dart';
 import 'package:shootinggame/enemies/BasicEnemy.dart';
 import 'package:shootinggame/enemies/Enemy.dart';
 import 'package:shootinggame/enemies/EnemyType.dart';
 import 'package:shootinggame/enemies/PresentType.dart';
-import 'package:shootinggame/friends/Dealer.dart';
+import 'package:shootinggame/friends/StatDealer.dart';
 import 'package:shootinggame/friends/Firetree.dart';
 import 'package:shootinggame/friends/Friend.dart';
 import 'package:shootinggame/friends/FriendType.dart';
 import 'package:shootinggame/friends/Tree.dart';
 import 'package:shootinggame/screens/game_screens/ScreenManager.dart';
+import 'package:shootinggame/screens/util/SizeHolder.dart';
 import 'package:shootinggame/screens/util/StoryHandler.dart';
 
 import 'Level.dart';
@@ -33,6 +35,7 @@ class Spawner {
   double _healthMulti;
   double _enemySpeed;
   double _enemyBulletSpeed;
+  double _treePower;
   List<EnemyType> _enemyTypes;
   List<PresentType> _presentTypes;
   Random _random;
@@ -51,8 +54,8 @@ class Spawner {
     _enemyTypes = level.enemyTypes;
     _enemyBulletSpeed = level.enemyBulletSpeed;
     maxEnemies = level.maxEnemies;
-    nextSpawn = 0;
-    _nextBossSpawn = 2;
+    nextSpawn = 2;
+    _nextBossSpawn = level.bossSpawnInterval;
     _nextFriendSpawn = _friendSpawnInterval;
     _nextPresentSpawn = _presentSpawnInterval;
     _nextTreeSpawn = 1;
@@ -65,6 +68,7 @@ class Spawner {
     _healthMulti = level.healthMulti;
     _enemySpeed = level.enemySpeedMultiplier;
     maxEnemies = level.maxEnemies;
+    _treePower = level.treePower;
   }
 
   update(double t) {
@@ -90,7 +94,7 @@ class Spawner {
       _nextBossSpawn = _timer + _bossSpawnInterval;
     }
     if (_timer > _nextFriendSpawn) {
-      Friend friend = Dealer();
+      Friend friend = StatDealer();
       friend.resize();
       _storyHandler.friends.add(friend);
       _nextFriendSpawn = _timer + _friendSpawnInterval;
@@ -102,13 +106,17 @@ class Spawner {
       _nextPresentSpawn = _timer + _presentSpawnInterval;
     }
     if (_timer > _nextTreeSpawn) {
-      screenManager.setTree(2);
+      setTree(_treePower);
       _nextTreeSpawn = _timer + _treeSpawnInterval;
     }
   }
 
-  void setTree(double x, double y, double power) {
-    Friend tree = Firetree(x, y, power);
+  void setTree(double power) {
+    Random random = Random();
+    Offset bgPos = screenManager.getBgPos();
+    double x = random.nextDouble() * (bgPos.dx + screenSize.width * 2);
+    double y = random.nextDouble() * (bgPos.dy + screenSize.width * 2);
+    Friend tree = Tree(x, y, power);
     tree.resize();
     _storyHandler.friends.add(tree);
   }

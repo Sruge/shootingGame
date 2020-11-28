@@ -1,27 +1,16 @@
 import 'dart:math';
 import 'dart:ui';
-
 import 'package:flutter/gestures.dart';
 import 'package:shootinggame/bullets/BasicBullet.dart';
 import 'package:shootinggame/bullets/BulletType.dart';
-import 'package:shootinggame/bullets/GoldenBullet.dart';
-import 'package:shootinggame/bullets/HealBullet.dart';
 import 'package:shootinggame/effects/Effect.dart';
 import 'package:shootinggame/effects/EffectState.dart';
 import 'package:shootinggame/enemies/EnemyHealthbar.dart';
 import 'package:shootinggame/bullets/SpecialBullet.dart';
 import 'package:shootinggame/entities/EntityState.dart';
-
 import 'package:shootinggame/entities/WalkingEntity.dart';
+import 'package:shootinggame/screens/game_screens/ScreenManager.dart';
 import 'package:shootinggame/screens/util/SizeHolder.dart';
-import 'package:shootinggame/screens/util/StoryHandler.dart';
-
-import '../bullets/Bullet.dart';
-import '../effects/EffectType.dart';
-import '../bullets/FireBullet.dart';
-import '../bullets/FreezeBullet.dart';
-import '../bullets/PurpleBullet.dart';
-import '../bullets/SmokeBullet.dart';
 
 class Enemy {
   double _timer;
@@ -97,37 +86,6 @@ class Enemy {
     return null;
   }
 
-  SpecialBullet getSpecialAttack() {
-    List<double> coords = getAttackingCoordinates();
-    int rand = random.nextInt(bulletTypes.length);
-    switch (bulletTypes[rand]) {
-      case BulletType.Freeze:
-        return FreezeBullet(coords[0], coords[1], coords[2], coords[3],
-            bulletLifetimeFctr, dmgFctr, bulletSpeedFactor);
-      case BulletType.Fire:
-        return FireBullet(coords[0], coords[1], coords[2], coords[3],
-            bulletLifetimeFctr, dmgFctr, bulletSpeedFactor);
-      case BulletType.Purple:
-        return PurpleBullet(coords[0], coords[1], coords[2], coords[3],
-            bulletLifetimeFctr, dmgFctr, bulletSpeedFactor);
-      case BulletType.Smoke:
-        return SmokeBullet(coords[0], coords[1], coords[2], coords[3],
-            bulletLifetimeFctr, dmgFctr, bulletSpeedFactor);
-      case BulletType.Gold:
-        return GoldenBullet(coords[0], coords[1], coords[2], coords[3],
-            bulletLifetimeFctr, dmgFctr, bulletSpeedFactor);
-        break;
-      case BulletType.Heal:
-        return HealBullet(coords[0], coords[1], coords[2], coords[3],
-            bulletLifetimeFctr, dmgFctr, bulletSpeedFactor);
-        break;
-      default:
-        PurpleBullet(coords[0], coords[1], coords[2], coords[3],
-            bulletLifetimeFctr, dmgFctr, bulletSpeedFactor);
-        break;
-    }
-  }
-
   bool isDead() {
     return state == EntityState.Dead;
   }
@@ -144,7 +102,7 @@ class Enemy {
     return entity.toRect().overlaps(rect);
   }
 
-  void update(double t, List<double> bgSpeed, StoryHandler storyHandler) {
+  void update(double t, List<double> bgSpeed) {
     _timer += t;
     if (!frozen) {
       double sumDistance;
@@ -180,8 +138,8 @@ class Enemy {
   }
 
   double getDistanceToCenter() {
-    _distanceToCenter = sqrt(pow((x - screenSize.width * 0.94 / 2).abs(), 2) +
-        pow((y - screenSize.height * 0.86 / 2).abs(), 2));
+    _distanceToCenter = sqrt(pow((x - screenSize.width / 2).abs(), 2) +
+        pow((y - screenSize.height / 2).abs(), 2));
     return _distanceToCenter;
   }
 
@@ -204,26 +162,10 @@ class Enemy {
   void resize() {
     entity.resize();
 
-    int spawnUpDownLeftRight = Random().nextInt(4);
-    double spawnPos = Random().nextDouble();
-    switch (spawnUpDownLeftRight) {
-      case 0:
-        x = screenSize.width * spawnPos;
-        y = -80;
-        break;
-      case 1:
-        x = screenSize.width + 50;
-        y = screenSize.height * spawnPos;
-        break;
-      case 2:
-        x = screenSize.width * spawnPos;
-        y = screenSize.height + 50;
-        break;
-      case 3:
-        x = -80;
-        y = screenSize.height * spawnPos;
-        break;
-    }
+    Offset bgPos = screenManager.getBgPos();
+    x = (bgPos.dx + screenSize.width * 2) * random.nextDouble();
+    y = (bgPos.dy + screenSize.height * 2) * random.nextDouble();
+
     enemyhealthBar.resize(x, y);
     effects.forEach((effect) {
       effect.resize(Offset(x, y));

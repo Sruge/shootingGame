@@ -10,33 +10,19 @@ import 'package:shootinggame/friends/DealerItemType.dart';
 import 'package:shootinggame/screens/player/Player.dart';
 import 'package:shootinggame/screens/util/SizeHolder.dart';
 
-class DealerBord {
+class DealerBoard {
   PositionComponent table;
 
-  bool _atLeastOneSlotOpen;
   Random _random;
   List<DealerItem> _dealerItems;
   List<DealerBordCoin> _dealerCoins;
-  DealerBord(this._atLeastOneSlotOpen) {
-    _random = Random();
-    int price1 = _random.nextInt(3) + 1;
-    int price2 = _random.nextInt(3) + 1;
-    List<DealerItemType> _possibleItemTypes = DealerItemType.values.toList();
-    if (!_atLeastOneSlotOpen) {
-      _possibleItemTypes.remove(DealerItemType.SpecialBullets);
-    }
-    DealerItemType _itemType1 =
-        _possibleItemTypes[_random.nextInt(_possibleItemTypes.length)];
-    DealerBordCoin _coin1 = DealerBordCoin(price1);
-    _possibleItemTypes.remove(_itemType1);
-    DealerItemType _itemType2 =
-        _possibleItemTypes[_random.nextInt(_possibleItemTypes.length)];
-    DealerBordCoin _coin2 = DealerBordCoin(price2);
-    _dealerItems = [
-      DealerItem(_itemType1, price1),
-      DealerItem(_itemType2, price2)
-    ];
-    _dealerCoins = [_coin1, _coin2];
+  DealerBoard(this._dealerItems) {
+    _dealerCoins = [];
+    _dealerItems.forEach((item) {
+      DealerBordCoin coin = DealerBordCoin(item.price);
+      _dealerCoins.add(coin);
+    });
+
     table = SpriteComponent.fromSprite(0, 0, Sprite('table.png'));
   }
 

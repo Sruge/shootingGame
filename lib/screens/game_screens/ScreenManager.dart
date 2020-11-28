@@ -26,8 +26,8 @@ class ScreenManager extends Game with TapDetector {
   // Screens
 
   PlayGround _playScreen;
-  BaseWidget _mainScreen;
-  BaseWidget _characterScreen;
+  MainScreen _mainScreen;
+  int playingChar;
 
   ScreenManager() {
     _fn = _init;
@@ -40,7 +40,6 @@ class ScreenManager extends Game with TapDetector {
     screenSize = size;
     _playScreen?.resize();
     _mainScreen?.resize();
-    _characterScreen?.resize();
   }
 
   @override
@@ -56,7 +55,7 @@ class ScreenManager extends Game with TapDetector {
   Future<void> _init(double t) async {
     _fn = _update;
     _mainScreen = MainScreen();
-    _characterScreen = CharacterScreen();
+    playingChar = 0;
 
     Util flameUtils = Util();
     await flameUtils.fullScreen();
@@ -77,46 +76,44 @@ class ScreenManager extends Game with TapDetector {
         return _mainScreen;
       case ScreenState.kPlayScreen:
         return _playScreen;
-      case ScreenState.kCharacterScreen:
-        return _characterScreen;
       default:
         return _mainScreen;
     }
   }
 
   void switchScreen(ScreenState state) {
+    _mainScreen.playingChar = playingChar;
+    _mainScreen.resize();
     _screenState = state;
   }
 
   void startNewGame(int char) {
+    playingChar = char;
     _playScreen = PlayGround(char);
     _playScreen.resize();
-
+    _mainScreen.gameActive = true;
     _screenState = ScreenState.kPlayScreen;
   }
 
-  void setSpeedfactor(double factor, bool useAsAbsolute) {
-    if (useAsAbsolute) {
-      _playScreen?.speedfactor = factor;
-    } else {
-      _playScreen?.speedfactor = _playScreen.speedfactor * factor;
-    }
-    print('new speedfactor: ${_playScreen.speedfactor}');
+  void endGame() {
+    switchScreen(ScreenState.kMenuScreen);
+    _playScreen = null;
+    _mainScreen.gameActive = false;
+    playingChar = null;
   }
 
-  void showDeal(double x, double y, DealerBord dealerBord) {
-    _playScreen?.openDeal(x, y);
-  }
-
-  void setTree(double power) {
-    _playScreen?.setTree(power);
+  Offset getBgPos() {
+    if (_playScreen != null)
+      return _playScreen.getBgPos();
+    else
+      return Offset(0, 0);
   }
 
   StoryHandler getStoryHandler() {
-    return _playScreen.storyHandler;
+    return _playScreen?.storyHandler;
   }
 
   Player getPlayer() {
-    return _playScreen.player;
+    return _playScreen?.player;
   }
 }

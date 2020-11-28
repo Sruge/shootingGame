@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:shootinggame/bullets/BasicBullet.dart';
 import 'package:shootinggame/bullets/BulletType.dart';
+import 'package:shootinggame/bullets/SmokeBullet.dart';
 import 'package:shootinggame/enemies/Enemy.dart';
 import 'package:shootinggame/bullets/SpecialBullet.dart';
 import 'package:shootinggame/entities/EntityState.dart';
@@ -26,8 +27,9 @@ class Kainhighwind extends Enemy {
   double _timer;
   StoryHandler _storyHandler;
   double bulletSpeedFactor;
+  double _power;
 
-  Kainhighwind() : super() {
+  Kainhighwind(this._power, this._storyHandler) : super() {
     _timer = 0;
     specialBullets = List.empty(growable: true);
     state = EntityState.Normal;
@@ -35,21 +37,21 @@ class Kainhighwind extends Enemy {
     attackRange = 200;
     attackInterval = 2;
     bulletTypes = [BulletType.Smoke];
-    bulletSpeedFactor = 1.2;
-    health = 400;
-    maxHealth = 400;
+    bulletSpeedFactor = 1;
+    health = 1000;
+    maxHealth = 1000;
     attackRange = 200;
     attackInterval = 4;
-    enemySpeedFactor = 0.3;
+    enemySpeedFactor = 0.18;
     dmgFctr = 0.5;
     bulletLifetimeFctr = 1;
     _disappearInterval = 10;
-    _spawnChangeInterval = 15;
+    _spawnChangeInterval = 5;
     _specialAttackInterval = 5;
 
     random = Random();
-    entity = WalkingEntity('kainhighwind.png', 32, 48,
-        Size(baseAnimationWidth, baseAnimationHeight));
+    entity = WalkingEntity(
+        'kainhighwind', 32, 48, Size(baseAnimationWidth, baseAnimationHeight));
   }
 
   BasicBullet getAttack() {
@@ -59,10 +61,17 @@ class Kainhighwind extends Enemy {
     return bullet;
   }
 
+  SpecialBullet getSpecialAttack() {
+    List<double> coords = getAttackingCoordinates();
+    SmokeBullet bullet =
+        SmokeBullet(coords[0], coords[1], coords[2], coords[3], _power);
+    bullet.resize();
+    return bullet;
+  }
+
   @override
-  void update(double t, List<double> speed, StoryHandler storyHandler) {
-    _storyHandler = storyHandler;
-    storyHandler.levelUpdateble = false;
+  void update(double t, List<double> speed) {
+    _storyHandler.levelUpdateble = false;
     _timer += t;
     if (_timer > _specialAttackInterval) {
       specialBullets.add(getSpecialAttack());
@@ -70,20 +79,20 @@ class Kainhighwind extends Enemy {
     }
     if (_timer > _spawnChangeInterval) {
       if (_initialSpawnTime == null) {
-        _initialSpawnTime = storyHandler.spawner.spawnInterval;
-        _initialMaxEnemies = storyHandler.spawner.maxEnemies;
-        storyHandler.spawner.spawnInterval = 0.8;
-        storyHandler.spawner.nextSpawn -= 30;
-        storyHandler.spawner.maxEnemies = 20;
+        _initialSpawnTime = _storyHandler.spawner.spawnInterval;
+        _initialMaxEnemies = _storyHandler.spawner.maxEnemies;
+        _storyHandler.spawner.spawnInterval = 0.8;
+        _storyHandler.spawner.nextSpawn -= 1000;
+        _storyHandler.spawner.maxEnemies = 20;
         print(
-            'Kainhighwind set Spawn Interval from $_initialSpawnTime to ${storyHandler.spawner.spawnInterval}');
+            'Kainhighwind set Spawn Interval from $_initialSpawnTime to ${_storyHandler.spawner.spawnInterval}');
         _spawnChangeInterval += 7;
       } else {
         _spawnChangeInterval += 45;
         print(
-            'Kainhighwind set Spawn Interval from ${storyHandler.spawner.spawnInterval} back to $_initialSpawnTime');
-        storyHandler.spawner.spawnInterval = _initialSpawnTime;
-        storyHandler.spawner.maxEnemies = _initialMaxEnemies;
+            'Kainhighwind set Spawn Interval from ${_storyHandler.spawner.spawnInterval} back to $_initialSpawnTime');
+        _storyHandler.spawner.spawnInterval = _initialSpawnTime;
+        _storyHandler.spawner.maxEnemies = _initialMaxEnemies;
 
         _initialSpawnTime = null;
       }
@@ -94,7 +103,7 @@ class Kainhighwind extends Enemy {
       y = random.nextDouble() * screenSize.height;
       _disappearInterval += 15;
     } else {
-      super.update(t, speed, storyHandler);
+      super.update(t, speed);
     }
   }
 

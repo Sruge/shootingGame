@@ -23,9 +23,10 @@ class Altima extends Enemy {
   Random random;
   double _specialAttackTimer;
   double bulletSpeedFactor;
+  double _power;
 
   double _specialAttackInterval;
-  Altima() : super() {
+  Altima(this._power) : super() {
     specialBullets = List.empty(growable: true);
     state = EntityState.Normal;
 
@@ -44,7 +45,7 @@ class Altima extends Enemy {
     dmgFctr = 1;
     bulletLifetimeFctr = 1;
     entity = WalkingEntity(
-        'altima2.png', 48, 48, Size(baseAnimationWidth, baseAnimationHeight));
+        'altima2', 48, 48, Size(baseAnimationWidth, baseAnimationHeight));
     random = Random();
   }
 
@@ -56,14 +57,14 @@ class Altima extends Enemy {
   }
 
   SpecialBullet getSpecialAttack() {
+    int rand = random.nextInt(bulletTypes.length);
     List<double> coords = getAttackingCoordinates();
 
-    return FreezeBullet(coords[0], coords[1], coords[2], coords[3],
-        bulletLifetimeFctr, dmgFctr, bulletSpeedFactor);
+    return FreezeBullet(coords[0], coords[1], coords[2], coords[3], _power);
   }
 
   @override
-  void update(double t, List<double> speed, StoryHandler storyHandler) {
+  void update(double t, List<double> speed) {
     _disappearTimer += t;
     _specialAttackTimer += t;
     if (_specialAttackTimer > _specialAttackInterval) {
@@ -76,7 +77,7 @@ class Altima extends Enemy {
       y = random.nextDouble() * screenSize.height;
       _disappearTimer = 0;
     } else {
-      super.update(t, speed, storyHandler);
+      super.update(t, speed);
     }
   }
 

@@ -19,7 +19,7 @@ class PlayGround extends BaseWidget {
 
   StoryHandler storyHandler;
   bool showDeal;
-  DealerBord _dealerBord;
+  DealerBoard _dealerBord;
 
   PlayGround(int char) {
     _bg = DynamicBackground(0, 0, 'bg.png');
@@ -30,20 +30,16 @@ class PlayGround extends BaseWidget {
   }
   @override
   void onTapDown(TapDownDetails detail, Function fn) {
-    if (showDeal &&
-        _dealerBord.table.toRect().contains(detail.globalPosition)) {
-      _dealerBord.onTapDown(detail, player);
-    } else {
-      showDeal = false;
-      speed = getSpeed(detail);
-      player.onTapDown(
-          detail, storyHandler.getEnemies(), storyHandler.friends, speed, () {
-        screenManager.switchScreen(ScreenState.kMenuScreen);
-      });
+    speed = getSpeed(detail);
+    player.onTapDown(
+        detail, storyHandler.getEnemies(), storyHandler.friends, speed, () {
+      screenManager.switchScreen(ScreenState.kMenuScreen);
+    });
+    storyHandler.friends.forEach((friend) {
+      friend.onTapDown(detail, player);
+    });
 
-      if (player.move) _bg.onTapDown(detail, speed);
-      print(speed);
-    }
+    if (player.move) _bg.onTapDown(detail, speed);
   }
 
   @override
@@ -96,13 +92,7 @@ class PlayGround extends BaseWidget {
     return speed;
   }
 
-  void openDeal(double x, double y) {
-    _dealerBord = DealerBord(true);
-    _dealerBord.resize(x, y);
-    showDeal = true;
-  }
-
-  void setTree(double power) {
-    storyHandler.setTree(_bg.x, _bg.y, power);
+  Offset getBgPos() {
+    return Offset(_bg.x, _bg.y);
   }
 }

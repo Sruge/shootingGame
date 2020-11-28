@@ -7,6 +7,7 @@ import 'package:shootinggame/effects/EffectType.dart';
 import 'package:shootinggame/effects/SmokeEffect.dart';
 import 'package:shootinggame/enemies/Enemy.dart';
 import 'package:shootinggame/screens/player/Player.dart';
+import 'package:shootinggame/screens/util/SizeHolder.dart';
 
 import 'SpecialBullet.dart';
 
@@ -16,16 +17,19 @@ class SmokeBullet extends SpecialBullet {
   double height;
   double rand;
   Random random;
+  double _timer;
+  double _x, _y;
+  double _power;
 
-  SmokeBullet(double x, double y, double _bulletSpeedX, double _bulletSpeedY,
-      double lifetimeFctr, double damageFctr, double bulletSpeed)
+  SmokeBullet(
+      this._x, this._y, double bulletSpeedX, double bulletSpeedY, this._power)
       : super(
-          x,
-          y,
+          _x,
+          _y,
           20,
           20,
-          _bulletSpeedX,
-          _bulletSpeedY,
+          bulletSpeedX,
+          bulletSpeedY,
           'smoke.png',
           64,
           64,
@@ -33,15 +37,11 @@ class SmokeBullet extends SpecialBullet {
     width = 20;
     height = 20;
     damage = 0;
-    lifetime = 5;
+    lifetime = 5 * _power;
     speedfactor = 0;
+    _timer = 0;
     random = Random();
     rand = (random.nextDouble() - 0.5) * 100;
-  }
-
-  @override
-  void onTapDown(TapDownDetails detail, Function fn) {
-    // TODO: implement onTapDown
   }
 
   void render(Canvas canvas) {
@@ -50,24 +50,35 @@ class SmokeBullet extends SpecialBullet {
     canvas.restore();
   }
 
+  void resize() {
+    specialBullet.x = _x;
+    specialBullet.y = _y;
+  }
+
   @override
   void update(double t, List<double> speed) {
+    _timer += t;
+    specialBullet.update(t);
     width += t * 50;
     height += t * 50;
     specialBullet.width = width;
     specialBullet.height = height;
-    specialBullet.x -= t * 25 + t * 70 * rand;
-    specialBullet.y -= t * 25 + t * 70 * rand;
-    super.update(t, speed);
+    specialBullet.x -= t * 25;
+    specialBullet.y -= t * 25;
+    specialBullet.x = specialBullet.x - t * speed[0] * screenSize.width;
+    specialBullet.y = specialBullet.y - t * speed[1] * screenSize.width;
+    if (_timer > lifetime) die();
   }
 
   @override
   void hitPlayer(Player player) {
-    if (player.effects.isEmpty) player.effects.add(SmokeEffect(player, null));
+    if (player.effects.isEmpty)
+      player.effects.add(SmokeEffect(player, null, _power));
   }
 
   @override
   void hitEnemy(Enemy enemy) {
-    if (enemy.effects.isEmpty) enemy.effects.add(SmokeEffect(null, enemy));
+    if (enemy.effects.isEmpty)
+      enemy.effects.add(SmokeEffect(null, enemy, _power));
   }
 }

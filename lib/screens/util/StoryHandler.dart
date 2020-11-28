@@ -42,9 +42,8 @@ class StoryHandler {
     friends = List.empty(growable: true);
     nextPresents = List.empty(growable: true);
     _random = Random();
-    _level = Level(0);
+    _level = Level(0, this);
     spawner = Spawner(_level, this);
-    nextPresents.add(PresentType.Coin);
     levelNumber = 0;
     _levelTimer = 0;
     levelUpdateble = true;
@@ -56,7 +55,7 @@ class StoryHandler {
     if (levelUpdateble && _levelTimer > _level.timeToNextLevel) {
       _levelTimer = 0;
       levelNumber += 1;
-      _level = Level(levelNumber);
+      _level = Level(levelNumber, this);
 
       spawner = Spawner(_level, this);
     }
@@ -64,7 +63,7 @@ class StoryHandler {
     spawner.update(t);
     //Update the enemies
     enemies.forEach((e) {
-      e.update(t, bgSpeed, this);
+      e.update(t, bgSpeed);
       if (e.isDead()) {
         if (nextPresents.isNotEmpty) {
           _presents.add(Present(e.x, e.y, nextPresents.first));
@@ -163,11 +162,5 @@ class StoryHandler {
     friends.forEach((f) {
       f.resize();
     });
-  }
-
-  void setTree(double x, double y, double power) {
-    double rand = _random.nextDouble();
-    spawner.setTree(x + rand * screenSize.width * 2,
-        y + rand * screenSize.height * 2, power);
   }
 }

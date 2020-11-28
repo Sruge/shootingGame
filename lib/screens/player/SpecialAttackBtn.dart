@@ -49,6 +49,9 @@ class SpecialAttackBtn extends BaseWidget {
       case AttackType.Shield:
         imgUrl = 'pink';
         break;
+      case AttackType.Smoke:
+        imgUrl = 'blackwhite';
+        break;
       default:
         imgUrl = 'empty';
         type = AttackType.Normal;

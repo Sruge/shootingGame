@@ -25,7 +25,8 @@ class Phoenix extends Enemy {
   double _specialAttackTimer;
 
   double _specialAttackInterval;
-  Phoenix() : super() {
+  double _power;
+  Phoenix(this._power) : super() {
     specialBullets = List.empty(growable: true);
     state = EntityState.Normal;
     _disappearTimer = 0;
@@ -37,12 +38,12 @@ class Phoenix extends Enemy {
     attackInterval = 2.5;
     bulletTypes = [BulletType.Fire];
     enemySpeedFactor = 0.2;
-    _specialAttackInterval = 2.2;
-    bulletSpeedFactor = 1;
+    _specialAttackInterval = 2;
+    bulletSpeedFactor = 1 + (_power * 0.1);
     dmgFctr = 2;
     bulletLifetimeFctr = 2;
 
-    entity = WalkingEntity('phoenix.png', 96, 96,
+    entity = WalkingEntity('phoenix', 96, 96,
         Size(baseAnimationWidth * 2, baseAnimationHeight * 2));
     random = Random();
   }
@@ -54,30 +55,21 @@ class Phoenix extends Enemy {
     return bullet;
   }
 
-  @override
   SpecialBullet getSpecialAttack() {
     List<double> coords = getAttackingCoordinates();
 
-    return FireBullet(coords[0], coords[1], coords[2], coords[3],
-        bulletLifetimeFctr, dmgFctr, bulletSpeedFactor);
+    return FireBullet(coords[0], coords[1], coords[2], coords[3], _power);
   }
 
   @override
-  void update(double t, List<double> speed, StoryHandler storyHandler) {
+  void update(double t, List<double> speed) {
     _disappearTimer += t;
     _specialAttackTimer += t;
     if (_specialAttackTimer > _specialAttackInterval) {
       specialBullets.add(getSpecialAttack());
-      _specialAttackTimer = 0;
+      _specialAttackTimer = 0 + (random.nextDouble() * 4 - 2);
     }
-    if (_disappearTimer > 10) {
-      Random random = Random();
-      x = random.nextDouble() * screenSize.width;
-      y = random.nextDouble() * screenSize.height;
-      _disappearTimer = 0;
-    } else {
-      super.update(t, speed, storyHandler);
-    }
+    super.update(t, speed);
   }
 
   int getScore() {

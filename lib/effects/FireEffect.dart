@@ -9,10 +9,11 @@ import 'EffectState.dart';
 class FireEffect extends Effect {
   Player _player;
   Enemy _enemy;
-  FireEffect(this._player, this._enemy)
+  double _power;
+  FireEffect(this._player, this._enemy, this._power)
       : super(EffectType.Gold, 'fire.png', _player, _enemy) {
     timer = 0;
-    totalDuration = 4;
+    totalDuration = 2;
     renderSomething = true;
   }
 
@@ -20,13 +21,13 @@ class FireEffect extends Effect {
     timer += t;
     if (timer > totalDuration) {
       if (_player != null) {
-        _player.health -= 3;
+        _player.health -= 20 * _power;
         if (_player.health <= 0) {
           _player.die();
         }
         state = EffectState.Ended;
       } else if (_enemy != null) {
-        _enemy.health -= 3;
+        _enemy.health -= 20 * _power;
         if (_enemy.health <= 0) {
           _enemy.state = EntityState.Dead;
         }

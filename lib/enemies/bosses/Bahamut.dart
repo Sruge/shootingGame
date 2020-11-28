@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:shootinggame/bullets/BasicBullet.dart';
 import 'package:shootinggame/bullets/BulletType.dart';
+import 'package:shootinggame/bullets/FreezeBullet.dart';
 import 'package:shootinggame/enemies/Enemy.dart';
 import 'package:shootinggame/bullets/SpecialBullet.dart';
 import 'package:shootinggame/entities/EntityState.dart';
@@ -21,9 +22,10 @@ class Bahamut extends Enemy {
   Random random;
   double _specialAttackTimer;
   double bulletSpeedFactor;
+  double _power;
 
   double _specialAttackInterval;
-  Bahamut() : super() {
+  Bahamut(this._power) : super() {
     specialBullets = List.empty(growable: true);
     state = EntityState.Normal;
     _specialAttackTimer = 0;
@@ -38,14 +40,13 @@ class Bahamut extends Enemy {
     maxHealth = 3000;
     attackRange = 200;
     attackInterval = 2;
-    attackRange = 150;
-    attackInterval = 4;
-    _specialAttackInterval = 5;
-    enemySpeedFactor = 0.15;
-    bulletSpeedFactor = 1;
-    dmgFctr = 1;
+
+    _specialAttackInterval = 9;
+    enemySpeedFactor = 0.10;
+    bulletSpeedFactor = .5 + _power;
+    dmgFctr = 2 * _power;
     bulletLifetimeFctr = 1;
-    entity = WalkingEntity('bahamut.png', 96, 96,
+    entity = WalkingEntity('bahamut', 96, 96,
         Size(baseAnimationWidth * 2, baseAnimationHeight * 2));
     random = Random();
   }
@@ -57,15 +58,22 @@ class Bahamut extends Enemy {
     return bullet;
   }
 
+  SpecialBullet getSpecialAttack() {
+    int rand = random.nextInt(bulletTypes.length);
+    List<double> coords = getAttackingCoordinates();
+
+    return FreezeBullet(coords[0], coords[1], coords[2], coords[3], _power);
+  }
+
   @override
-  void update(double t, List<double> speed, StoryHandler storyHandler) {
+  void update(double t, List<double> speed) {
     _specialAttackTimer += t;
     if (_specialAttackTimer > _specialAttackInterval) {
       specialBullets.add(getSpecialAttack());
       _specialAttackTimer = 0;
     }
 
-    super.update(t, speed, storyHandler);
+    super.update(t, speed);
   }
 
   int getScore() {

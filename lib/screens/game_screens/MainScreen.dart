@@ -16,21 +16,41 @@ class MainScreen extends BaseWidget {
   Background _bg;
   GameButton _newGame;
   GameButton _continueGame;
+  GameButton _continueGameDis;
+  GameButton _credits;
+  GameButton _highscore;
   GameButton _char1;
   GameButton _char2;
   GameButton _char3;
+  GameButton _activeCharPic;
   PositionComponent _title;
-  int _activeChar;
+  int activeChar;
+  int playingChar;
+  bool gameActive;
   MainScreen() {
+    gameActive = false;
     _bg = Background('bg.png');
-    _activeChar = 0;
+    activeChar = 0;
+    playingChar = 0;
     _newGame = GameButton(
       ButtonType.Normal,
-      'newGameBtn.png',
+      'newGameBtn2.png',
     );
     _continueGame = GameButton(
       ButtonType.Normal,
-      'continueBtn.png',
+      'continueBtn2.png',
+    );
+    _continueGameDis = GameButton(
+      ButtonType.Normal,
+      'continueBtn2disabled.png',
+    );
+    _credits = GameButton(
+      ButtonType.Normal,
+      'creditsBtn.png',
+    );
+    _highscore = GameButton(
+      ButtonType.Normal,
+      'highscoreBtn.png',
     );
     _char1 = GameButton(
       ButtonType.Toggle,
@@ -44,26 +64,34 @@ class MainScreen extends BaseWidget {
       ButtonType.Toggle,
       'elf3single.png',
     );
+    _char3 = GameButton(
+      ButtonType.Toggle,
+      'elf3single.png',
+    );
     _title = SpriteComponent.fromSprite(0, 0, Sprite('title.png'));
   }
   @override
   void onTapDown(TapDownDetails detail, Function fn) {
-    if (_newGame.toRect().contains(detail.globalPosition) && _activeChar != 0) {
-      screenManager.startNewGame(_activeChar);
-    } else if (_continueGame.toRect().contains(detail.globalPosition)) {
+    if (_newGame.toRect().contains(detail.globalPosition) && activeChar != 0) {
+      screenManager.startNewGame(activeChar);
+    } else if (_continueGame.toRect().contains(detail.globalPosition) &&
+        gameActive) {
       screenManager.switchScreen(ScreenState.kPlayScreen);
     } else if (_char1.toRect().contains(detail.globalPosition)) {
-      _activeChar = 1;
+      activeChar = 1;
+      screenManager.playingChar = 1;
       _char1.toggled = true;
       _char2.toggled = false;
       _char3.toggled = false;
     } else if (_char2.toRect().contains(detail.globalPosition)) {
-      _activeChar = 2;
+      activeChar = 2;
+      screenManager.playingChar = 2;
       _char1.toggled = false;
       _char2.toggled = true;
       _char3.toggled = false;
     } else if (_char3.toRect().contains(detail.globalPosition)) {
-      _activeChar = 3;
+      activeChar = 3;
+      screenManager.playingChar = 3;
       _char1.toggled = false;
       _char2.toggled = false;
       _char3.toggled = true;
@@ -77,7 +105,14 @@ class MainScreen extends BaseWidget {
     _title.render(canvas);
     canvas.restore();
     _newGame.render(canvas);
-    _continueGame.render(canvas);
+    if (gameActive && playingChar != 0) {
+      _continueGame.render(canvas);
+      _activeCharPic.render(canvas);
+    } else {
+      _continueGameDis.render(canvas);
+    }
+    _credits.render(canvas);
+    _highscore.render(canvas);
     _char1.render(canvas);
     _char2.render(canvas);
     _char3.render(canvas);
@@ -86,27 +121,42 @@ class MainScreen extends BaseWidget {
   @override
   void resize() {
     _bg.resize();
-    _newGame.x = screenSize.width * 0.16;
+    _newGame.x = screenSize.width * 0.08;
     _newGame.y = screenSize.height * 0.6;
-    _newGame.width = screenSize.width * 0.26;
-    _newGame.height = screenSize.height * 0.24;
+    _newGame.width = screenSize.width * 0.27;
+    _newGame.height = screenSize.height * 0.2;
 
-    _continueGame.x = screenSize.width * 0.58;
+    _continueGame.x = screenSize.width * 0.365;
     _continueGame.y = screenSize.height * 0.6;
-    _continueGame.width = screenSize.width * 0.26;
-    _continueGame.height = screenSize.height * 0.24;
+    _continueGame.width = screenSize.width * 0.27;
+    _continueGame.height = screenSize.height * 0.2;
 
-    _char1.x = screenSize.width * 0.16;
+    _continueGameDis.x = screenSize.width * 0.365;
+    _continueGameDis.y = screenSize.height * 0.6;
+    _continueGameDis.width = screenSize.width * 0.27;
+    _continueGameDis.height = screenSize.height * 0.2;
+
+    _credits.x = screenSize.width * 0.65;
+    _credits.y = screenSize.height * 0.36;
+    _credits.width = screenSize.width * 0.27;
+    _credits.height = screenSize.height * 0.2;
+
+    _highscore.x = screenSize.width * 0.65;
+    _highscore.y = screenSize.height * 0.6;
+    _highscore.width = screenSize.width * 0.27;
+    _highscore.height = screenSize.height * 0.2;
+
+    _char1.x = screenSize.width * 0.08;
     _char1.y = screenSize.height * 0.36;
     _char1.width = screenSize.width * 0.08;
     _char1.height = screenSize.height * 0.2;
 
-    _char2.x = screenSize.width * 0.25;
+    _char2.x = screenSize.width * 0.175;
     _char2.y = screenSize.height * 0.36;
     _char2.width = screenSize.width * 0.08;
     _char2.height = screenSize.height * 0.2;
 
-    _char3.x = screenSize.width * 0.34;
+    _char3.x = screenSize.width * 0.27;
     _char3.y = screenSize.height * 0.36;
     _char3.width = screenSize.width * 0.08;
     _char3.height = screenSize.height * 0.2;
@@ -118,11 +168,33 @@ class MainScreen extends BaseWidget {
     _char1.resize();
     _char2.resize();
     _char3.resize();
+    if (playingChar == 1) {
+      _activeCharPic = GameButton(
+        ButtonType.Normal,
+        'elfsingle.png',
+      );
+    }
+    if (playingChar == 2) {
+      _activeCharPic = GameButton(
+        ButtonType.Normal,
+        'elf2single.png',
+      );
+    }
+    if (playingChar == 3) {
+      _activeCharPic = GameButton(
+        ButtonType.Normal,
+        'elf3single.png',
+      );
+    }
+    if (playingChar != 0) {
+      _activeCharPic.x = screenSize.width * 0.46;
+      _activeCharPic.y = screenSize.height * 0.36;
+      _activeCharPic.width = screenSize.width * 0.08;
+      _activeCharPic.height = screenSize.height * 0.2;
+      _activeCharPic.resize();
+    }
   }
 
   @override
-  void update(double t) {
-    _bg.update(t);
-    _char1.update(t);
-  }
+  void update(double t) {}
 }

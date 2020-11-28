@@ -14,9 +14,10 @@ class GoldenBullet extends SpecialBullet {
   double damage;
   double width;
   double height;
+  double _power;
 
   GoldenBullet(double x, double y, double _bulletSpeedX, double _bulletSpeedY,
-      double lifetimeFctr, double damageFctr, double bulletSpeed)
+      this._power)
       : super(
           x,
           y,
@@ -32,7 +33,7 @@ class GoldenBullet extends SpecialBullet {
     width = 20;
     height = 20;
     lifetime = 5;
-    speedfactor = bulletSpeed * 4;
+    speedfactor = 4;
   }
 
   @override

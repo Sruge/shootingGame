@@ -2,24 +2,20 @@ import 'dart:ui';
 
 import 'package:flame/components/animation_component.dart';
 import 'package:flame/spritesheet.dart';
-import 'package:shootinggame/bullets/Bullet.dart';
 import 'package:shootinggame/bullets/FireRingBullet.dart';
-import 'package:shootinggame/bullets/FreezeBullet.dart';
-import 'package:shootinggame/bullets/HealBullet.dart';
+
 import 'package:shootinggame/bullets/SpecialBullet.dart';
 import 'package:shootinggame/effects/EffectType.dart';
 import 'package:shootinggame/entities/EntityState.dart';
 import 'package:shootinggame/screens/game_screens/ScreenManager.dart';
-import 'package:shootinggame/entities/WalkingEntity.dart';
 import 'package:shootinggame/screens/util/SizeHolder.dart';
 
 import 'DealerBord.dart';
 import 'Friend.dart';
-import 'FriendType.dart';
 
 class Firetree extends Friend {
   String aniPath;
-  DealerBord _dealerBord;
+  DealerBoard _dealerBord;
   double _timer;
   double _lifetime;
   double _dyingtime;
@@ -29,23 +25,22 @@ class Firetree extends Friend {
   double _x, _y, _power;
   Firetree(this._x, this._y, this._power) : super() {
     attackRange = 130;
-    attackInterval = 3;
+    attackInterval = 5;
     _timer = 0;
-    _lifetime = 30;
+    _lifetime = 80 * _power;
     _dyingtime = 2;
     _attackTime = 5;
     bullets = [];
 
-    _dealerBord = DealerBord(true);
     enemySpeedFactor = 0;
 
     final sprShe = SpriteSheet(
         imageName: 'firetree.png',
-        textureWidth: 128,
-        textureHeight: 128,
+        textureWidth: 32,
+        textureHeight: 48,
         columns: 4,
         rows: 1);
-    final animation = sprShe.createAnimation(0, stepTime: 0.2);
+    final animation = sprShe.createAnimation(0, stepTime: 0.1);
     _tree = AnimationComponent(
         baseAnimationWidth * 1.5, baseAnimationHeight * 1.5, animation);
   }
@@ -57,12 +52,18 @@ class Firetree extends Friend {
     _y = _y - t * bgSpeed[1] * screenSize.width;
     _tree.animation.update(t);
     if (_timer > _attackTime) {
-      List<double> coords = getAttackingCoordinates(_tree.x, _tree.y);
+      List<double> coords =
+          getAttackingCoordinates(_tree.x, _tree.y, _tree.width, _tree.height);
       FireRingBullet bullet = FireRingBullet(
-          coords[0], coords[1], coords[2], coords[3], _power, _power, _power);
+        coords[0],
+        coords[1],
+        coords[2],
+        coords[3],
+        _power * 2,
+      );
       bullet.resize();
       bullets.add(bullet);
-      _attackTime = _timer + 12;
+      _attackTime = _timer + _attackTime;
     }
     if (_timer > _lifetime) {
       if (state == EntityState.Dying) {
@@ -98,10 +99,5 @@ class Firetree extends Friend {
 
   bool overlaps(Rect rect) {
     return _tree.toRect().overlaps(rect);
-  }
-
-  @override
-  void trigger() {
-    screenManager.showDeal(x, y, _dealerBord);
   }
 }

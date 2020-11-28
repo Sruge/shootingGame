@@ -52,10 +52,6 @@ class SpecialBullet {
     return _state == EntityState.Dead;
   }
 
-  void onTapDown(TapDownDetails detail, Function fn) {
-    // TODO: implement onTapDown
-  }
-
   bool overlaps(Rect rect) {
     return specialBullet.toRect().overlaps(rect);
   }
@@ -85,10 +81,8 @@ class SpecialBullet {
 
     _x = _x + _bulletSpeedX * speedfactor - t * _speedX * screenSize.width;
     _y = _y + _bulletSpeedY * speedfactor - t * _speedY * screenSize.width;
-    if (_timer > lifetime)
-      die();
-    else
-      specialBullet.update(t);
+    if (_timer > lifetime) die();
+    specialBullet.update(t);
   }
 
   void setSpeed(List<double> speed) {

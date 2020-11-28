@@ -4,7 +4,6 @@ import 'package:flutter/src/gestures/tap.dart';
 import 'dart:ui';
 
 import 'package:shootinggame/screens/BaseWidget.dart';
-import 'package:shootinggame/screens/util/SizeHolder.dart';
 
 import 'ButtonType.dart';
 

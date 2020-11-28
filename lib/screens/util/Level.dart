@@ -12,6 +12,9 @@ import 'package:shootinggame/enemies/bosses/Leviathan.dart';
 import 'package:shootinggame/enemies/bosses/Phoenix.dart';
 import 'package:shootinggame/enemies/bosses/Princessserenity.dart';
 import 'package:shootinggame/enemies/bosses/Russia.dart';
+import 'package:shootinggame/screens/util/Spawner.dart';
+
+import 'StoryHandler.dart';
 
 class Level {
   double spawnInterval;
@@ -29,20 +32,25 @@ class Level {
   double healthMulti;
   double timeToNextLevel;
   double enemyBulletSpeed;
+  double _bossPower;
+  double treePower;
 
   List<EnemyType> enemyTypes;
   List<PresentType> presentTypes;
   List<Enemy> bosses;
+  StoryHandler _storyHandler;
   Random _random;
-  Level(int level) {
+  Level(int level, this._storyHandler) {
     _random = Random();
-    spawnInterval = 12 + _random.nextInt(4).toDouble();
-    bossSpawnInterval = 40 + _random.nextInt(60).toDouble();
-    friendSpawnInterval = 12;
-    presentSpawnInterval = 12;
-    treeSpawnInterval = 80;
-    timeToNextLevel = 80;
+    spawnInterval = 10;
+    bossSpawnInterval = 60;
+    friendSpawnInterval = 20;
+    presentSpawnInterval = 18;
+    treeSpawnInterval = 100;
+    timeToNextLevel = 40;
 
+    _bossPower = 1;
+    treePower = 1;
     dmgMultiplier = 1;
     bulletLifetimeMultiplier = 0.7;
     attackRangeMultiplier = 1;
@@ -59,20 +67,20 @@ class Level {
       PresentType.Health,
       PresentType.Coin,
       PresentType.Blue,
-      PresentType.Colored,
-      PresentType.Golden,
-      PresentType.Red
+      // PresentType.Colored,
+      // PresentType.Golden,
+      // PresentType.Red
     ];
-    if (level >= 0) {
-      Kainhighwind boss = Kainhighwind();
-      boss.resize();
-      bosses.add(boss);
+    if (level > 1) {
+      // Kainhighwind boss = Kainhighwind(_bossPower, _storyHandler);
+      // boss.resize();
+      // bosses.add(boss);
 
-      // Killer killer = Killer();
+      // Killer killer = Killer(_bossPower);
       // killer.resize();
       // bosses.add(killer);
 
-      // Phoenix phoenix = Phoenix();
+      // Phoenix phoenix = Phoenix(2);
       // phoenix.resize();
       // bosses.add(phoenix);
 
@@ -83,28 +91,33 @@ class Level {
       // Leviathan leviathan = Leviathan();
       // leviathan.resize();
       // bosses.add(leviathan);
-      spawnInterval = 15 + _random.nextInt(4).toDouble();
+
+      // Boss boss = Boss(_bossPower);
+      // boss.resize();
+      // bosses.add(boss);
+
+      spawnInterval = 7;
     }
-    if (level > 1) {
+    if (level > 2) {
+      timeToNextLevel = 150;
+
       enemyTypes.add(EnemyType.Two);
 
-      Killer killer = Killer();
-      killer.resize();
-      bosses.add(killer);
+      Russia russia = Russia(_bossPower);
+      russia.resize();
+      bosses.add(russia);
 
       enemyBulletSpeed = 1.1;
       enemySpeedMultiplier = 0.2;
 
       bulletLifetimeMultiplier = 1;
-      healthMulti = 5;
       dmgMultiplier = 1.2;
       attackIntervalMultiplier = 0.9;
       healthMulti = 1.5;
-
-      spawnInterval = 15 + _random.nextInt(4).toDouble();
+      spawnInterval = 10;
     }
-    if (level > 1) {
-      Phoenix phoenix = Phoenix();
+    if (level > 3) {
+      Phoenix phoenix = Phoenix(_bossPower);
       phoenix.resize();
       bosses.add(phoenix);
       enemyBulletSpeed = 1.2;
@@ -113,33 +126,37 @@ class Level {
       dmgMultiplier = 2;
       healthMulti = 1.7;
       bulletLifetimeMultiplier = 2;
-      spawnInterval = 13 + _random.nextInt(4).toDouble();
+      spawnInterval = 10;
     }
     if (level > 4) {
       enemyTypes.add(EnemyType.Three);
+      Boss boss = Boss(_bossPower);
+      boss.resize();
+      bosses.add(boss);
 
-      Russia russia = Russia();
-      russia.resize();
-      bosses.add(russia);
+      Killer killer = Killer(_bossPower);
+      killer.resize();
+      bosses.add(killer);
       attackIntervalMultiplier = 1.2;
       dmgMultiplier = 2.5;
       healthMulti = 2;
-      spawnInterval = 10 + _random.nextInt(4).toDouble();
+      spawnInterval = 10;
     }
     if (level > 5) {
-      Princessserenity princessserenity = Princessserenity();
+      enemyTypes.add(EnemyType.Four);
+
+      Princessserenity princessserenity = Princessserenity(_bossPower);
       princessserenity.resize();
       bosses.add(princessserenity);
       spawnInterval = 6;
       enemySpeedMultiplier = 0.35;
       attackIntervalMultiplier = 0.8;
-      spawnInterval = 26 + _random.nextInt(10).toDouble();
+      spawnInterval = 26;
     }
     if (level > 6) {
-      enemyTypes.add(EnemyType.Four);
       enemyTypes.add(EnemyType.Five);
 
-      Leviathan leviathan = Leviathan();
+      Leviathan leviathan = Leviathan(_bossPower);
       leviathan.resize();
       bosses.add(leviathan);
 
@@ -147,36 +164,36 @@ class Level {
       dmgMultiplier = 4;
       healthMulti = 3;
 
-      spawnInterval = 6 + _random.nextInt(10).toDouble();
+      spawnInterval = 6;
     }
     if (level > 7) {
       enemyTypes.add(EnemyType.Six);
 
-      Altima altima = Altima();
+      Altima altima = Altima(_bossPower);
       altima.resize();
       bosses.add(altima);
       healthMulti = 8;
     }
     if (level > 8) {
-      Boss kainhighwind = Boss();
+      Kainhighwind kainhighwind = Kainhighwind(_bossPower, _storyHandler);
       kainhighwind.resize();
       bosses.add(kainhighwind);
       enemyBulletSpeed = 1.6;
       dmgMultiplier = 6;
       healthMulti = 5;
-      spawnInterval = 4 + _random.nextInt(10).toDouble();
+      spawnInterval = 4;
     }
     if (level > 9) {
       enemyTypes.add(EnemyType.PirateOne);
       enemyTypes.add(EnemyType.PirateTwo);
       enemyTypes.add(EnemyType.PirateThree);
 
-      Bahamut bahamut = Bahamut();
+      Bahamut bahamut = Bahamut(_bossPower);
       bahamut.resize();
       bosses.add(bahamut);
 
       enemySpeedMultiplier = 2;
-      spawnInterval = 1 + _random.nextInt(10).toDouble();
+      spawnInterval = 1;
     }
     print('Creating Level: $level: ${this.toString()}');
   }

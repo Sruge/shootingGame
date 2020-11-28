@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:shootinggame/bullets/BasicBullet.dart';
 import 'package:shootinggame/bullets/BulletType.dart';
+import 'package:shootinggame/bullets/FreezeBullet.dart';
 import 'package:shootinggame/enemies/Enemy.dart';
 import 'package:shootinggame/bullets/SpecialBullet.dart';
 import 'package:shootinggame/entities/EntityState.dart';
@@ -22,9 +23,10 @@ class Leviathan extends Enemy {
   Random random;
   double _specialAttackTimer;
   double bulletSpeedFactor;
+  double _power;
 
   double _specialAttackInterval;
-  Leviathan() : super() {
+  Leviathan(this._power) : super() {
     specialBullets = List.empty(growable: true);
     state = EntityState.Normal;
     _disappearTimer = 0;
@@ -41,7 +43,7 @@ class Leviathan extends Enemy {
     dmgFctr = 1;
     bulletLifetimeFctr = 1;
 
-    entity = WalkingEntity('leviathan.png', 96, 96,
+    entity = WalkingEntity('leviathan', 96, 96,
         Size(baseAnimationWidth * 3, baseAnimationHeight * 3));
     random = Random();
   }
@@ -53,8 +55,15 @@ class Leviathan extends Enemy {
     return bullet;
   }
 
+  SpecialBullet getSpecialAttack() {
+    int rand = random.nextInt(bulletTypes.length);
+    List<double> coords = getAttackingCoordinates();
+
+    return FreezeBullet(coords[0], coords[1], coords[2], coords[3], _power);
+  }
+
   @override
-  void update(double t, List<double> speed, StoryHandler storyHandler) {
+  void update(double t, List<double> speed) {
     _disappearTimer += t;
     _specialAttackTimer += t;
     if (_specialAttackTimer > _specialAttackInterval) {
@@ -67,7 +76,7 @@ class Leviathan extends Enemy {
       y = random.nextDouble() * screenSize.height;
       _disappearTimer = 0;
     } else {
-      super.update(t, speed, storyHandler);
+      super.update(t, speed);
     }
   }
 

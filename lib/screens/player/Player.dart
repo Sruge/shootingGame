@@ -7,13 +7,12 @@ import 'package:shootinggame/bullets/Bullet.dart';
 import 'package:shootinggame/bullets/BulletType.dart';
 import 'package:shootinggame/bullets/FreezeBullet.dart';
 import 'package:shootinggame/bullets/GoldenBullet.dart';
+import 'package:shootinggame/bullets/SmokeBullet.dart';
 import 'package:shootinggame/effects/Effect.dart';
 import 'package:shootinggame/effects/EffectState.dart';
-import 'package:shootinggame/effects/EffectType.dart';
 import 'package:shootinggame/effects/HealEffect.dart';
 import 'package:shootinggame/effects/IceEffect.dart';
 import 'package:shootinggame/effects/Shield.dart';
-import 'package:shootinggame/effects/Sparkle.dart';
 import 'package:shootinggame/enemies/Enemy.dart';
 import 'package:shootinggame/bullets/FireBullet.dart';
 import 'package:shootinggame/friends/Friend.dart';
@@ -52,22 +51,23 @@ class Player {
   double dmgFctr;
   bool frozen;
   int slots;
+  double specialPower;
 
   bool attack;
   BulletType bulletType;
 
   Player(int char) {
-    bool debug = true;
+    bool debug = false;
     String playerPath;
     switch (char) {
       case 1:
-        playerPath = 'elf.png';
+        playerPath = 'elf';
         break;
       case 2:
-        playerPath = 'elf2.png';
+        playerPath = 'elf2';
         break;
       case 3:
-        playerPath = 'elf3.png';
+        playerPath = 'elf3';
         break;
       default:
     }
@@ -83,13 +83,14 @@ class Player {
     effects = List.empty(growable: true);
     bulletCount = 100;
     maxBulletCount = 200;
-    speedfactor = 0.2;
+    speedfactor = 1;
     coins = 0;
     score = 0;
     slots = 0;
-    bulletLifetimeFctr = 1.2;
+    bulletLifetimeFctr = 1.1;
     bulletSpeedFctr = 1;
     dmgFctr = 1;
+    specialPower = 1;
     frozen = false;
     attackType = AttackType.Normal;
     bulletType = BulletType.One;
@@ -99,24 +100,27 @@ class Player {
       _btnBar = ButtonBar(slots);
       bulletCount = 500;
       maxBulletCount = 1000;
+      bulletType = BulletType.Three;
+      health = 500;
+      maxHealth = 500;
 
       coins = 20;
       addAttack(AttackType.Fire, 5);
       addAttack(AttackType.Freeze, 5);
-      addAttack(AttackType.Heal, 5);
-      Effect iceEffect = IceEffect(this, null);
-      iceEffect.resize(getPosition());
-      effects.add(iceEffect);
-      Effect sparkle = Sparkle(this, null);
-      sparkle.resize(getPosition());
-      effects.add(sparkle);
+      addAttack(AttackType.Smoke, 5);
+      // Effect iceEffect = IceEffect(this, null);
+      // iceEffect.resize(getPosition());
+      // effects.add(iceEffect);
+      // Effect sparkle = Sparkle(this, null);
+      // sparkle.resize(getPosition());
+      // effects.add(sparkle);
     }
   }
   void onTapDown(TapDownDetails detail, List<Enemy> enemies,
       List<Friend> friends, List<double> speed, Function fn) {
     double sumSpeed = speed[0].abs() + speed[1].abs();
-    speed[0] = speed[0] / sumSpeed / 5;
-    speed[1] = speed[1] / sumSpeed / 5;
+    speed[0] = speed[0] / sumSpeed * speedfactor * 0.2;
+    speed[1] = speed[1] / sumSpeed * speedfactor * 0.2;
 
     move = true;
     attack = true;
@@ -133,17 +137,17 @@ class Player {
               break;
             }
           }
-          if (move) {
-            for (int i = 0; i < friends.length; i++) {
-              if (friends[i].contains(detail.globalPosition)) {
-                if (friends[i].overlaps(_player.toRect())) {
-                  move = false;
-                  friends[i].trigger();
-                  friends[i].die();
-                }
-              }
-            }
-          }
+          // if (move) {
+          //   for (int i = 0; i < friends.length; i++) {
+          //     if (friends[i].contains(detail.globalPosition)) {
+          //       if (friends[i].overlaps(_player.toRect())) {
+          //         move = false;
+          //         friends[i].trigger();
+          //         friends[i].die();
+          //       }
+          //     }
+          //   }
+          // }
         } else if (move) {
           shoot(detail.globalPosition, speed);
           _btnBar.deactivateAll();
@@ -272,40 +276,22 @@ class Player {
         attackType = AttackType.Normal;
         break;
       case AttackType.Fire:
-        FireBullet bullet = FireBullet(
-            screenSize.width / 2,
-            screenSize.height / 2,
-            speed[0],
-            speed[1],
-            bulletLifetimeFctr,
-            dmgFctr,
-            bulletSpeedFctr);
+        FireBullet bullet = FireBullet(screenSize.width / 2,
+            screenSize.height / 2, speed[0], speed[1], specialPower);
         bullet.resize();
         _specialBullets.add(bullet);
         attackType = AttackType.Normal;
         break;
       case AttackType.Freeze:
-        FreezeBullet bullet = FreezeBullet(
-            screenSize.width / 2,
-            screenSize.height / 2,
-            speed[0],
-            speed[1],
-            bulletLifetimeFctr,
-            dmgFctr,
-            bulletSpeedFctr);
+        FreezeBullet bullet = FreezeBullet(screenSize.width / 2,
+            screenSize.height / 2, speed[0], speed[1], specialPower);
         bullet.resize();
         _specialBullets.add(bullet);
         attackType = AttackType.Normal;
         break;
       case AttackType.Night:
-        GoldenBullet bullet = GoldenBullet(
-            screenSize.width / 2,
-            screenSize.height / 2,
-            speed[0],
-            speed[1],
-            bulletLifetimeFctr,
-            dmgFctr,
-            bulletSpeedFctr);
+        GoldenBullet bullet = GoldenBullet(screenSize.width / 2,
+            screenSize.height / 2, speed[0], speed[1], specialPower);
         bullet.resize();
         _specialBullets.add(bullet);
         attackType = AttackType.Normal;
@@ -324,13 +310,20 @@ class Player {
         effects.add(shield);
         attackType = AttackType.Normal;
         break;
+      case AttackType.Smoke:
+        SmokeBullet bullet = SmokeBullet(screenSize.width / 2,
+            screenSize.height / 2, speed[0], speed[1], specialPower);
+        bullet.resize();
+        _specialBullets.add(bullet);
+        attackType = AttackType.Normal;
+        break;
       default:
         break;
     }
   }
 
   void die() {
-    health = maxHealth;
+    screenManager.endGame();
   }
 
   void addSlot() {

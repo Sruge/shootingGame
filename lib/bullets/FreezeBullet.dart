@@ -1,6 +1,5 @@
 import 'package:flutter/gestures.dart';
 import 'package:shootinggame/effects/Effect.dart';
-import 'package:shootinggame/effects/EffectType.dart';
 import 'package:shootinggame/effects/FreezeEffect.dart';
 import 'package:shootinggame/enemies/Enemy.dart';
 import 'package:shootinggame/screens/player/Player.dart';
@@ -9,9 +8,10 @@ import 'SpecialBullet.dart';
 
 class FreezeBullet extends SpecialBullet {
   double damage;
+  double _power;
 
   FreezeBullet(double x, double y, double _bulletSpeedX, double _bulletSpeedY,
-      double lifetimeFctr, double damageFctr, double bulletSpeed)
+      this._power)
       : super(
           x,
           y,
@@ -23,9 +23,9 @@ class FreezeBullet extends SpecialBullet {
           32,
           32,
         ) {
-    damage = 50 * damageFctr;
+    damage = 40 * _power;
     lifetime = 2;
-    speedfactor = bulletSpeed * 5;
+    speedfactor = _power * 5;
   }
 
   void onTapDown(TapDownDetails detail, Function fn) {
@@ -34,7 +34,7 @@ class FreezeBullet extends SpecialBullet {
 
   @override
   void hitPlayer(Player player) {
-    Effect effect = FreezeEffect(player, null);
+    Effect effect = FreezeEffect(player, null, _power);
     effect.resize(player.getPosition());
     player.effects.add(effect);
     super.hitPlayer(player);
@@ -42,7 +42,7 @@ class FreezeBullet extends SpecialBullet {
 
   @override
   void hitEnemy(Enemy enemy) {
-    Effect effect = FreezeEffect(null, enemy);
+    Effect effect = FreezeEffect(null, enemy, _power);
     effect.resize(Offset(enemy.x, enemy.y));
     enemy.effects.add(effect);
     super.hitEnemy(enemy);

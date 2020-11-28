@@ -1,18 +1,12 @@
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:flame/components/animation_component.dart';
 import 'package:flutter/gestures.dart';
-import 'package:shootinggame/bullets/Bullet.dart';
 import 'package:shootinggame/bullets/SpecialBullet.dart';
-import 'package:shootinggame/effects/EffectType.dart';
-
 import 'package:shootinggame/entities/EntityState.dart';
 import 'package:shootinggame/entities/WalkingEntity.dart';
-
+import 'package:shootinggame/screens/player/Player.dart';
 import 'package:shootinggame/screens/util/SizeHolder.dart';
-
-import 'FriendType.dart';
 
 class Friend {
   double _timer;
@@ -59,18 +53,24 @@ class Friend {
 
   void update(double t, List<double> speed) {}
 
-  List<double> getAttackingCoordinates(double x, double y) {
-    double sumDistance = (x - screenSize.width * 0.94 / 2).abs() +
-        (y - screenSize.height * 0.86 / 2).abs();
-    double bulletSpeedX = -(x - screenSize.width * 0.94 / 2) / sumDistance;
-    double bulletSpeedY = -(y - screenSize.height * 0.86 / 2) / sumDistance;
-    List<double> coords = [x, y, bulletSpeedX, bulletSpeedY];
+  List<double> getAttackingCoordinates(
+      double x, double y, double width, double height) {
+    final entityCenterX = x + width / 2;
+    final entityCenterY = y + height / 2;
+
+    double sumDistance = (entityCenterX - screenSize.width / 2).abs() +
+        (entityCenterY - screenSize.height / 2).abs();
+    double bulletSpeedX = -(entityCenterX - screenSize.width / 2) / sumDistance;
+    double bulletSpeedY =
+        -(entityCenterY - screenSize.height / 2) / sumDistance;
+    List<double> coords = [
+      entityCenterX,
+      entityCenterY,
+      bulletSpeedX,
+      bulletSpeedY
+    ];
 
     return coords;
-  }
-
-  EffectType getEffect() {
-    return EffectType.None;
   }
 
   SpecialBullet getSpecialAttack() {
@@ -81,7 +81,7 @@ class Friend {
     return state == EntityState.Dead;
   }
 
-  void onTapDown(TapDownDetails detail, Function fn) {}
+  void onTapDown(TapDownDetails detail, Player player) {}
 
   bool contains(Offset offset) {
     return entity.toRect().contains(offset);
@@ -132,8 +132,8 @@ class Friend {
   }
 
   double getDistanceToCenter() {
-    _distanceToCenter = sqrt(pow((x - screenSize.width * 0.94 / 2).abs(), 2) +
-        pow((y - screenSize.height * 0.86 / 2).abs(), 2));
+    _distanceToCenter = sqrt(pow((x - screenSize.width / 2).abs(), 2) +
+        pow((y - screenSize.height / 2).abs(), 2));
     return _distanceToCenter;
   }
 

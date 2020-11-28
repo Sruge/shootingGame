@@ -8,7 +8,7 @@ import 'package:shootinggame/entities/WalkingEntity.dart';
 import 'package:shootinggame/screens/util/SizeHolder.dart';
 
 class BasicEnemy extends Enemy {
-  EnemyType _type;
+  EnemyType type;
   WalkingEntity entity;
   BulletType _bulletType;
   String aniPath;
@@ -21,7 +21,7 @@ class BasicEnemy extends Enemy {
       _enemySpeed,
       _bulletSpeed;
   BasicEnemy(
-      this._type,
+      this.type,
       this._dmgMultiplier,
       this._attackRange,
       this._attackInterval,
@@ -30,7 +30,7 @@ class BasicEnemy extends Enemy {
       this._enemySpeed,
       this._bulletSpeed)
       : super() {
-    switch (_type) {
+    switch (type) {
       case EnemyType.One:
         aniPath = 'priest';
         attackRange = 200 * _attackRange;

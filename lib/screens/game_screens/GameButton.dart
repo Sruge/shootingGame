@@ -1,6 +1,6 @@
 import 'package:flame/components/component.dart';
 import 'package:flame/sprite.dart';
-import 'package:flutter/src/gestures/tap.dart';
+import 'package:flutter/gestures.dart';
 import 'dart:ui';
 
 import 'package:shootinggame/screens/BaseWidget.dart';

@@ -6,6 +6,7 @@ import 'package:shootinggame/bullets/BulletType.dart';
 import 'package:shootinggame/bullets/SmokeBullet.dart';
 import 'package:shootinggame/enemies/Enemy.dart';
 import 'package:shootinggame/bullets/SpecialBullet.dart';
+import 'package:shootinggame/enemies/EnemyType.dart';
 import 'package:shootinggame/entities/EntityState.dart';
 import 'package:shootinggame/entities/WalkingEntity.dart';
 import 'package:shootinggame/screens/util/SizeHolder.dart';
@@ -28,8 +29,12 @@ class Kainhighwind extends Enemy {
   StoryHandler _storyHandler;
   double bulletSpeedFactor;
   double _power;
+  EnemyType type;
 
   Kainhighwind(this._power, this._storyHandler) : super() {
+    _storyHandler.levelUpdateble = false;
+
+    type = EnemyType.Boss;
     _timer = 0;
     specialBullets = List.empty(growable: true);
     state = EntityState.Normal;
@@ -71,7 +76,6 @@ class Kainhighwind extends Enemy {
 
   @override
   void update(double t, List<double> speed) {
-    _storyHandler.levelUpdateble = false;
     _timer += t;
     if (_timer > _specialAttackInterval) {
       specialBullets.add(getSpecialAttack());

@@ -7,6 +7,7 @@ import 'package:shootinggame/effects/Effect.dart';
 import 'package:shootinggame/effects/EffectState.dart';
 import 'package:shootinggame/enemies/EnemyHealthbar.dart';
 import 'package:shootinggame/bullets/SpecialBullet.dart';
+import 'package:shootinggame/enemies/EnemyType.dart';
 import 'package:shootinggame/entities/EntityState.dart';
 import 'package:shootinggame/entities/WalkingEntity.dart';
 import 'package:shootinggame/screens/game_screens/ScreenManager.dart';
@@ -35,6 +36,7 @@ class Enemy {
   double dmgFctr;
   bool frozen;
   double bulletSpeedFactor;
+  EnemyType type;
 
   Enemy() {
     _timer = 0;
@@ -47,59 +49,6 @@ class Enemy {
     bulletTypes = List.empty(growable: true);
     effects = List.empty(growable: true);
     frozen = false;
-  }
-
-  bool attacks() {
-    if (_timer >= attackInterval && getDistanceToCenter() < attackRange) {
-      if (frozen) {
-        _timer = 0;
-        return false;
-      } else {
-        _timer = 0;
-        return true;
-      }
-    } else {
-      return false;
-    }
-  }
-
-  List<double> getAttackingCoordinates() {
-    final entityCenterX = entity.x + entity.size.width / 2;
-    final entityCenterY = entity.y + entity.size.height / 2;
-
-    double sumDistance = (entityCenterX - screenSize.width / 2).abs() +
-        (entityCenterY - screenSize.height / 2).abs();
-    double bulletSpeedX = -(entityCenterX - screenSize.width / 2) / sumDistance;
-    double bulletSpeedY =
-        -(entityCenterY - screenSize.height / 2) / sumDistance;
-    List<double> coords = [
-      entityCenterX,
-      entityCenterY,
-      bulletSpeedX,
-      bulletSpeedY
-    ];
-
-    return coords;
-  }
-
-  BasicBullet getAttack() {
-    return null;
-  }
-
-  bool isDead() {
-    return state == EntityState.Dead;
-  }
-
-  void die() {
-    state = EntityState.Dead;
-  }
-
-  bool contains(Offset offset) {
-    return entity.toRect().contains(offset);
-  }
-
-  bool overlaps(Rect rect) {
-    return entity.toRect().overlaps(rect);
   }
 
   void update(double t, List<double> bgSpeed) {
@@ -117,14 +66,17 @@ class Enemy {
         enemySpeedX = 0;
         enemySpeedY = 0;
       }
-
-      x = x +
-          t * enemySpeedX * screenSize.width -
-          t * bgSpeed[0] * screenSize.width;
-      y = y +
-          t * enemySpeedY * screenSize.width -
-          t * bgSpeed[1] * screenSize.width;
+    } else {
+      enemySpeedX = 0;
+      enemySpeedY = 0;
     }
+
+    x = x +
+        t * enemySpeedX * screenSize.width -
+        t * bgSpeed[0] * screenSize.width;
+    y = y +
+        t * enemySpeedY * screenSize.width -
+        t * bgSpeed[1] * screenSize.width;
 
     enemyhealthBar.updateRect(maxHealth, health, x, y);
     effects.forEach((effect) {
@@ -135,6 +87,42 @@ class Enemy {
     entity.y = y;
     entity.update(t, [enemySpeedX, enemySpeedY]);
     if (health <= 0) die();
+  }
+
+  bool attacks() {
+    if (_timer >= attackInterval && getDistanceToCenter() < attackRange) {
+      if (frozen) {
+        _timer = 0;
+        return false;
+      } else {
+        _timer = 0;
+        return true;
+      }
+    } else {
+      return false;
+    }
+  }
+
+  List<double> getAttackingCoordinates() {
+    //First calculate the center of the enemy
+    double entityCenterX = entity.x + entity.size.width / 2;
+    double entityCenterY = entity.y + entity.size.height / 2;
+
+    //Then calculate the distance between the players and the enemys center
+    double sumDistance = (entityCenterX - screenSize.width / 2).abs() +
+        (entityCenterY - screenSize.height / 2).abs();
+
+    //According to the values the speed in x and y direction is computed
+    double bulletSpeedX = -(entityCenterX - screenSize.width / 2) / sumDistance;
+    double bulletSpeedY =
+        -(entityCenterY - screenSize.height / 2) / sumDistance;
+    List<double> coords = [
+      entityCenterX,
+      entityCenterY,
+      bulletSpeedX,
+      bulletSpeedY
+    ];
+    return coords;
   }
 
   double getDistanceToCenter() {
@@ -170,5 +158,26 @@ class Enemy {
     effects.forEach((effect) {
       effect.resize(Offset(x, y));
     });
+  }
+
+  //Handled by the children
+  BasicBullet getAttack() {
+    return null;
+  }
+
+  bool isDead() {
+    return state == EntityState.Dead;
+  }
+
+  void die() {
+    state = EntityState.Dead;
+  }
+
+  bool contains(Offset offset) {
+    return entity.toRect().contains(offset);
+  }
+
+  bool overlaps(Rect rect) {
+    return entity.toRect().overlaps(rect);
   }
 }

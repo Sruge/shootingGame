@@ -12,8 +12,10 @@ import 'package:shootinggame/screens/util/SizeHolder.dart';
 import 'package:shootinggame/screens/util/StoryHandler.dart';
 
 import '../../bullets/Bullet.dart';
+import '../EnemyType.dart';
 
 class Altima extends Enemy {
+  EnemyType type;
   double _disappearTimer;
   double health;
   EntityState state;
@@ -24,9 +26,13 @@ class Altima extends Enemy {
   double _specialAttackTimer;
   double bulletSpeedFactor;
   double _power;
+  StoryHandler _storyHandler;
 
   double _specialAttackInterval;
-  Altima(this._power) : super() {
+  Altima(this._power, this._storyHandler) : super() {
+    _storyHandler.levelUpdateble = false;
+
+    type = EnemyType.Boss;
     specialBullets = List.empty(growable: true);
     state = EntityState.Normal;
 
@@ -83,5 +89,10 @@ class Altima extends Enemy {
 
   int getScore() {
     return 3;
+  }
+
+  void die() {
+    _storyHandler.levelUpdateble = true;
+    state = EntityState.Dead;
   }
 }

@@ -7,12 +7,8 @@ import 'package:shootinggame/enemies/Enemy.dart';
 import 'package:shootinggame/enemies/Present.dart';
 import 'package:shootinggame/enemies/PresentType.dart';
 import 'package:shootinggame/friends/Friend.dart';
-import 'package:shootinggame/friends/Tree.dart';
-import 'package:shootinggame/screens/game_screens/ScreenManager.dart';
 import 'package:shootinggame/screens/player/Player.dart';
-import 'package:shootinggame/screens/util/SizeHolder.dart';
 import 'package:shootinggame/screens/util/Spawner.dart';
-
 import 'Level.dart';
 
 class StoryHandler {

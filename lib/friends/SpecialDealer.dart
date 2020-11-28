@@ -1,23 +1,17 @@
 import 'dart:math';
 import 'dart:ui';
-
-import 'package:flame/components/animation_component.dart';
-import 'package:flame/spritesheet.dart';
 import 'package:flutter/gestures.dart';
 import 'package:shootinggame/effects/EffectType.dart';
 import 'package:shootinggame/entities/EntityState.dart';
 import 'package:shootinggame/friends/DealerItemType.dart';
-import 'package:shootinggame/screens/game_screens/ScreenManager.dart';
 import 'package:shootinggame/entities/WalkingEntity.dart';
 import 'package:shootinggame/screens/player/Player.dart';
 import 'package:shootinggame/screens/util/SizeHolder.dart';
-
 import 'DealerBord.dart';
 import 'DealerItem.dart';
 import 'Friend.dart';
-import 'FriendType.dart';
 
-class StatDealer extends Friend {
+class SpecialDealer extends Friend {
   WalkingEntity entity;
   String aniPath;
   DealerBoard _dealerBoard;
@@ -27,17 +21,16 @@ class StatDealer extends Friend {
   double _direction;
   double _dyingtime;
   List<DealerItem> _items;
-  List<int> _price;
   Random _random;
   bool _renderBoard;
 
-  StatDealer() : super() {
+  SpecialDealer() : super() {
     attackRange = 130;
     attackInterval = 3;
     _timer = 0;
     health = 4;
     maxHealth = 4;
-    _lifetime = 10;
+    _lifetime = 15;
     _switchDirTime = 3;
     _direction = 1;
     _dyingtime = 0.1;
@@ -45,7 +38,14 @@ class StatDealer extends Friend {
     _random = Random();
     int price1 = _random.nextInt(3) + 1;
     int price2 = _random.nextInt(3) + 1;
-    List<DealerItemType> _possibleItemTypes = DealerItemType.values.toList();
+    List<DealerItemType> _possibleItemTypes = [
+      DealerItemType.Speed,
+      DealerItemType.Slot,
+      DealerItemType.Range,
+      DealerItemType.SpecialPower,
+      DealerItemType.MaxHealth,
+      DealerItemType.MaxBullets,
+    ];
     DealerItemType _itemType1 =
         _possibleItemTypes[_random.nextInt(_possibleItemTypes.length)];
     _possibleItemTypes.remove(_itemType1);
@@ -119,7 +119,7 @@ class StatDealer extends Friend {
         _dealerBoard.onTapDown(detail, player);
       } else {
         state = EntityState.Dying;
-        _lifetime = _timer + 1;
+        _lifetime = _timer + 4;
         _renderBoard = false;
         enemySpeedFactor = 0.5;
       }

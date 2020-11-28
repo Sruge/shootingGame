@@ -5,10 +5,10 @@ import 'package:shootinggame/enemies/BasicEnemy.dart';
 import 'package:shootinggame/enemies/Enemy.dart';
 import 'package:shootinggame/enemies/EnemyType.dart';
 import 'package:shootinggame/enemies/PresentType.dart';
-import 'package:shootinggame/friends/StatDealer.dart';
-import 'package:shootinggame/friends/Firetree.dart';
+import 'package:shootinggame/friends/BulletTypeDealer.dart';
+import 'package:shootinggame/friends/StandardDealer.dart';
+import 'package:shootinggame/friends/SpecialDealer.dart';
 import 'package:shootinggame/friends/Friend.dart';
-import 'package:shootinggame/friends/FriendType.dart';
 import 'package:shootinggame/friends/Tree.dart';
 import 'package:shootinggame/screens/game_screens/ScreenManager.dart';
 import 'package:shootinggame/screens/util/SizeHolder.dart';
@@ -54,11 +54,11 @@ class Spawner {
     _enemyTypes = level.enemyTypes;
     _enemyBulletSpeed = level.enemyBulletSpeed;
     maxEnemies = level.maxEnemies;
-    nextSpawn = 2;
-    _nextBossSpawn = level.bossSpawnInterval;
+    nextSpawn = spawnInterval;
+    _nextBossSpawn = _bossSpawnInterval;
     _nextFriendSpawn = _friendSpawnInterval;
     _nextPresentSpawn = _presentSpawnInterval;
-    _nextTreeSpawn = 1;
+    _nextTreeSpawn = _treeSpawnInterval;
     bosses = level.bosses;
     _presentTypes = level.presentTypes;
     _attackInterval = level.attackIntervalMultiplier;
@@ -69,10 +69,18 @@ class Spawner {
     _enemySpeed = level.enemySpeedMultiplier;
     maxEnemies = level.maxEnemies;
     _treePower = level.treePower;
+
+    if (level.level == 0) {
+      StandardDealer stdDealer = StandardDealer();
+      stdDealer.resize();
+      storyHandler.friends.add(stdDealer);
+    }
   }
 
   update(double t) {
     _timer += t;
+
+    //Add enemies if the time has come and there are not too many yet
     if (_timer > nextSpawn && _storyHandler.enemies.length <= maxEnemies) {
       BasicEnemy enemy = BasicEnemy(
           _enemyTypes[_random.nextInt(_enemyTypes.length)],
@@ -85,26 +93,52 @@ class Spawner {
           _enemyBulletSpeed);
       enemy.resize();
       _storyHandler.enemies.add(enemy);
-      nextSpawn = _timer + spawnInterval;
+
+      //There is a 7 percent chance that "nextSpawn" does
+      //not get increased and so another enemy gets added
+      if (_random.nextDouble() > 0.93) {
+        nextSpawn = _timer + spawnInterval + _random.nextInt(3);
+      }
     }
+
+    //Add boss if its time to
     if (_timer > _nextBossSpawn && bosses.isNotEmpty) {
       int rand = _random.nextInt(bosses.length);
       _storyHandler.enemies.add(bosses[rand]);
       bosses.removeAt(rand);
-      _nextBossSpawn = _timer + _bossSpawnInterval;
+      _nextBossSpawn = _timer + _bossSpawnInterval + _random.nextInt(40);
     }
+
+    //Add a SpecialDealer or (with small probability) a BulletTypeDealer
     if (_timer > _nextFriendSpawn) {
-      Friend friend = StatDealer();
+      Friend friend;
+      if (_random.nextDouble() > 0.85) {
+        friend = BulletTypeDealer();
+      } else {
+        friend = SpecialDealer();
+      }
       friend.resize();
       _storyHandler.friends.add(friend);
-      _nextFriendSpawn = _timer + _friendSpawnInterval;
+      _nextFriendSpawn = _timer + _friendSpawnInterval + _random.nextInt(20);
     }
+
+    //Add a present to the queue which will be dropped if next enemy dies
     if (_timer > _nextPresentSpawn) {
-      PresentType present =
-          _presentTypes[_random.nextInt(_presentTypes.length)];
-      _storyHandler.nextPresents.add(present);
-      _nextPresentSpawn = _timer + _presentSpawnInterval;
+      if (_random.nextDouble() > 0.3) {
+        _storyHandler.nextPresents.add(PresentType.Coin);
+      } else {
+        PresentType present =
+            _presentTypes[_random.nextInt(_presentTypes.length)];
+        _storyHandler.nextPresents.add(present);
+      }
+      //After a present gets added to the queue there is always a 10 percent
+      //chance that another present gets added
+      if (_random.nextDouble() > 0.9) {
+        _nextPresentSpawn = _timer + _presentSpawnInterval + _random.nextInt(3);
+      }
     }
+
+    //If its time to add a tree
     if (_timer > _nextTreeSpawn) {
       setTree(_treePower);
       _nextTreeSpawn = _timer + _treeSpawnInterval;

@@ -12,8 +12,10 @@ import 'package:shootinggame/screens/util/SizeHolder.dart';
 import 'package:shootinggame/screens/util/StoryHandler.dart';
 
 import '../../bullets/Bullet.dart';
+import '../EnemyType.dart';
 
 class Bahamut extends Enemy {
+  EnemyType type;
   double health;
   EntityState state;
   WalkingEntity entity;
@@ -23,9 +25,11 @@ class Bahamut extends Enemy {
   double _specialAttackTimer;
   double bulletSpeedFactor;
   double _power;
+  StoryHandler _storyHandler;
 
   double _specialAttackInterval;
-  Bahamut(this._power) : super() {
+  Bahamut(this._power, this._storyHandler) : super() {
+    type = EnemyType.Boss;
     specialBullets = List.empty(growable: true);
     state = EntityState.Normal;
     _specialAttackTimer = 0;
@@ -78,5 +82,10 @@ class Bahamut extends Enemy {
 
   int getScore() {
     return 30;
+  }
+
+  void die() {
+    _storyHandler.levelUpdateble = true;
+    super.die();
   }
 }

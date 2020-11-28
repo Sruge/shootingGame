@@ -6,12 +6,11 @@ import 'package:shootinggame/bullets/BulletType.dart';
 import 'package:shootinggame/bullets/FreezeBullet.dart';
 import 'package:shootinggame/enemies/Enemy.dart';
 import 'package:shootinggame/bullets/SpecialBullet.dart';
+import 'package:shootinggame/enemies/EnemyType.dart';
 import 'package:shootinggame/entities/EntityState.dart';
 import 'package:shootinggame/entities/WalkingEntity.dart';
 import 'package:shootinggame/screens/util/SizeHolder.dart';
 import 'package:shootinggame/screens/util/StoryHandler.dart';
-
-import '../../bullets/Bullet.dart';
 
 class Leviathan extends Enemy {
   double _disappearTimer;
@@ -24,9 +23,13 @@ class Leviathan extends Enemy {
   double _specialAttackTimer;
   double bulletSpeedFactor;
   double _power;
+  EnemyType type;
 
   double _specialAttackInterval;
-  Leviathan(this._power) : super() {
+  StoryHandler _storyHandler;
+  Leviathan(this._power, this._storyHandler) : super() {
+    type = EnemyType.Boss;
+
     specialBullets = List.empty(growable: true);
     state = EntityState.Normal;
     _disappearTimer = 0;
@@ -42,6 +45,7 @@ class Leviathan extends Enemy {
     bulletSpeedFactor = 2;
     dmgFctr = 1;
     bulletLifetimeFctr = 1;
+    type = EnemyType.Boss;
 
     entity = WalkingEntity('leviathan', 96, 96,
         Size(baseAnimationWidth * 3, baseAnimationHeight * 3));
@@ -82,5 +86,10 @@ class Leviathan extends Enemy {
 
   int getScore() {
     return 3;
+  }
+
+  void die() {
+    _storyHandler.levelUpdateble = true;
+    super.die();
   }
 }

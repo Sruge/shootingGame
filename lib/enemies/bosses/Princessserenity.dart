@@ -12,6 +12,7 @@ import 'package:shootinggame/screens/util/SizeHolder.dart';
 import 'package:shootinggame/screens/util/StoryHandler.dart';
 
 import '../../bullets/Bullet.dart';
+import '../EnemyType.dart';
 
 class Princessserenity extends Enemy {
   double _disappearTimer;
@@ -24,9 +25,12 @@ class Princessserenity extends Enemy {
   double _specialAttackTimer;
   double bulletSpeedFactor;
   double _power;
+  EnemyType type;
+  StoryHandler _storyHandler;
 
   double _specialAttackInterval;
-  Princessserenity(this._power) : super() {
+  Princessserenity(this._power, this._storyHandler) : super() {
+    type = EnemyType.Boss;
     specialBullets = List.empty(growable: true);
     state = EntityState.Normal;
     _disappearTimer = 0;
@@ -82,5 +86,10 @@ class Princessserenity extends Enemy {
 
   int getScore() {
     return 3;
+  }
+
+  void die() {
+    _storyHandler.levelUpdateble = true;
+    super.die();
   }
 }

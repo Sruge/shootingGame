@@ -6,9 +6,11 @@ import 'package:shootinggame/bullets/BulletType.dart';
 import 'package:shootinggame/bullets/FreezeBullet.dart';
 import 'package:shootinggame/enemies/Enemy.dart';
 import 'package:shootinggame/bullets/SpecialBullet.dart';
+import 'package:shootinggame/enemies/EnemyType.dart';
 import 'package:shootinggame/entities/EntityState.dart';
 import 'package:shootinggame/entities/WalkingEntity.dart';
 import 'package:shootinggame/screens/util/SizeHolder.dart';
+import 'package:shootinggame/screens/util/StoryHandler.dart';
 
 class Russia extends Enemy {
   double _disappearTimer;
@@ -21,9 +23,11 @@ class Russia extends Enemy {
   double bulletSpeedFactor;
   double _specialAttackTimer;
   double _power;
-
   double _specialAttackInterval;
-  Russia(this._power) : super() {
+  EnemyType type;
+  StoryHandler _storyHandler;
+  Russia(this._power, this._storyHandler) : super() {
+    type = EnemyType.Boss;
     health = 200;
     maxHealth = 200;
     specialBullets = List.empty(growable: true);
@@ -77,5 +81,10 @@ class Russia extends Enemy {
 
   int getScore() {
     return 3;
+  }
+
+  void die() {
+    _storyHandler.levelUpdateble = true;
+    super.die();
   }
 }

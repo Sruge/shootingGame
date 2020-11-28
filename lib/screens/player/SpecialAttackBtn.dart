@@ -20,7 +20,7 @@ class SpecialAttackBtn extends BaseWidget {
   int count;
   TextPainter tpCount;
   Offset countTextOffset;
-  SpecialAttackBtn(this.type, this.count, this.x, this.y) {
+  SpecialAttackBtn(this.type, this.count) {
     tpCount = TextPainter(
       textAlign: TextAlign.center,
       textDirection: TextDirection.ltr,
@@ -51,6 +51,9 @@ class SpecialAttackBtn extends BaseWidget {
         break;
       case AttackType.Smoke:
         imgUrl = 'blackwhite';
+        break;
+      case AttackType.Tree:
+        imgUrl = 'tree';
         break;
       default:
         imgUrl = 'empty';

@@ -7,5 +7,6 @@ enum EnemyType {
   Six,
   PirateOne,
   PirateTwo,
-  PirateThree
+  PirateThree,
+  Boss
 }

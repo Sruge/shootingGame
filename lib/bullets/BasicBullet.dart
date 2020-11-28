@@ -11,18 +11,18 @@ class BasicBullet extends Bullet {
       : super(x, y, _bulletSpeedX, _bulletSpeedY) {
     if (_type == BulletType.One) {
       damage = damageFctr * 20.0;
-      lifetime = lifetimeFctr;
+      lifetime = lifetimeFctr * 1.1;
       speedfactor = bulletSpeed * 3.5;
       bullet = SpriteComponent.square(6, 'bullet.png');
     } else if (_type == BulletType.Two) {
-      damage = 40.0 * damageFctr;
-      lifetime = 1.1 * lifetimeFctr;
-      speedfactor = bulletSpeed * 4.5;
+      damage = 30.0 * damageFctr;
+      lifetime = 0.8 * lifetimeFctr;
+      speedfactor = bulletSpeed * 4;
       bullet = SpriteComponent.square(7, 'redBullet.png');
     } else if (_type == BulletType.Three) {
-      damage = 60.0 * damageFctr;
-      lifetime = 1.2 * lifetimeFctr;
-      speedfactor = bulletSpeed * 5;
+      damage = 40.0 * damageFctr;
+      lifetime = 0.6 * lifetimeFctr;
+      speedfactor = bulletSpeed * 4.5;
       bullet = SpriteComponent.square(8, 'greenBullet.png');
     }
   }

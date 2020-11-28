@@ -14,8 +14,11 @@ import 'package:shootinggame/screens/util/SizeHolder.dart';
 import 'package:shootinggame/screens/util/StoryHandler.dart';
 
 import '../../bullets/Bullet.dart';
+import '../EnemyType.dart';
 
 class Killer extends Enemy {
+  EnemyType type;
+
   double _switchDirTimer;
   double health;
   EntityState state;
@@ -29,9 +32,10 @@ class Killer extends Enemy {
   double _switchDirTime;
   double _changeX, _changeY;
   bool switched;
-
+  StoryHandler _storyHandler;
   double _specialAttackInterval;
-  Killer(this._power) : super() {
+  Killer(this._power, this._storyHandler) : super() {
+    type = EnemyType.Boss;
     specialBullets = List.empty(growable: true);
     state = EntityState.Normal;
     _switchDirTimer = 0;
@@ -127,5 +131,10 @@ class Killer extends Enemy {
 
   int getScore() {
     return 3;
+  }
+
+  void die() {
+    _storyHandler.levelUpdateble = true;
+    super.die();
   }
 }

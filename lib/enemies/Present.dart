@@ -22,6 +22,7 @@ class Present {
   double _lifetimeMax;
   PresentType _type;
   AnimationComponent _present;
+  Random _random;
 
   Present(double x, double y, this._type) {
     String _image;
@@ -61,7 +62,8 @@ class Present {
     _present = AnimationComponent(24, 24, animation);
     _state = EntityState.Normal;
     _lifetimeUpToNow = 0;
-    _lifetimeMax = 4;
+    _lifetimeMax = 5;
+    _random = Random();
     setSpeed([0, 0]);
 
     this._x = x;
@@ -127,7 +129,6 @@ class Present {
   void hit(Player player) {
     switch (_type) {
       case PresentType.Health:
-        player.health += player.maxHealth * 0.1;
         Effect effect = HealEffect(player, null);
         effect.resize(player.getPosition());
         player.effects.add(effect);
@@ -140,9 +141,17 @@ class Present {
         player.coins += 1;
         break;
       case PresentType.Blue:
-        Random random = Random();
+        break;
+      case PresentType.Golden:
+        player.coins += _random.nextInt(5) + 1;
+        break;
+      case PresentType.Colored:
         player.addAttack(
-            AttackType.values[random.nextInt(AttackType.values.length)], 3);
+            AttackType.values[_random.nextInt(AttackType.values.length)],
+            _random.nextInt(3) + 1);
+        break;
+      case PresentType.Red:
+        player.addTreeToSlots();
         break;
       default:
         break;

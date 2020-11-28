@@ -17,6 +17,7 @@ import 'package:shootinggame/screens/util/SizeHolder.dart';
 import 'package:shootinggame/screens/util/StoryHandler.dart';
 
 import '../../bullets/Bullet.dart';
+import '../EnemyType.dart';
 
 class Boss extends Enemy {
   double _bossTimer;
@@ -36,9 +37,11 @@ class Boss extends Enemy {
   StoryHandler _storyHandler;
   double _beamingDuration;
   double _initialSpeedFactor;
+  EnemyType type;
 
   double _nextSpecialAttack;
   Boss(this._power) : super() {
+    type = EnemyType.Boss;
     specialBullets = List.empty(growable: true);
     state = EntityState.Normal;
     _bossTimer = 0;
@@ -136,7 +139,7 @@ class Boss extends Enemy {
   }
 
   void die() {
-    //_storyHandler.spawner.spawnInterval = _initialSpawnInterval
+    _storyHandler.levelUpdateble = true;
     super.die();
   }
 }

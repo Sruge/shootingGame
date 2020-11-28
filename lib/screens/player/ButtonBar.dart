@@ -2,7 +2,6 @@ import 'package:flame/components/component.dart';
 import 'package:flame/sprite.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/painting.dart';
-import 'package:shootinggame/effects/EffectType.dart';
 import 'dart:ui';
 
 import 'package:shootinggame/screens/player/AttackType.dart';
@@ -28,7 +27,7 @@ class ButtonBar {
     activeButton = null;
 
     for (int i = 0; i < buttonCount; i++) {
-      _buttons.add(SpecialAttackBtn(AttackType.Normal, 0, 0, 0));
+      _buttons.add(SpecialAttackBtn(AttackType.Normal, 0));
     }
   }
 
@@ -98,7 +97,7 @@ class ButtonBar {
   void update(double t) {
     for (int i = 0; i < _buttons.length; i++) {
       if (_buttons[i].type != AttackType.Normal && _buttons[i].count <= 0) {
-        _buttons[i] = SpecialAttackBtn(AttackType.Normal, 0, 0, 0);
+        _buttons[i] = SpecialAttackBtn(AttackType.Normal, 0);
         _buttons[i].count = 0;
         resize();
       }
@@ -107,8 +106,8 @@ class ButtonBar {
   }
 
   void addSlot() {
-    if (_buttons.length < 4) {
-      _buttons.add(SpecialAttackBtn(AttackType.Normal, 0, 0, 0));
+    if (_buttons.length < 3) {
+      _buttons.add(SpecialAttackBtn(AttackType.Normal, 0));
       resize();
     }
   }
@@ -116,7 +115,7 @@ class ButtonBar {
   void addAttack(AttackType type, int count) {
     for (int i = 0; i < _buttons.length; i++) {
       if (_buttons[i].type == AttackType.Normal) {
-        _buttons[i] = SpecialAttackBtn(type, count, screenSize.width - 20, 0);
+        _buttons[i] = SpecialAttackBtn(type, count);
         resize();
         break;
       } else if (_buttons[i].type == type) {
@@ -133,10 +132,18 @@ class ButtonBar {
   }
 
   void reduceCount(AttackType type) {
-    _buttons.forEach((element) {
-      if (type != AttackType.Normal && element.type == type) {
-        element.count -= 1;
+    for (int i = 0; i < _buttons.length; i++) {
+      if (type != AttackType.Normal && _buttons[i].type == type) {
+        _buttons[i].count -= 1;
+        if (type == AttackType.Tree) {
+          _buttons.removeAt(i);
+        }
       }
-    });
+    }
+  }
+
+  void addTree() {
+    _buttons.add(SpecialAttackBtn(AttackType.Tree, 1));
+    resize();
   }
 }

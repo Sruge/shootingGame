@@ -87,7 +87,7 @@ class Player {
     coins = 0;
     score = 0;
     slots = 0;
-    bulletLifetimeFctr = 1.1;
+    bulletLifetimeFctr = 1;
     bulletSpeedFctr = 1;
     dmgFctr = 1;
     specialPower = 1;
@@ -100,9 +100,10 @@ class Player {
       _btnBar = ButtonBar(slots);
       bulletCount = 500;
       maxBulletCount = 1000;
-      bulletType = BulletType.Three;
+      bulletType = BulletType.Two;
       health = 500;
       maxHealth = 500;
+      bulletLifetimeFctr = 1.5;
 
       coins = 20;
       addAttack(AttackType.Fire, 5);
@@ -137,17 +138,6 @@ class Player {
               break;
             }
           }
-          // if (move) {
-          //   for (int i = 0; i < friends.length; i++) {
-          //     if (friends[i].contains(detail.globalPosition)) {
-          //       if (friends[i].overlaps(_player.toRect())) {
-          //         move = false;
-          //         friends[i].trigger();
-          //         friends[i].die();
-          //       }
-          //     }
-          //   }
-          // }
         } else if (move) {
           shoot(detail.globalPosition, speed);
           _btnBar.deactivateAll();
@@ -317,6 +307,8 @@ class Player {
         _specialBullets.add(bullet);
         attackType = AttackType.Normal;
         break;
+      case AttackType.Tree:
+        break;
       default:
         break;
     }
@@ -333,6 +325,10 @@ class Player {
 
   void addAttack(AttackType type, int count) {
     _btnBar.addAttack(type, count);
+  }
+
+  void addTreeToSlots() {
+    _btnBar.addTree();
   }
 
   Offset getPosition() {

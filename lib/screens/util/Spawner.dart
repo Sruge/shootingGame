@@ -96,7 +96,7 @@ class Spawner {
 
       //There is a 7 percent chance that "nextSpawn" does
       //not get increased and so another enemy gets added
-      if (_random.nextDouble() > 0.93) {
+      if (_random.nextDouble() > 0.07) {
         nextSpawn = _timer + spawnInterval + _random.nextInt(3);
       }
     }
@@ -104,7 +104,9 @@ class Spawner {
     //Add boss if its time to
     if (_timer > _nextBossSpawn && bosses.isNotEmpty) {
       int rand = _random.nextInt(bosses.length);
+
       _storyHandler.enemies.add(bosses[rand]);
+      bosses[rand].getCalledToTheBattlefield();
       bosses.removeAt(rand);
       _nextBossSpawn = _timer + _bossSpawnInterval + _random.nextInt(40);
     }
@@ -125,6 +127,7 @@ class Spawner {
     //Add a present to the queue which will be dropped if next enemy dies
     if (_timer > _nextPresentSpawn) {
       if (_random.nextDouble() > 0.3) {
+        //70% Chance to get a coin
         _storyHandler.nextPresents.add(PresentType.Coin);
       } else {
         PresentType present =
@@ -133,7 +136,7 @@ class Spawner {
       }
       //After a present gets added to the queue there is always a 10 percent
       //chance that another present gets added
-      if (_random.nextDouble() > 0.9) {
+      if (_random.nextDouble() > 0.1) {
         _nextPresentSpawn = _timer + _presentSpawnInterval + _random.nextInt(3);
       }
     }

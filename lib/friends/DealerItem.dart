@@ -108,6 +108,10 @@ class DealerItem {
             player.bulletLifetimeFctr += 0.2;
             print('New Range: ${player.bulletLifetimeFctr}');
             break;
+          case DealerItemType.Range:
+            player.dmgFctr += 0.2;
+            print('New Dmg: ${player.dmgFctr}');
+            break;
           case DealerItemType.BulletType2:
             player.bulletType = BulletType.Two;
             print('Now using BulletType Two');

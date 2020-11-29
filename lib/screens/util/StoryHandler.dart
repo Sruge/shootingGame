@@ -52,7 +52,6 @@ class StoryHandler {
       _levelTimer = 0;
       levelNumber += 1;
       _level = Level(levelNumber, this);
-
       spawner = Spawner(_level, this);
     }
     //Add Enemies, Friends... from the Spawners Queues

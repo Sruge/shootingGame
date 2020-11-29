@@ -53,6 +53,9 @@ class Enemy {
 
   void update(double t, List<double> bgSpeed) {
     _timer += t;
+
+    //If the enemy is frozen no speed needs to be computet
+    //because its anyways not going to move
     if (!frozen) {
       double sumDistance;
       sumDistance =
@@ -82,7 +85,7 @@ class Enemy {
     effects.forEach((effect) {
       effect.update(t, x, y);
     });
-    effects.removeWhere((element) => element.state == EffectState.Ended);
+    effects.removeWhere((effect) => effect.state == EffectState.Ended);
     entity.x = x;
     entity.y = y;
     entity.update(t, [enemySpeedX, enemySpeedY]);
@@ -180,4 +183,7 @@ class Enemy {
   bool overlaps(Rect rect) {
     return entity.toRect().overlaps(rect);
   }
+
+  //Overwritten only by bosses
+  void getCalledToTheBattlefield() {}
 }

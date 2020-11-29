@@ -34,7 +34,7 @@ class MainScreen extends BaseWidget {
     playingChar = 0;
     _newGame = GameButton(
       ButtonType.Normal,
-      'newGameBtn2.png',
+      'newgamebtn2.png',
     );
     _continueGame = GameButton(
       ButtonType.Normal,

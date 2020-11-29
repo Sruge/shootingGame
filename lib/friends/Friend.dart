@@ -5,6 +5,7 @@ import 'package:flutter/gestures.dart';
 import 'package:shootinggame/bullets/SpecialBullet.dart';
 import 'package:shootinggame/entities/EntityState.dart';
 import 'package:shootinggame/entities/WalkingEntity.dart';
+import 'package:shootinggame/screens/game_screens/ScreenManager.dart';
 import 'package:shootinggame/screens/player/Player.dart';
 import 'package:shootinggame/screens/util/SizeHolder.dart';
 
@@ -28,6 +29,7 @@ class Friend {
   double enemySpeedX;
   double enemySpeedFactor;
   List<SpecialBullet> specialBullets;
+  Random random;
 
   Friend() {
     _timer = 0;
@@ -37,7 +39,7 @@ class Friend {
     enemySpeedY = 0;
     enemySpeedFactor = 0.2;
     specialBullets = List.empty(growable: true);
-    Random random = Random();
+    random = Random();
     leftOrDown = random.nextInt(2);
     bullets = [];
   }
@@ -105,30 +107,11 @@ class Friend {
   }
 
   void resize() {
-    // entity.width = screenSize.width * 0.06;
-    // entity.height = screenSize.height * 0.14;
-
-    int spawnUpDownLeftRight = Random().nextInt(4);
-    double spawnPos = Random().nextDouble();
-    switch (spawnUpDownLeftRight) {
-      case 0:
-        x = screenSize.width * spawnPos;
-        y = -80;
-        break;
-      case 1:
-        x = screenSize.width + 50;
-        y = screenSize.height * spawnPos;
-        break;
-      case 2:
-        x = screenSize.width * spawnPos;
-        y = screenSize.height + 50;
-        break;
-      case 3:
-        x = -80;
-        y = screenSize.height * spawnPos;
-        break;
-    }
     entity.resize();
+
+    Offset bgPos = screenManager.getBgPos();
+    x = (bgPos.dx + screenSize.width * 2) * random.nextDouble();
+    y = (bgPos.dy + screenSize.height * 2) * random.nextDouble();
   }
 
   double getDistanceToCenter() {

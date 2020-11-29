@@ -16,6 +16,7 @@ import 'package:shootinggame/enemies/bosses/Russia.dart';
 import 'StoryHandler.dart';
 
 class Level {
+  bool _debug;
   int level;
   double spawnInterval;
   double friendSpawnInterval;
@@ -40,6 +41,7 @@ class Level {
   List<Enemy> bosses;
   StoryHandler _storyHandler;
   Level(this.level, this._storyHandler) {
+    _debug = true;
     bosses = List.empty(growable: true);
 
     spawnInterval = 10;
@@ -64,27 +66,37 @@ class Level {
     presentTypes = [
       PresentType.Bullets,
       PresentType.Health,
-      //PresentType.Coin,
-      // PresentType.Colored,
-      // PresentType.Golden,
-      // PresentType.Red
+      PresentType.Colored,
+      PresentType.Golden,
+      PresentType.Red
     ];
 
-    if (level > 0) {
-      spawnInterval = 7;
-    }
-    if (level > 1) {
-      // Kainhighwind boss = Kainhighwind(_bossPower, _storyHandler);
-      // boss.resize();
-      // bosses.add(boss);
+    if (_debug) {
+      presentTypes.add(PresentType.Golden);
+      presentTypes.add(PresentType.Colored);
 
-      // Killer killer = Killer(_bossPower);
-      // killer.resize();
-      // bosses.add(killer);
+      enemyTypes.add(EnemyType.Three);
+      enemyTypes.add(EnemyType.PirateOne);
+      enemyTypes.add(EnemyType.PirateTwo);
+      enemyTypes.add(EnemyType.PirateThree);
+      _bossPower = 5;
+      dmgMultiplier = 5;
 
-      // Phoenix phoenix = Phoenix(2);
-      // phoenix.resize();
-      // bosses.add(phoenix);
+      Kainhighwind bossk = Kainhighwind(_bossPower, _storyHandler);
+      bossk.resize();
+      bosses.add(bossk);
+
+      Killer killer = Killer(_bossPower, _storyHandler);
+      killer.resize();
+      bosses.add(killer);
+
+      Phoenix phoenix = Phoenix(2, _storyHandler);
+      phoenix.resize();
+      bosses.add(phoenix);
+      Altima altima = Altima(_bossPower, _storyHandler);
+      altima.resize();
+      bosses.add(altima);
+      healthMulti = 8;
 
       // Russia russia = Russia();
       // russia.resize();
@@ -94,10 +106,15 @@ class Level {
       // leviathan.resize();
       // bosses.add(leviathan);
 
-      // Boss boss = Boss(_bossPower);
-      // boss.resize();
-      // bosses.add(boss);
+      Boss boss = Boss(_bossPower);
+      boss.resize();
+      bosses.add(boss);
+    }
 
+    if (level > 0) {
+      spawnInterval = 7;
+    }
+    if (level > 1) {
       spawnInterval = 6;
     }
     if (level > 2) {
@@ -126,7 +143,7 @@ class Level {
       bosses.add(phoenix);
       enemyBulletSpeed = 1.2;
       enemySpeedMultiplier = 0.24;
-      attackIntervalMultiplier = 0.5;
+      attackIntervalMultiplier = 0.9;
       dmgMultiplier = 2;
       healthMulti = 1.7;
       bulletLifetimeMultiplier = 2;

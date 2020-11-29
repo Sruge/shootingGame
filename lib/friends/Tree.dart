@@ -30,14 +30,14 @@ class Tree extends Friend {
     enemySpeedFactor = 0;
 
     final sprShe = SpriteSheet(
-        imageName: 'tree.png',
-        textureWidth: 128,
-        textureHeight: 128,
+        imageName: 'mytree.png',
+        textureWidth: 256,
+        textureHeight: 220,
         columns: 4,
         rows: 1);
     final animation = sprShe.createAnimation(0, stepTime: 0.2);
     _tree = AnimationComponent(
-        baseAnimationWidth * 1.5, baseAnimationHeight * 1.5, animation);
+        baseAnimationWidth * 1.5, baseAnimationHeight * 1.35, animation);
   }
 
   void update(double t, List<double> bgSpeed) {

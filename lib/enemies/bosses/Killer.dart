@@ -82,14 +82,15 @@ class Killer extends Enemy {
 
   @override
   void update(double t, List<double> speed) {
-    _switchDirTimer += t;
     _specialAttackTimer += t;
     if (_specialAttackTimer > _specialAttackInterval) {
       specialBullets.add(getSpecialAttack());
       _specialAttackTimer = 0;
     }
+    //If Killer is frozen we don't compute its speed
     if (!frozen) {
       var distanceToCenter = getDistanceToCenter();
+      _switchDirTimer += t;
       if (_switchDirTimer > _switchDirTime) {
         _changeX = (random.nextDouble() * 2 - 1) / 10;
         _changeY = (random.nextDouble() * 2 - 1) / 10;
@@ -108,19 +109,26 @@ class Killer extends Enemy {
               -(x - screenSize.width / 2) / sumDistance * enemySpeedFactor;
           enemySpeedY =
               -(y - screenSize.height / 2) / sumDistance * enemySpeedFactor;
+          //TODO: Change 50 to a relative value
+          //If Killer is within attack range - 50 it's not going to move
         } else {
           enemySpeedX = 0;
           enemySpeedY = 0;
         }
       }
-
-      x = x +
-          t * enemySpeedX * screenSize.width -
-          t * speed[0] * screenSize.width;
-      y = y +
-          t * enemySpeedY * screenSize.width -
-          t * speed[1] * screenSize.width;
+    } else {
+      enemySpeedX = 0;
+      enemySpeedY = 0;
     }
+
+    //Calculate the new enemy position according to its enemySpeed and
+    // speed (which is speed at which the player is moving)
+    x = x +
+        t * enemySpeedX * screenSize.width -
+        t * speed[0] * screenSize.width;
+    y = y +
+        t * enemySpeedY * screenSize.width -
+        t * speed[1] * screenSize.width;
 
     enemyhealthBar.updateRect(maxHealth, health, x, y);
     effects.forEach((effect) {

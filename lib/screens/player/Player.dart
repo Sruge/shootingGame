@@ -57,7 +57,7 @@ class Player {
   BulletType bulletType;
 
   Player(int char) {
-    bool debug = false;
+    bool debug = true;
     String playerPath;
     switch (char) {
       case 1:
@@ -101,12 +101,15 @@ class Player {
       bulletCount = 500;
       maxBulletCount = 1000;
       bulletType = BulletType.Two;
-      health = 500;
-      maxHealth = 500;
+      health = 5000;
+      maxHealth = 5000;
       bulletLifetimeFctr = 1.5;
+      speedfactor = 1.9;
+      bulletLifetimeFctr = 1.5;
+      dmgFctr = 2;
 
       coins = 20;
-      addAttack(AttackType.Fire, 5);
+      addAttack(AttackType.Shield, 5);
       addAttack(AttackType.Freeze, 5);
       addAttack(AttackType.Smoke, 5);
       // Effect iceEffect = IceEffect(this, null);
